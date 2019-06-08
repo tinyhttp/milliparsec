@@ -1,8 +1,8 @@
 {
   "name": "body-parsec",
   "version": "1.0.0",
-  "main": "dist/body-parsec.js",
-  "types": "dist/types.d.ts",
+  "main": "lib/body-parsec.js",
+  "types": "lib/types.d.ts",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
   "license": "MIT",

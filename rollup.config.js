@@ -7,7 +7,7 @@ const dev = process.env.ROLLUP_WATCH === 'true'
 export default {
   input: 'body-parsec.ts',
   output: {
-    file: 'dist/body-parsec.js',
+    file: 'lib/body-parsec.js',
     format: 'cjs'
   },
   plugins: [ts(), !dev && terser()],

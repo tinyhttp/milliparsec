@@ -40,3 +40,4 @@ typings/
 .env
 
 .rpt2_cache
+lib/

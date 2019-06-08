@@ -1,5 +1,5 @@
 const { createServer } = require('http')
-const parsec = require('../dist/body-parsec')
+const parsec = require('../lib/body-parsec')
 
 createServer((req, res) => {
   parsec.json(req).then(data => {

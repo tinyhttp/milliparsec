@@ -1,5 +1,5 @@
 const { createServer } = require('http')
-const parsec = require('../dist/body-parsec')
+const parsec = require('../lib/body-parsec')
 
 createServer(async (req, res) => {
   await parsec.json(req)
