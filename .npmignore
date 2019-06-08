@@ -1,0 +1,5 @@
+.prettierrc.json
+parsec.ts
+examples/
+rollup.config.json
+tsconfig.json

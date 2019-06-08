@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "es6",
+    "esModuleInterop": true,
+    "target": "es5",
+    "lib": ["es2018"],
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "baseUrl": "."
+  },
+  "exclude": ["node_modules", "example"],
+  "include": ["./*.ts"]
+}
