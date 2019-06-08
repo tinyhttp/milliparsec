@@ -8,7 +8,7 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 
 - async
 - JSON / raw / form data support
-- tiny package size (4 kb)
+- tiny package size (488 b)
 
 ### TODO 🚩
 
@@ -18,9 +18,9 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 ## Installation 🔄
 
 ```sh
-yarn add parsec
+yarn add body-parsec
 # or
-npm i parsec
+npm i body-parsec
 ```
 
 ## Usage
@@ -33,7 +33,7 @@ Use a middleware inside a server:
 
 ```js
 const { createServer } = require('http')
-const parsec = require('parsec')
+const parsec = require('body-parsec')
 
 createServer(async (req, res) => {
   await parsec.json(req)
@@ -46,7 +46,7 @@ If you don't like async / await syntax, you can simply use `.then`:
 
 ```js
 const { createServer } = require('http')
-const parsec = require('parsec')
+const parsec = require('body-parsec')
 
 createServer((req, res) => {
   parsec.json(req).then(() => {

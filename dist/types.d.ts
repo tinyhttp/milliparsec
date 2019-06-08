@@ -1,6 +1,6 @@
 import { IncomingMessage } from 'http'
 
-declare module parsec {
+declare module 'body-parsec' {
   export function raw(req: IncomingMessage): any
   export function form(req: IncomingMessage): any
   export function json(req: IncomingMessage): any

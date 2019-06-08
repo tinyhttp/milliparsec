@@ -1,5 +1,5 @@
 const { createServer } = require('http')
-const parsec = require('../dist/parsec')
+const parsec = require('../dist/body-parsec')
 
 createServer(async (req, res) => {
   res.setHeader('Content-Type', 'text/html')

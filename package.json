@@ -1,7 +1,7 @@
 {
-  "name": "parsec",
+  "name": "body-parsec",
   "version": "1.0.0",
-  "main": "dist/parsec.js",
+  "main": "dist/body-parsec.js",
   "types": "dist/types.d.ts",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
@@ -16,7 +16,6 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "example": "node example/server",
     "dev": "rollup -cw"
   }
 }

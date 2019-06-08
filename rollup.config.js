@@ -5,10 +5,11 @@ import { terser } from 'rollup-plugin-terser'
 const dev = process.env.ROLLUP_WATCH === 'true'
 
 export default {
-  input: 'parsec.ts',
+  input: 'body-parsec.ts',
   output: {
-    file: 'dist/parsec.js',
+    file: 'dist/body-parsec.js',
     format: 'cjs'
   },
-  plugins: [, /* dev && run() */ ts(), !dev && terser()]
+  plugins: [ts(), !dev && terser()],
+  external: ['querystring', 'fs']
 }
