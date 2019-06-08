@@ -1,6 +1,6 @@
 {
   "name": "body-parsec",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "lib/body-parsec.js",
   "types": "lib/types.d.ts",
   "repository": "https://github.com/talentlessguy/parsec.git",
