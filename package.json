@@ -1,6 +1,6 @@
 {
   "name": "body-parsec",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "lib/body-parsec.js",
   "types": "lib/types.d.ts",
   "repository": "https://github.com/talentlessguy/parsec.git",
@@ -8,6 +8,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^12.0.7",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "koa": "^2.7.0",
     "prettier": "^1.18.0",
     "rollup": "^1.14.4",
     "rollup-plugin-terser": "^5.0.0",
@@ -16,6 +19,12 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -cw"
+    "dev": "rollup -cw",
+    "run:express": "node -r esm examples/express",
+    "run:koa": "node -r esm examples/koa",
+    "run:custom": "node -r esm examples/custom",
+    "run:html_form": "node -r esm examples/html_form",
+    "run:json": "node -r esm examples/json",
+    "run:then": "node -r esm examples/then"
   }
 }
