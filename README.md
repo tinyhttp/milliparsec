@@ -1,19 +1,21 @@
 # parsec 🌌
 
-Small &amp; cool asynchronous body parser for Node.js.
+Asynchronous body parser for Node.js.
 
-It puts all the data into `req.body` so you don't have to create a separate array for it.
+It puts all the data into `req.body` so you don't have to create a separate array for it. At the same time, you can get the parsed body as a resolver argument.
 
 ## Features 🛠
 
 - async
 - JSON / raw / form data support
 - tiny package size (488 b)
+- no dependencies
 
 ### TODO 🚩
 
-- [ ] XML
-- [ ] Add Express and Koa examples
+- [ ] XML support
+- [x] Add Express and Koa examples
+- [ ] Add Fastify and Hapi examples
 
 ## Installation 🔄
 
@@ -23,20 +25,21 @@ yarn add body-parsec
 npm i body-parsec
 ```
 
-## Usage
+## Usage ⏩
 
 ### Basic example 🖐
 
-- All the examples are located in `examples` directory.
+- All the examples are located in `examples` directory. To run an example, clone the repository, then run `yarn build` and then `yarn run:` + filename of the example.
 
 Use a middleware inside a server:
 
 ```js
 const { createServer } = require('http')
-const parsec = require('body-parsec')
+const { json } = require('body-parsec')
 
 createServer(async (req, res) => {
-  await parsec.json(req)
+  const parsedData = await json(req)
+  console.log(parsedData) // { 'hello': 'world' }
   res.setHeader('Content-Type', 'application/json')
   res.end(req.body.hello)
 }).listen(80)
@@ -46,11 +49,12 @@ If you don't like async / await syntax, you can simply use `.then`:
 
 ```js
 const { createServer } = require('http')
-const parsec = require('body-parsec')
+const { json } = require('body-parsec')
 
 createServer((req, res) => {
-  parsec.json(req).then(() => {
+  json(req).then(parsedData => {
     res.setHeader('Content-Type', 'application/json')
+    console.log(parsedData) // { 'hello': 'world' }
     res.end(req.body.hello)
   })
 }).listen(80)
@@ -63,6 +67,32 @@ curl -d '{ "hello": "world" }' localhost
 ```
 
 After sending a request, it should output `world`.
+
+### Parsec and web frameworks ⚙
+
+Parsec easily integrates with Express and Koa (because I haven't tested others yet). Here is a simple form handling with Express:
+
+```js
+const Express = require('express')
+const { form } = require('body-parsec')
+
+const app = new Express()
+
+app.get('/', (req, res) => {
+  res.send(`
+  <form method="POST" action="/">
+  <input name="name" />
+  </form>
+  `)
+})
+
+app.post('/', async (req, res) => {
+  await form(req)
+  res.send(`Hello ${req.body.name}!`)
+})
+
+app.listen(80, () => console.log(`Running on http://localhost`))
+```
 
 ### Docs 📖
 

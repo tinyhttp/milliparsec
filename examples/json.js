@@ -1,8 +1,8 @@
-const { createServer } = require('http')
-const parsec = require('../lib/body-parsec')
+import { createServer } from 'http'
+import { json } from '../lib/body-parsec'
 
 createServer(async (req, res) => {
-  await parsec.json(req)
+  await json(req)
   res.setHeader('Content-Type', 'application/json')
   res.end(req.body.hello)
 }).listen(80)
