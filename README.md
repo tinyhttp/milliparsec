@@ -6,16 +6,16 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 
 ## Features 🛠
 
-- async
-- JSON / raw / form data support
-- tiny package size (488 b)
-- no dependencies
+- async ⌛
+- JSON / raw / form / text data support ⏩
+- tiny package size (750 b) 📦
+- no dependencies 🎊
+- filter requests (only POST, PUT and PATCH) ☔
 
 ### TODO 🚩
 
 - [ ] XML support
-- [x] Add Express and Koa examples
-- [ ] Add Fastify and Hapi examples
+- [ ] Make an async / await wrapper for `await next()` for Koa
 
 ## Installation 🔄
 
@@ -73,10 +73,12 @@ After sending a request, it should output `world`.
 Parsec easily integrates with Express and Koa (because I haven't tested others yet). Here is a simple form handling with Express:
 
 ```js
-const Express = require('express')
-const { form } = require('body-parsec')
+import Express from 'express'
+import { form } from 'body-parsec'
 
 const app = new Express()
+
+app.use(async (req, res, next) => await form(req, next))
 
 app.get('/', (req, res) => {
   res.send(`
@@ -87,7 +89,6 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', async (req, res) => {
-  await form(req)
   res.send(`Hello ${req.body.name}!`)
 })
 
@@ -98,12 +99,22 @@ app.listen(80, () => console.log(`Running on http://localhost`))
 
 #### `parsec.raw(req)`
 
-Minimal body parsing without any formatting:
+Minimal body parsing without any formatting (even without converting to string):
 
 ```js
 // Request: curl -d "Hello World"
 await parsec.raw(req)
-res.end(req.body) // "Hello World:
+res.end(req.body) // "Hello World"
+```
+
+#### `parsec.text(req)`
+
+Converts request body to text.
+
+```js
+// Request: curl -d "Hello World"
+await parsec.text(req)
+res.end(req.body) // "Hello World"
 ```
 
 #### `parsec.custom(req, fn)`

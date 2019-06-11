@@ -1,5 +1,5 @@
 .prettierrc.json
 body-parsec.ts
 examples/
-rollup.config.json
+rollup.config.js
 tsconfig.json

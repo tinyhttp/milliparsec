@@ -7,24 +7,42 @@ declare interface ReqWithBody extends Req {
 }
 
 // Main function
-const parsec = (req: ReqWithBody, fn?: Function) => {
+const parsec = (req: ReqWithBody, fn = (body: any) => body, next: Function) => {
   return new Promise((resolve: Function) => {
     req.body = ''
-    req
-      // When new data is coming from request
-      .on('data', (chunk: Array<any>) => (req.body += chunk.toString()))
-      // We got all the data, now let's format it!
-      .on('end', () => {
-        if (fn) req.body = fn(req.body)
-        resolve(req.body)
-      })
+    if (!['POST', 'PUT', 'PATCH'].includes(req.method)) {
+      next()
+      // TODO: Add smth to finish request
+    } else {
+      req
+        // When new data is coming from request
+        .on('data', (chunk: Array<any>) => (req.body += chunk))
+        // We got all the data, now let's format it!
+        .on('end', () => {
+          fn(req.body)
+          resolve(req.body)
+          if (next) next()
+        })
+    }
   })
 }
 
 // JSON, raw, FormData
 
-const json = (req: ReqWithBody) => parsec(req, JSON.parse)
-const raw = (req: ReqWithBody) => parsec(req)
-const form = (req: ReqWithBody) => parsec(req, parse)
+const json = (req: ReqWithBody, next?: Function) => {
+  return parsec(req, (x: any) => JSON.parse(x.toString()), next)
+}
 
-export { parsec as custom, json, raw, form }
+const raw = (req: ReqWithBody, next?: Function) => {
+  return parsec(req, (x: any) => x, next)
+}
+
+const text = (req: ReqWithBody, next?: Function) => {
+  return parsec(req, (x: any) => x.toString(), next)
+}
+
+const form = (req: ReqWithBody, next?: Function) => {
+  return parsec(req, (x: any) => parse(x.toString()), next)
+}
+
+export { parsec as custom, json, raw, text, form }

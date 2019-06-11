@@ -3,6 +3,8 @@ import { form } from '../lib/body-parsec'
 
 const app = new Express()
 
+app.use(async (req, res, next) => await form(req, next))
+
 app.get('/', (req, res) => {
   res.send(`
   <form method="POST" action="/">
@@ -12,7 +14,6 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', async (req, res) => {
-  await form(req)
   res.send(`Hello ${req.body.name}!`)
 })
 
