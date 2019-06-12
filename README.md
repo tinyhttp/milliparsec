@@ -1,5 +1,9 @@
 # parsec 🌌
 
+![Twitter](https://img.shields.io/twitter/follow/v1rtl.svg?label=twitter&style=flat-square)
+![David](https://img.shields.io/david/talentlessguy/parsec.svg?style=flat-square)
+![Top lang](https://img.shields.io/github/languages/top/talentlessguy/parsec.svg?style=flat-square)
+
 Asynchronous body parser for Node.js.
 
 It puts all the data into `req.body` so you don't have to create a separate array for it. At the same time, you can get the parsed body as a resolver argument.
