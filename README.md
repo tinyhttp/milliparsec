@@ -4,6 +4,9 @@
 ![David](https://img.shields.io/david/talentlessguy/parsec.svg?style=flat-square)
 ![Top lang](https://img.shields.io/github/languages/top/talentlessguy/parsec.svg?style=flat-square)
 ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/body-parsec.svg?style=flat-square)
+![Version](https://img.shields.io/npm/v/body-parsec.svg?style=flat-square)
+![Last commit](https://img.shields.io/github/last-commit/talentlessguy/parsec.svg?style=flat-square)
+![Minified size](https://img.shields.io/bundlephobia/min/body-parsec.svg?style=flat-square)
 
 Asynchronous body parser for Node.js.
 
@@ -13,7 +16,7 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 
 - async ⌛
 - JSON / raw / form / text data support ⏩
-- tiny package size (750 b) 📦
+- tiny package size (766 b) 📦
 - no dependencies 🎊
 - filter requests (only POST, PUT and PATCH) ☔
 
