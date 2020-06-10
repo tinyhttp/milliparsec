@@ -1,0 +1,5 @@
+{
+  "name": "koa",
+  "type": "module",
+  "main": "index.js"
+}

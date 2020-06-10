@@ -1,4 +1,4 @@
-import * as parsec from './index'
+import * as parsec from './index.js'
 import {
   Response,
   Next,

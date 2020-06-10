@@ -7,7 +7,7 @@
 ![Last commit](https://img.shields.io/github/last-commit/talentlessguy/parsec.svg?style=flat-square)
 ![Minified size](https://img.shields.io/bundlephobia/min/body-parsec.svg?style=flat-square)
 
-Asynchronous body parser for Node.js.
+Modern asynchronous body parser for Node.js.
 
 It puts all the data into `req.body` so you don't have to create a separate array for it. At the same time, you can get the parsed body as a resolver argument.
 
@@ -16,7 +16,7 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 - async ⌛
 - JSON / raw / form / text data support ⏩
 - tiny package size (766 b) 📦
-- no dependencies 🎊
+- no dependencies 🔥
 - filter requests (only POST, PUT and PATCH) ☔
 - Koa & Express support
 
@@ -42,29 +42,14 @@ npm i body-parsec
 Use a middleware inside a server:
 
 ```js
-const { createServer } = require('http')
-const { json } = require('body-parsec')
+import { createServer } = from 'http'
+import * as parsec from 'body-parsec'
 
 createServer(async (req, res) => {
-  const parsedData = await json()(req)
+  const parsedData = await parsec.json()(req)
   console.log(parsedData) // { 'hello': 'world' }
   res.setHeader('Content-Type', 'application/json')
   res.end(req.body.hello)
-}).listen(80)
-```
-
-If you don't like async / await syntax, you can simply use `.then`:
-
-```js
-const { createServer } = require('http')
-const { json } = require('body-parsec')
-
-createServer((req, res) => {
-  json()(req).then((parsedData) => {
-    res.setHeader('Content-Type', 'application/json')
-    console.log(parsedData) // { 'hello': 'world' }
-    res.end(req.body.hello)
-  })
 }).listen(80)
 ```
 
