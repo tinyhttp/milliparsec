@@ -39,5 +39,4 @@ typings/
 # dotenv environment variables file
 .env
 
-.rpt2_cache
-lib/
+dist

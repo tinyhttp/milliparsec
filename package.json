@@ -1,32 +1,39 @@
 {
   "name": "body-parsec",
   "version": "1.0.2",
-  "main": "lib/body-parsec.js",
-  "types": "lib/types.d.ts",
+  "main": "dist/cjs/index.js",
+  "types": "dist/esm/index.d.ts",
+  "module": "dist/esm/index.js",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^12.0.8",
-    "esm": "^3.2.25",
+    "@types/express": "^4.17.6",
+    "@types/jest": "^26.0.0",
+    "@types/koa": "^2.11.3",
+    "@types/node": "^14.0.12",
+    "@types/supertest": "^2.0.9",
     "express": "^4.17.1",
-    "koa": "^2.7.0",
-    "prettier": "^1.18.2",
-    "rollup": "^1.15.1",
-    "rollup-plugin-terser": "^5.0.0",
-    "rollup-plugin-typescript2": "^0.21.1",
-    "typescript": "^3.5.1"
+    "jest": "^26.0.1",
+    "koa": "^2.12.0",
+    "supertest": "^4.0.2",
+    "ts-jest": "^26.1.0",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.5"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -cw",
-    "run:express": "node -r esm examples/express",
-    "run:koa": "node -r esm examples/koa",
-    "run:custom": "node -r esm examples/custom",
-    "run:html_form": "node -r esm examples/html_form",
-    "run:json": "node -r esm examples/json",
-    "run:then": "node -r esm examples/then",
-    "run:raw": "node -r esm examples/raw",
-    "run:text": "node -r esm examples/text"
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs",
+    "build:esm": "tsc --target esnext --outDir dist/esm",
+    "build": "pnpm run build:cjs && pnpm run build:esm"
+  },
+  "dependencies": {
+    "p-event": "^4.2.0"
+  },
+  "peerDependencies": {
+    "koa": "^2.12.0"
   }
 }
