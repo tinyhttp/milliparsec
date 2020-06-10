@@ -15,10 +15,12 @@
       "import": "./dist/index.js",
       "require": "./dist/cjs/index.js"
     },
-    "koa": {
+    "./koa": {
       "import": "./dist/koa.js",
       "require": "./dist/cjs/koa.js"
-    }
+    },
+    "./package.json": "./package.json",
+    "./": "./"
   },
   "devDependencies": {
     "@types/express": "^4.17.6",
