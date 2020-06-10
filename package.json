@@ -1,10 +1,9 @@
 {
   "name": "body-parsec",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
   "license": "MIT",
-  "type": "module",
   "main": "dist/cjs/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.esm.js",

@@ -6,7 +6,8 @@
     "moduleResolution": "node",
     "sourceMap": false,
     "baseUrl": ".",
-    "declaration": true
+    "declaration": true,
+    "module": "ESNext"
   },
   "exclude": ["__tests__", "dist"]
 }

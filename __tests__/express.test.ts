@@ -13,7 +13,7 @@ describe('Express middleware test', () => {
       res.json(req.body)
     })
 
-    app.listen()
+    const server = app.listen()
 
     const request = supertest(app)
 
@@ -25,6 +25,7 @@ describe('Express middleware test', () => {
         hello: 'world',
       })
       .end((err) => {
+        server.close()
         if (err) return done(err)
         done()
       })
