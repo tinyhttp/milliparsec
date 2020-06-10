@@ -18,11 +18,12 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 - tiny package size (766 b) 📦
 - no dependencies 🎊
 - filter requests (only POST, PUT and PATCH) ☔
+- Koa & Express support
 
 ### TODO 🚩
 
 - [ ] XML support
-- [ ] Make an async / await wrapper for `await next()` for Koa
+- [ ] Multipart support
 
 ## Installation 🔄
 
@@ -45,7 +46,7 @@ const { createServer } = require('http')
 const { json } = require('body-parsec')
 
 createServer(async (req, res) => {
-  const parsedData = await json(req)
+  const parsedData = await json()(req)
   console.log(parsedData) // { 'hello': 'world' }
   res.setHeader('Content-Type', 'application/json')
   res.end(req.body.hello)
@@ -59,7 +60,7 @@ const { createServer } = require('http')
 const { json } = require('body-parsec')
 
 createServer((req, res) => {
-  json(req).then(parsedData => {
+  json()(req).then((parsedData) => {
     res.setHeader('Content-Type', 'application/json')
     console.log(parsedData) // { 'hello': 'world' }
     res.end(req.body.hello)
@@ -77,15 +78,15 @@ After sending a request, it should output `world`.
 
 ### Parsec and web frameworks ⚙
 
-Parsec easily integrates with Express and Koa (because I haven't tested others yet). Here is a simple form handling with Express:
+## Express
 
 ```js
 import Express from 'express'
 import { form } from 'body-parsec'
 
-const app = new Express()
+const app = Express()
 
-app.use(async (req, res, next) => await form(req, next))
+app.use(form())
 
 app.get('/', (req, res) => {
   res.send(`
@@ -102,6 +103,24 @@ app.post('/', async (req, res) => {
 app.listen(80, () => console.log(`Running on http://localhost`))
 ```
 
+## Koa
+
+```ts
+import Koa from 'koa'
+import { json, CtxWithBody } from 'body-parsec/koa'
+
+const app = new Koa()
+
+app.use(json())
+
+app.use((ctx: CtxWithBody) => {
+  if (ctx.method === 'POST') {
+    ctx.type = 'application/json'
+    ctx.body = ctx.req.body
+  }
+})
+```
+
 ### Docs 📖
 
 #### `parsec.raw(req)`
@@ -110,17 +129,17 @@ Minimal body parsing without any formatting (even without converting to string):
 
 ```js
 // Request: curl -d "Hello World"
-await parsec.raw(req)
+await parsec.raw()(req)
 res.end(req.body) // "Hello World"
 ```
 
 #### `parsec.text(req)`
 
-Converts request body to text.
+Converts request body to string.
 
 ```js
 // Request: curl -d "Hello World"
-await parsec.text(req)
+await parsec.text()(req)
 res.end(req.body) // "Hello World"
 ```
 
@@ -132,7 +151,7 @@ Here we make a request body upper case:
 
 ```js
 // Request: curl -d "this text must be uppercased" localhost
-await parsec.custom(req, data => data.toUpperCase())
+await parsec.custom(req, (data) => data.toUpperCase())
 res.end(req.body) // "THIS TEXT MUST BE UPPERCASED"
 ```
 
@@ -142,7 +161,7 @@ If you need to parse a JSON request simply use `parsec.json` method:
 
 ```js
 // Request: curl -d { "hello": "world" } localhost
-await parsec.json(req)
+await parsec.json()(req)
 res.end(req.body.hello) // world
 ```
 
@@ -153,7 +172,7 @@ You can try to play with HTML form example in
 
 ```js
 // Request: curl -d 'username=pro_gamer'
-await parsec.form(req)
+await parsec.form()(req)
 res.end(req.body.username) // pro_gamer
 ```
 
