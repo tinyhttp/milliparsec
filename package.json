@@ -1,6 +1,6 @@
 {
   "name": "body-parsec",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "main": "dist/cjs/index.js",
   "types": "dist/esm/index.d.ts",
   "module": "dist/esm/index.js",
@@ -28,7 +28,8 @@
   "scripts": {
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
     "build:esm": "tsc --target esnext --outDir dist/esm",
-    "build": "pnpm run build:cjs && pnpm run build:esm"
+    "build": "pnpm run build:cjs && pnpm run build:esm",
+    "prepare": "pnpm run build"
   },
   "dependencies": {
     "p-event": "^4.2.0"
