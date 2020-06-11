@@ -65,9 +65,9 @@ After sending a request, it should output `world`.
 
 ## Express
 
-```js
+```ts
 import Express from 'express'
-import { form } from 'body-parsec'
+import { form, ReqWithBody } from 'body-parsec'
 
 const app = Express()
 
@@ -81,11 +81,11 @@ app.get('/', (req, res) => {
   `)
 })
 
-app.post('/', async (req, res) => {
+app.post('/', async (req: ReqWithBody, res) => {
   res.send(`Hello ${req.body.name}!`)
 })
 
-app.listen(80, () => console.log(`Running on http://localhost`))
+app.listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
 ## Koa
@@ -104,6 +104,8 @@ app.use((ctx: CtxWithBody) => {
     ctx.body = ctx.req.body
   }
 })
+
+app.listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
 ### Docs 📖

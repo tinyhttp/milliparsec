@@ -47,9 +47,6 @@
     "build": "pnpm run build:cjs && pnpm run build:esm",
     "prepare": "pnpm run build && pnpm run test"
   },
-  "dependencies": {
-    "p-event": "^4.2.0"
-  },
   "peerDependencies": {
     "koa": "^2.12.0"
   }

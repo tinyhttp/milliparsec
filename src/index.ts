@@ -1,6 +1,13 @@
 import { IncomingMessage as Req } from 'http'
 import { parse } from 'querystring'
-import pEvent from 'p-event'
+import { EventEmitter } from 'events'
+
+// promisify event
+const pEvent = (emitter: EventEmitter, event: string) => {
+  return new Promise((resolve) => {
+    emitter.on(event, resolve)
+  })
+}
 
 // Extend the request object with body
 export interface ReqWithBody extends Req {
