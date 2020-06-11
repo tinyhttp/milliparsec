@@ -9,21 +9,17 @@
 
 Modern asynchronous body parser for Node.js.
 
-It puts all the data into `req.body` so you don't have to create a separate array for it. At the same time, you can get the parsed body as a resolver argument.
+It puts all the data into `req.body` so you don't have to create a separate array for it.
 
 ## Features 🛠
 
+- works with Node 13+ ESM and CommonJS
 - async ⌛
 - JSON / raw / form / text data support ⏩
 - tiny package size (766 b) 📦
 - no dependencies 🔥
 - filter requests (only POST, PUT and PATCH) ☔
 - Koa & Express support
-
-### TODO 🚩
-
-- [ ] XML support
-- [ ] Multipart support
 
 ## Installation 🔄
 
