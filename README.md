@@ -33,8 +33,6 @@ npm i body-parsec
 
 ### Basic example 🖐
 
-- All the examples are located in `examples` directory. To run an example, clone the repository, then run `yarn build` and then `yarn run:` + filename of the example.
-
 Use a middleware inside a server:
 
 ```js
