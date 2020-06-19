@@ -22,5 +22,18 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: Run Jest
-      uses: stefanoeb/jest-action@1.0.4
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v1.4.2
+      with:
+        # Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0
+        node-version: 14
+    - name: GitHub Action for Yarn
+      uses: Borales/actions-yarn@v2.3.0
+      with:
+        # Yarn command
+        cmd: yarn
+    - name: Run Tests
+      run: yarn test
+      
+  
+    
