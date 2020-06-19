@@ -44,8 +44,8 @@
     "test": "jest",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
     "build:esm": "tsc --target esnext --outDir dist",
-    "build": "pnpm run build:cjs && pnpm run build:esm",
-    "prepare": "pnpm run build && pnpm run test"
+    "build": "npm run build:cjs && npm run build:esm",
+    "prepare": "npm run build && npm run test"
   },
   "peerDependencies": {
     "koa": "^2.12.0"
