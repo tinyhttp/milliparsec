@@ -40,3 +40,4 @@ typings/
 .env
 
 dist
+coverage

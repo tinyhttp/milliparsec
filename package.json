@@ -31,6 +31,8 @@
     "express": "^4.17.1",
     "jest": "^26.0.1",
     "koa": "^2.12.0",
+    "rollup": "^2.21.0",
+    "rollup-plugin-typescript2": "^0.27.1",
     "supertest": "^4.0.2",
     "ts-jest": "^26.1.0",
     "tslib": "^2.0.0",
@@ -42,12 +44,10 @@
   ],
   "scripts": {
     "test": "jest",
-    "build:cjs": "tsc --module commonjs --outDir dist/cjs",
-    "build:esm": "tsc --target esnext --outDir dist",
-    "build": "npm run build:cjs && npm run build:esm",
-    "prepare": "npm run build && npm run test"
+    "build": "rollup -c",
+    "prepare": "pnpm build && pnpm test"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "koa": "^2.12.0"
   }
 }
