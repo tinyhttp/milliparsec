@@ -16,7 +16,7 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 - works with Node 13+ ESM and CommonJS
 - async ⌛
 - JSON / raw / form / text data support ⏩
-- tiny package size (766 b) 📦
+- tiny package size (826 b) 📦
 - no dependencies 🔥
 - filter requests (only POST, PUT and PATCH) ☔
 - Koa & Express support
