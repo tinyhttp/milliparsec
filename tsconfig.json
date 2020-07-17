@@ -9,5 +9,5 @@
     "declaration": true,
     "module": "ESNext"
   },
-  "exclude": ["__tests__", "dist"]
+  "exclude": ["__tests__", "dist", "examples"]
 }

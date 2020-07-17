@@ -1,12 +1,12 @@
 {
   "name": "body-parsec",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
   "license": "MIT",
-  "main": "dist/cjs/index.js",
+  "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
-  "module": "dist/index.esm.js",
+  "module": "dist/index.js",
   "type": "module",
   "engines": {
     "node": ">=12.4"
@@ -14,11 +14,11 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/cjs/index.js"
+      "require": "./dist/index.cjs"
     },
     "./koa": {
       "import": "./dist/koa.js",
-      "require": "./dist/cjs/koa.js"
+      "require": "./dist/koa.cjs"
     },
     "./package.json": "./package.json",
     "./": "./"

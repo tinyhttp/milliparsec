@@ -3,7 +3,7 @@ import supertest from 'supertest'
 import { json, form, ReqWithBody } from '../src/index'
 
 describe('Express middleware test', () => {
-  it('should parse JSON body', done => {
+  it('should parse JSON body', (done) => {
     const app = Express()
 
     app.use(json())
@@ -22,15 +22,15 @@ describe('Express middleware test', () => {
       .send({ hello: 'world' })
       .set('Accept', 'application/json')
       .expect(200, {
-        hello: 'world'
+        hello: 'world',
       })
-      .end(err => {
+      .end((err) => {
         server.close()
         if (err) return done(err)
         done()
       })
   })
-  it('should parse form', done => {
+  it('should parse form', (done) => {
     const app = Express()
 
     app.use(form())
@@ -49,9 +49,9 @@ describe('Express middleware test', () => {
       .send('hello=world')
       .set('Accept', 'application/json')
       .expect(200, {
-        hello: 'world'
+        hello: 'world',
       })
-      .end(err => {
+      .end((err) => {
         server.close()
         if (err) return done(err)
         done()
