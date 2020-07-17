@@ -4,7 +4,7 @@ import { once } from 'events'
 
 // Extend the request object with body
 export type ReqWithBody = Req & {
-  body: any
+  body?: any
 }
 
 // Main function
