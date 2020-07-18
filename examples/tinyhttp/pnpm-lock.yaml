@@ -1,0 +1,123 @@
+dependencies:
+  '@tinyhttp/app': 0.2.20
+lockfileVersion: 5.1
+packages:
+  /@tinyhttp/app/0.2.20:
+    dependencies:
+      '@tinyhttp/cookie': 0.1.4
+      '@tinyhttp/cookie-signature': 0.1.4
+      '@tinyhttp/etag': 0.2.4
+      es-accepts: 0.0.15
+      es-content-type: 0.0.7
+      es-fresh: 0.0.5
+      es-mime-types: 0.0.11
+      proxy-addr: 2.0.6
+      range-parser: 1.2.1
+      regexparam: 1.3.0
+    dev: false
+    engines:
+      node: '>=12.x'
+    resolution:
+      integrity: sha512-vIaDl3/k4CiiCPpR3DDKNMXhe9y5zudN67DqYz0T07A5B4kKy7IR3J3W9sE6KM05qxYPNx98L2ftaq3WACGSgA==
+  /@tinyhttp/cookie-signature/0.1.4:
+    dev: false
+    engines:
+      node: '>=12.4.0'
+    resolution:
+      integrity: sha512-jOHBqSenhP6Kt05s4JGSn5PJgH/k3R4+5HVIMwEt7+01jfzWLwgbc7WlXbCLTZOb2DMYQl0nDnPTMwGGfhT5oQ==
+  /@tinyhttp/cookie/0.1.4:
+    dev: false
+    engines:
+      node: '>=12.4.0'
+    resolution:
+      integrity: sha512-rNQnQeoJgL/0O5lDWiYL+Gozei6T8KJaCD98oMBiz1bqPYhqWEdW2kj1Er24cDyCiLlVInkezoEC8x4ZYKlY7A==
+  /@tinyhttp/etag/0.2.4:
+    dev: false
+    engines:
+      node: '>=12.4.0'
+    resolution:
+      integrity: sha512-fsvNndniLN6rv65mq4WEZRgHvyoE5slq9VrhJ9hwknuEiRbGxkwbo0BxZq+bP/tJMTDv7Lm424SKOAFqO+1Oqg==
+  /es-accepts/0.0.15:
+    dependencies:
+      es-mime-types: 0.0.10
+      negotiator: 0.6.2
+    dev: false
+    engines:
+      node: '>=12.x'
+    resolution:
+      integrity: sha512-G6J+YGSsrusdlzx2QQJ/ezKXSxKi455zTOux5b41OMQYDhKNmdnSgna3JDhQ34luwNzna8FEvKkN/jIAJa2pKA==
+  /es-content-type/0.0.7:
+    dev: false
+    engines:
+      node: '>=12.x'
+    resolution:
+      integrity: sha512-K9IZdlJ6rZ/d17tsnfmq2JiWVOd644tz5tuDMnlSm4HT/NAb91Z2Ob827Ewk/U/Cizo3j8iVkdeZV9VpaFxAdQ==
+  /es-fresh/0.0.5:
+    dev: false
+    engines:
+      node: '>=12.x'
+    resolution:
+      integrity: sha512-19++jhteq1AU/UiXycrJUZUhTWbBMgIj//g8bnzKzIAOwsNXJdV7uxChurlJrrXUa0w7+kGgOuOxEUseCt1S/w==
+  /es-mime-types/0.0.10:
+    dependencies:
+      mime-db: 1.44.0
+    dev: false
+    engines:
+      node: '>=12.x'
+    resolution:
+      integrity: sha512-tGMLNZZFVRzD0kxNxnf3O4Z2LTC4/gYoXd4J4DbfL8LeZif7jGR5cmPb8SkLckRWe8PkGy+yfwjdg99kyOet3Q==
+  /es-mime-types/0.0.11:
+    dependencies:
+      mime-db: 1.44.0
+    dev: false
+    engines:
+      node: '>=12.x'
+    resolution:
+      integrity: sha512-sbnuyF2F/XFOXKZNe3cKkgS+UJ+TwpK4B2Lw/m11ZpnlXtCei8zc94BxLQWgJBmjpm2ami69JavQks1E2XJo1A==
+  /forwarded/0.1.2:
+    dev: false
+    engines:
+      node: '>= 0.6'
+    resolution:
+      integrity: sha1-mMI9qxF1ZXuMBXPozszZGw/xjIQ=
+  /ipaddr.js/1.9.1:
+    dev: false
+    engines:
+      node: '>= 0.10'
+    resolution:
+      integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
+  /mime-db/1.44.0:
+    dev: false
+    engines:
+      node: '>= 0.6'
+    resolution:
+      integrity: sha512-/NOTfLrsPBVeH7YtFPgsVWveuL+4SjjYxaQ1xtM1KMFj7HdxlBlxeyNLzhyJVx7r4rZGJAZ/6lkKCitSc/Nmpg==
+  /negotiator/0.6.2:
+    dev: false
+    engines:
+      node: '>= 0.6'
+    resolution:
+      integrity: sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw==
+  /proxy-addr/2.0.6:
+    dependencies:
+      forwarded: 0.1.2
+      ipaddr.js: 1.9.1
+    dev: false
+    engines:
+      node: '>= 0.10'
+    resolution:
+      integrity: sha512-dh/frvCBVmSsDYzw6n926jv974gddhkFPfiN8hPOi30Wax25QZyZEGveluCgliBnqmuM+UJmBErbAUFIoDbjOw==
+  /range-parser/1.2.1:
+    dev: false
+    engines:
+      node: '>= 0.6'
+    resolution:
+      integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
+  /regexparam/1.3.0:
+    dev: false
+    engines:
+      node: '>=6'
+    resolution:
+      integrity: sha512-6IQpFBv6e5vz1QAqI+V4k8P2e/3gRrqfCJ9FI+O1FLQTO+Uz6RXZEZOPmTJ6hlGj7gkERzY5BRCv09whKP96/g==
+specifiers:
+  '@tinyhttp/app': ^0.2.20

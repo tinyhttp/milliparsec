@@ -1,16 +1,15 @@
-import Express from 'express'
+import { App } from '@tinyhttp/app'
 import supertest from 'supertest'
 import { json, form } from '../src/index'
 
-describe('Express middleware test', () => {
+describe('tinyhttp middleware test', () => {
   it('should parse JSON body', (done) => {
-    const app = Express()
+    const app = new App()
 
-    app.use(json())
+    app.use(async (req, res, next) => await json()(req, res, next))
 
     app.post('/', (req, res) => {
       res.setHeader('Content-Type', 'application/json')
-
       res.json(req.body)
     })
 
@@ -32,11 +31,11 @@ describe('Express middleware test', () => {
       })
   })
   it('should parse form', (done) => {
-    const app = Express()
+    const app = new App()
 
-    app.use(form())
+    app.use(async (req, res, next) => await form()(req, res, next))
 
-    app.post('/', (req, res) => {
+    app.post('/', async (req, res) => {
       res.setHeader('Content-Type', 'application/json')
       res.json(req.body)
     })
@@ -48,7 +47,7 @@ describe('Express middleware test', () => {
     request
       .post('/')
       .send('hello=world')
-      .set('Accept', 'application/x-www-form-urlencoded ')
+      .set('Accept', 'application/x-www-form-urlencoded')
       .expect(200, {
         hello: 'world',
       })

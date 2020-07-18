@@ -1,6 +1,6 @@
 {
   "name": "body-parsec",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
   "license": "MIT",
@@ -24,6 +24,7 @@
     "./": "./"
   },
   "devDependencies": {
+    "@tinyhttp/app": "^0.2.18",
     "@types/express": "^4.17.6",
     "@types/jest": "^26.0.0",
     "@types/koa": "^2.11.3",
@@ -49,6 +50,7 @@
     "prepare": "pnpm build && pnpm test"
   },
   "optionalDependencies": {
+    "express": "^4.17.1",
     "koa": "^2.12.0"
   }
 }

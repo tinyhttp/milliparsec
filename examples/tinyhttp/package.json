@@ -1,0 +1,8 @@
+{
+  "name": "tinyhttp",
+  "private": true,
+  "dependencies": {
+    "@tinyhttp/app": "^0.2.20"
+  },
+  "type": "module"
+}

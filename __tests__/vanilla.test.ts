@@ -4,13 +4,13 @@ import { json, form, ReqWithBody } from '../src/index'
 
 describe('Vanilla middleware test', () => {
   it('should parse JSON body', (done) => {
-    const app = createServer((req: ReqWithBody, res) => {
-      if (req.method === 'POST') {
-        json()(req).then(() => {
-          res.setHeader('Content-Type', 'application/json')
+    const app = createServer(async (req: ReqWithBody, res) => {
+      await json()(req)
 
-          res.end(JSON.stringify(req.body, null, 2))
-        })
+      if (req.method === 'POST') {
+        res.setHeader('Content-Type', 'application/json')
+
+        res.end(JSON.stringify(req.body, null, 2))
       }
     })
 
@@ -32,13 +32,13 @@ describe('Vanilla middleware test', () => {
       })
   })
   it('should parse form', (done) => {
-    const app = createServer((req: ReqWithBody, res) => {
-      form()(req).then(() => {
-        if (req.method === 'POST') {
-          res.setHeader('Content-Type', 'application/json')
-          res.end(JSON.stringify(req.body, null, 2))
-        }
-      })
+    const app = createServer(async (req: ReqWithBody, res) => {
+      await form()(req)
+
+      if (req.method === 'POST') {
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify(req.body, null, 2))
+      }
     })
 
     const server = app.listen()
@@ -48,7 +48,7 @@ describe('Vanilla middleware test', () => {
     request
       .post('/')
       .send('hello=world')
-      .set('Accept', 'application/json')
+      .set('Accept', 'application/x-www-form-urlencoded ')
       .expect(200, {
         hello: 'world',
       })

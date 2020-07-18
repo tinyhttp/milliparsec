@@ -11,10 +11,12 @@ Modern asynchronous body parser for Node.js.
 
 It puts all the data into `req.body` so you don't have to create a separate array for it.
 
-## Features 🛠
+> parsec is a part of [tinyhttp](https://github.com/talentlessguy/tinyhttp) ecosystem.
+
+## Features 👀
 
 - works with Node 13+ ESM and CommonJS
-- async ⌛
+- asynchronous ⌛
 - JSON / raw / form / text data support ⏩
 - tiny package size (826 b) 📦
 - no dependencies 🔥
@@ -24,8 +26,13 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 ## Installation 🔄
 
 ```sh
+# pnpm
+pnpm i body-parsec
+
+# yarn
 yarn add body-parsec
-# or
+
+# npm
 npm i body-parsec
 ```
 
@@ -55,13 +62,30 @@ curl -d '{ "hello": "world" }' localhost
 
 After sending a request, it should output `world`.
 
-### Parsec and web frameworks ⚙
+### Parsec and web frameworks 💻
+
+## [tinyhttp](https://github.com/talentlessguy/tinyhttp) ⚡
+
+```ts
+import { App } from '@tinyhttp/app'
+import * as parsec from 'body-parsec'
+
+const app = new App()
+
+app
+  .use(async (req, res, next) => await parsec.form()(req, res, next))
+  .post('/', (req, res) => {
+    res.send(req.body)
+  })
+
+app.listen(3000, () => console.log(`Started on http://localhost:3000`))
+```
 
 ## Express
 
 ```ts
 import Express from 'express'
-import { form, ReqWithBody } from 'body-parsec'
+import { form } from 'body-parsec'
 
 const app = Express()
 
@@ -75,7 +99,7 @@ app.get('/', (req, res) => {
   `)
 })
 
-app.post('/', async (req: ReqWithBody, res) => {
+app.post('/', (req, res) => {
   res.send(`Hello ${req.body.name}!`)
 })
 
@@ -102,7 +126,7 @@ app.use((ctx: CtxWithBody) => {
 app.listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
-### Docs 📖
+### API 📦
 
 #### `parsec.raw(req)`
 
