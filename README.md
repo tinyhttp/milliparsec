@@ -5,7 +5,7 @@
 ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/body-parsec.svg?style=flat-square)
 ![Version](https://img.shields.io/npm/v/body-parsec.svg?style=flat-square)
 ![Last commit](https://img.shields.io/github/last-commit/talentlessguy/parsec.svg?style=flat-square)
-![Minified size](https://img.shields.io/bundlephobia/min/body-parsec.svg?style=flat-square)
+![Minified size](https://img.shields.io/bundlephobia/min/body-parsec.svg?style=flat-square) ![Codecov](https://img.shields.io/codecov/c/gh/talentlessguy/parsec?style=flat-square)
 
 Modern asynchronous body parser for Node.js.
 
