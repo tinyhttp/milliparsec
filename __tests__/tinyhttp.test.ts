@@ -6,7 +6,7 @@ describe('tinyhttp middleware test', () => {
   it('should parse JSON body', (done) => {
     const app = new App()
 
-    app.use(async (req, res, next) => await json()(req, res, next))
+    app.use(json())
 
     app.post('/', (req, res) => {
       res.setHeader('Content-Type', 'application/json')
@@ -33,7 +33,7 @@ describe('tinyhttp middleware test', () => {
   it('should parse form', (done) => {
     const app = new App()
 
-    app.use(async (req, res, next) => await form()(req, res, next))
+    app.use(form())
 
     app.post('/', async (req, res) => {
       res.setHeader('Content-Type', 'application/json')

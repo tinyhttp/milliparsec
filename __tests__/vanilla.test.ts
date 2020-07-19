@@ -5,9 +5,8 @@ import { json, form, ReqWithBody } from '../src/index'
 describe('Vanilla middleware test', () => {
   it('should parse JSON body', (done) => {
     const app = createServer(async (req: ReqWithBody, res) => {
-      await json()(req)
-
       if (req.method === 'POST') {
+        await json()(req)
         res.setHeader('Content-Type', 'application/json')
 
         res.end(JSON.stringify(req.body, null, 2))
@@ -33,9 +32,8 @@ describe('Vanilla middleware test', () => {
   })
   it('should parse form', (done) => {
     const app = createServer(async (req: ReqWithBody, res) => {
-      await form()(req)
-
       if (req.method === 'POST') {
+        await form()(req)
         res.setHeader('Content-Type', 'application/json')
         res.end(JSON.stringify(req.body, null, 2))
       }

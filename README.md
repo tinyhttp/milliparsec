@@ -15,13 +15,12 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 
 ## Features 👀
 
-- works with Node 13+ ESM and CommonJS
-- asynchronous ⌛
-- JSON / raw / form / text data support ⏩
+- works with Node 13+ ESM and CommonJS 🚀
+- built with `async` / `await` ⏩
+- JSON / raw / form / text data support 🛠
 - tiny package size (826 b) 📦
 - no dependencies 🔥
-- filter requests (only POST, PUT and PATCH) ☔
-- Koa & Express support
+- [tinyhttp](https://github.com/talentlessguy/tinyhttp), Koa and Express support
 
 ## Installation 🔄
 
@@ -44,10 +43,10 @@ Use a middleware inside a server:
 
 ```js
 import { createServer } = from 'http'
-import * as parsec from 'body-parsec'
+import { josn } from 'body-parsec'
 
 createServer(async (req, res) => {
-  const parsedData = await parsec.json()(req)
+  const parsedData = await json()(req)
   console.log(parsedData) // { 'hello': 'world' }
   res.setHeader('Content-Type', 'application/json')
   res.end(req.body.hello)
@@ -68,15 +67,13 @@ After sending a request, it should output `world`.
 
 ```ts
 import { App } from '@tinyhttp/app'
-import * as parsec from 'body-parsec'
+import { form } from 'body-parsec'
 
 const app = new App()
 
-app
-  .use(async (req, res, next) => await parsec.form()(req, res, next))
-  .post('/', (req, res) => {
-    res.send(req.body)
-  })
+app.use(form()).post('/', (req, res) => {
+  res.send(req.body)
+})
 
 app.listen(3000, () => console.log(`Started on http://localhost:3000`))
 ```
@@ -162,7 +159,7 @@ res.end(req.body) // "THIS TEXT MUST BE UPPERCASED"
 
 #### `parsec.json(req)`
 
-If you need to parse a JSON request simply use `parsec.json` method:
+Parses request body using `JSON.parse`.
 
 ```js
 // Request: curl -d { "hello": "world" } localhost
@@ -172,8 +169,7 @@ res.end(req.body.hello) // world
 
 #### `parsec.form(req)`
 
-Body parsers are mostly used to get data from forms. To get data from them, use `form` method:
-You can try to play with HTML form example in
+Parses request body using `querystring.parse`.
 
 ```js
 // Request: curl -d 'username=pro_gamer'
