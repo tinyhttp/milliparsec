@@ -26,6 +26,7 @@ export default [
       {
         file: 'dist/koa.js',
         format: 'esm',
+        compact: true,
       },
       {
         file: 'dist/koa.cjs',
