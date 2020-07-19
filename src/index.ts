@@ -17,9 +17,8 @@ const parsec = (fn: (body: any) => void, T?: any) => async (req: ReqWithBody | t
     req.body += chunk
 
     req.body = fn(req.body)
-
-    next?.()
   }
+  next?.()
 }
 
 // JSON, raw, FormData
