@@ -1,6 +1,6 @@
 {
   "name": "body-parsec",
-  "version": "2.0.17",
+  "version": "2.0.18",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
   "license": "MIT",
@@ -44,7 +44,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "tsup src/*.ts --format cjs,esm --dts",
+    "build": "tsup src/*.ts --format cjs,esm --dts --minify-whitespace",
     "prepare": "pnpm build && pnpm test"
   },
   "optionalDependencies": {
