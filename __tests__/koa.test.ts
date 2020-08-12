@@ -24,13 +24,14 @@ describe('Koa middleware test', () => {
       .send({ hello: 'world' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /application\/json/)
-      .expect(
-        200,
-        {
-          hello: 'world',
-        },
-        done
-      )
+      .expect(200, {
+        hello: 'world',
+      })
+      .end((err) => {
+        server.close()
+        if (err) return done(err)
+        done()
+      })
   })
   it('should parse form', (done) => {
     const app = new Koa()
@@ -48,12 +49,17 @@ describe('Koa middleware test', () => {
 
     const request = supertest(server)
 
-    request.post('/').send('hello=world').set('Accept', 'application/json').expect(
-      200,
-      {
+    request
+      .post('/')
+      .send('hello=world')
+      .set('Accept', 'application/json')
+      .expect(200, {
         hello: 'world',
-      },
-      done
-    )
+      })
+      .end((err) => {
+        server.close()
+        if (err) return done(err)
+        done()
+      })
   })
 })

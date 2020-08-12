@@ -16,8 +16,6 @@ const parsec = <T extends ReqWithBody>(fn: (body: any) => void) => async (req: R
     })
 
     req.body = body
-
-    await once(req, 'end')
   }
 }
 
