@@ -10,7 +10,7 @@ export type ReqWithBody = EventEmitter &
 
 // Main function
 const parsec = <T extends ReqWithBody>(fn: (body: any) => void) => async (req: ReqWithBody | T, _res: Response) => {
-  if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
     const body = await once(req, 'data').then((data) => {
       return fn(data)
     })
