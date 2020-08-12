@@ -24,12 +24,14 @@ const raw = () => async (ctx: CtxWithBody, next?: Next) => {
   next?.()
 }
 
-const text = () => (ctx: CtxWithBody, next?: Next) => {
-  return custom((x) => x.toString())(ctx)
+const text = () => async (ctx: CtxWithBody, next?: Next) => {
+  await custom((x) => x.toString())(ctx)
+  next?.()
 }
 
-const form = () => (ctx: CtxWithBody, next?: Next) => {
-  return custom((x) => qs.parse(x.toString()))(ctx)
+const form = () => async (ctx: CtxWithBody, next?: Next) => {
+  await custom((x) => qs.parse(x.toString()))(ctx)
+  next?.()
 }
 
 export { custom, json, raw, text, form }

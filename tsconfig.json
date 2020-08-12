@@ -1,13 +1,9 @@
 {
+  "exclude": ["dist", "examples", "__tests__"],
   "compilerOptions": {
     "esModuleInterop": true,
-    "target": "ES2019",
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "sourceMap": false,
-    "baseUrl": ".",
-    "declaration": true,
-    "module": "ESNext"
-  },
-  "exclude": ["__tests__", "dist", "examples"]
+    "module": "ESNext",
+    "target": "es2018",
+    "moduleResolution": "Node"
+  }
 }
