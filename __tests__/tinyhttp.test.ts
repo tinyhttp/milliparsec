@@ -17,18 +17,13 @@ describe('tinyhttp middleware test', () => {
 
     const request = supertest(server)
 
-    request
-      .post('/')
-      .send({ hello: 'world' })
-      .set('Accept', 'application/json')
-      .expect(200, {
+    request.post('/').send({ hello: 'world' }).set('Accept', 'application/json').expect(
+      200,
+      {
         hello: 'world',
-      })
-      .end((err) => {
-        server.close()
-        if (err) return done(err)
-        done()
-      })
+      },
+      done
+    )
   })
   it('should parse form', (done) => {
     const app = new App()
@@ -44,17 +39,12 @@ describe('tinyhttp middleware test', () => {
 
     const request = supertest(server)
 
-    request
-      .post('/')
-      .send('hello=world')
-      .set('Accept', 'application/x-www-form-urlencoded')
-      .expect(200, {
+    request.post('/').send('hello=world').set('Accept', 'application/x-www-form-urlencoded').expect(
+      200,
+      {
         hello: 'world',
-      })
-      .end((err) => {
-        server.close()
-        if (err) return done(err)
-        done()
-      })
+      },
+      done
+    )
   })
 })

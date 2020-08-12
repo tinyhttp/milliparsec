@@ -15,22 +15,15 @@ describe('Vanilla middleware test', () => {
       }
     })
 
-    const server = app.listen()
-
     const request = supertest(app)
 
-    request
-      .post('/')
-      .send({ hello: 'world' })
-      .set('Accept', 'application/json')
-      .expect(200, {
+    request.post('/').send({ hello: 'world' }).set('Accept', 'application/json').expect(
+      200,
+      {
         hello: 'world',
-      })
-      .end((err) => {
-        server.close()
-        if (err) return done(err)
-        done()
-      })
+      },
+      done
+    )
   })
   it('should parse form', (done) => {
     const app = createServer(async (req: Request, res) => {
@@ -41,21 +34,14 @@ describe('Vanilla middleware test', () => {
       }
     })
 
-    const server = app.listen()
-
     const request = supertest(app)
 
-    request
-      .post('/')
-      .send('hello=world')
-      .set('Accept', 'application/x-www-form-urlencoded ')
-      .expect(200, {
+    request.post('/').send('hello=world').set('Accept', 'application/x-www-form-urlencoded ').expect(
+      200,
+      {
         hello: 'world',
-      })
-      .end((err) => {
-        server.close()
-        if (err) return done(err)
-        done()
-      })
+      },
+      done
+    )
   })
 })

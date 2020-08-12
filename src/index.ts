@@ -1,21 +1,24 @@
-import { ServerResponse as Response } from 'http'
+import { ServerResponse as Response, IncomingMessage } from 'http'
 import * as qs from 'querystring'
-import { once, EventEmitter } from 'events'
+import { once, EventEmitter, on } from 'events'
 
 // Extend the request object with body
-export type ReqWithBody = EventEmitter & {
-  body?: any
-}
+export type ReqWithBody = EventEmitter &
+  Partial<IncomingMessage> & {
+    body?: any
+  }
 
 // Main function
 const parsec = <T extends ReqWithBody>(fn: (body: any) => void) => async (req: ReqWithBody | T, _res: Response) => {
-  const body = await once(req, 'data').then((data) => {
-    return fn(data)
-  })
+  if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
+    const body = await once(req, 'data').then((data) => {
+      return fn(data)
+    })
 
-  req.body = body
+    req.body = body
 
-  await once(req, 'end')
+    await once(req, 'end')
+  }
 }
 
 // JSON, raw, FormData
