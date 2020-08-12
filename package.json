@@ -44,7 +44,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsup src/*.ts --format cjs,esm --dts",
     "prepare": "pnpm build && pnpm test"
   },
   "optionalDependencies": {
