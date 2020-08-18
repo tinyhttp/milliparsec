@@ -21,9 +21,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: Build packages
-        run: npm run build
-      - name: Run tests
-        run: npm run test
+      - uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12.4'
+      - run: npm install
+      - run: npm build
+      - run: npm test
       - name: Codecov
         uses: codecov/codecov-action@v1.0.10
