@@ -18,7 +18,7 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 - works with Node 13+ ESM and CommonJS 🚀
 - built with `async` / `await` ⏩
 - JSON / raw / form / text data support 🛠
-- tiny package size (796 b) 📦
+- tiny package size (879 b) 📦
 - no dependencies 🔥
 - [tinyhttp](https://github.com/talentlessguy/tinyhttp), Koa and Express support
 
