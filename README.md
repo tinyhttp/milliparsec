@@ -43,7 +43,7 @@ Use a middleware inside a server:
 
 ```js
 import { createServer } = from 'http'
-import { josn } from 'body-parsec'
+import { json } from 'body-parsec'
 
 createServer(async (req, res) => {
   const parsedData = await json()(req)
