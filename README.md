@@ -90,9 +90,9 @@ app.use(urlencoded())
 
 app.get('/', (req, res) => {
   res.send(`
-  <urlencoded method="POST" action="/">
+  <form method="POST" action="/" enctype="application/x-www-form-urlencoded">
   <input name="name" />
-  </urlencoded>
+  </form>
   `)
 })
 
