@@ -1,6 +1,6 @@
 import Koa from 'koa'
 import supertest from 'supertest'
-import { json, form, CtxWithBody } from '../src/koa'
+import { json, urlencoded, CtxWithBody } from '../src/koa'
 
 describe('Koa middleware test', () => {
   it('should parse JSON body', (done) => {
@@ -36,7 +36,7 @@ describe('Koa middleware test', () => {
   it('should parse form', (done) => {
     const app = new Koa()
 
-    app.use(form())
+    app.use(urlencoded())
 
     app.use((ctx: CtxWithBody) => {
       if (ctx.method === 'POST') {

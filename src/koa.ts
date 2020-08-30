@@ -29,9 +29,9 @@ const text = () => async (ctx: CtxWithBody, next?: Next) => {
   next?.()
 }
 
-const form = () => async (ctx: CtxWithBody, next?: Next) => {
+const urlencoded = () => async (ctx: CtxWithBody, next?: Next) => {
   await custom((x) => qs.parse(x.toString()))(ctx)
   next?.()
 }
 
-export { custom, json, raw, text, form }
+export { custom, json, raw, text, urlencoded }

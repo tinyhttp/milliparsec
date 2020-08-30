@@ -1,6 +1,6 @@
 import { App } from '@tinyhttp/app'
 import supertest from 'supertest'
-import { json, form } from '../src/index'
+import { json, urlencoded } from '../src/index'
 
 describe('tinyhttp middleware test', () => {
   it('should parse JSON body', (done) => {
@@ -28,7 +28,7 @@ describe('tinyhttp middleware test', () => {
   it('should parse form', (done) => {
     const app = new App()
 
-    app.use(form())
+    app.use(urlencoded())
 
     app.post('/', async (req, res) => {
       res.setHeader('Content-Type', 'application/json')

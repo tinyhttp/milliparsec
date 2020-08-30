@@ -36,9 +36,9 @@ const text = () => async (req: ReqWithBody, _res?: Response, next?: () => void) 
   next?.()
 }
 
-const form = () => async (req: ReqWithBody, _res?: Response, next?: () => void) => {
+const urlencoded = () => async (req: ReqWithBody, _res?: Response, next?: () => void) => {
   await parsec((x) => qs.parse(x.toString()))(req, _res)
   next?.()
 }
 
-export { parsec as custom, json, raw, text, form }
+export { parsec as custom, json, raw, text, urlencoded }

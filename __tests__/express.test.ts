@@ -1,6 +1,6 @@
 import Express from 'express'
 import supertest from 'supertest'
-import { json, form } from '../src/index'
+import { json, urlencoded } from '../src/index'
 
 describe('Express middleware test', () => {
   it('should parse JSON body', (done) => {
@@ -34,7 +34,7 @@ describe('Express middleware test', () => {
   it('should parse form', (done) => {
     const app = Express()
 
-    app.use(form())
+    app.use(urlencoded())
 
     app.post('/', (req, res) => {
       res.setHeader('Content-Type', 'application/json')

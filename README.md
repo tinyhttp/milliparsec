@@ -7,7 +7,7 @@
 ![Last commit](https://img.shields.io/github/last-commit/talentlessguy/parsec.svg?style=flat-square)
 ![Minified size](https://img.shields.io/bundlephobia/min/body-parsec.svg?style=flat-square) ![Codecov](https://img.shields.io/codecov/c/gh/talentlessguy/parsec?style=flat-square)
 
-Modern asynchronous body parser for Node.js.
+Tiniest body parser ever for Node.js.
 
 It puts all the data into `req.body` so you don't have to create a separate array for it.
 
@@ -17,7 +17,7 @@ It puts all the data into `req.body` so you don't have to create a separate arra
 
 - works with Node 13+ ESM and CommonJS 🚀
 - built with `async` / `await` ⏩
-- JSON / raw / form / text data support 🛠
+- JSON / raw / urlencoded / text data support 🛠
 - tiny package size (879B) 📦
 - no dependencies 🔥
 - [tinyhttp](https://github.com/talentlessguy/tinyhttp), Koa and Express support
@@ -67,11 +67,11 @@ After sending a request, it should output `world`.
 
 ```ts
 import { App } from '@tinyhttp/app'
-import { form } from 'body-parsec'
+import { urlencoded } from 'body-parsec'
 
 const app = new App()
 
-app.use(form()).post('/', (req, res) => {
+app.use(urlencoded()).post('/', (req, res) => {
   res.send(req.body)
 })
 
@@ -82,17 +82,17 @@ app.listen(3000, () => console.log(`Started on http://localhost:3000`))
 
 ```ts
 import Express from 'express'
-import { form } from 'body-parsec'
+import { urlencoded } from 'body-parsec'
 
 const app = Express()
 
-app.use(form())
+app.use(urlencoded())
 
 app.get('/', (req, res) => {
   res.send(`
-  <form method="POST" action="/">
+  <urlencoded method="POST" action="/">
   <input name="name" />
-  </form>
+  </urlencoded>
   `)
 })
 
@@ -127,7 +127,7 @@ app.listen(3000, () => console.log(`Running on http://localhost:3000`))
 
 #### `parsec.raw(req)`
 
-Minimal body parsing without any formatting (even without converting to string):
+Minimal body parsing without any urlencodedatting (even without converting to string):
 
 ```js
 // Request: curl -d "Hello World"
@@ -147,7 +147,7 @@ res.end(req.body) // "Hello World"
 
 #### `parsec.custom(req, fn)`
 
-You can use `parsec` as a a handler for `IncomingMessage` with a custom formatter.
+You can use `parsec` as a a handler for `IncomingMessage` with a custom urlencodedatter.
 
 Here we make a request body upper case:
 
@@ -167,13 +167,13 @@ await parsec.json()(req)
 res.end(req.body.hello) // world
 ```
 
-#### `parsec.form(req)`
+#### `parsec.urlencoded(req)`
 
 Parses request body using `querystring.parse`.
 
 ```js
 // Request: curl -d 'username=pro_gamer'
-await parsec.form()(req)
+await parsec.urlencoded()(req)
 res.end(req.body.username) // pro_gamer
 ```
 
