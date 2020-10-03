@@ -1,6 +1,5 @@
 # milliparsec 🌌
 
-![Twitter](https://img.shields.io/twitter/follow/v1rtl.svg?label=twitter&style=flat-square)
 ![Top lang](https://img.shields.io/github/languages/top/talentlessguy/parsec.svg?style=flat-square)
 ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=flat-square)
 ![Version](https://img.shields.io/npm/v/milliparsec.svg?style=flat-square)
@@ -16,7 +15,7 @@ Tiniest body parser in the universe. Built for modern Node.js.
 - 🚀 works with Node 13+ ESM and CommonJS
 - ⏩ built with `async` / `await`
 - 🛠 JSON / raw / urlencoded / text data support
-- 📦 tiny package size (879B)
+- 📦 tiny package size (800B)
 - 🔥 no dependencies
 - [tinyhttp](https://github.com/talentlessguy/tinyhttp), Koa and Express support
 
