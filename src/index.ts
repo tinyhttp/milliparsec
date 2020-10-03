@@ -1,21 +1,22 @@
 import { ServerResponse as Response, IncomingMessage } from 'http'
 import * as qs from 'querystring'
-import { once, EventEmitter, on } from 'events'
+import { once, EventEmitter } from 'events'
 
 // Extend the request object with body
-export type ReqWithBody = EventEmitter &
-  Partial<IncomingMessage> & {
-    body?: any
-  }
+export type ReqWithBody = IncomingMessage & {
+  body?: any
+} & EventEmitter
 
 // Main function
 const parsec = <T extends ReqWithBody>(fn: (body: any) => void) => async (req: ReqWithBody | T, _res: Response) => {
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
-    const body = await once(req, 'data').then((data) => {
-      return fn(data)
-    })
+    let body = ''
 
-    req.body = body
+    for await (const chunk of req) {
+      body += chunk
+    }
+
+    req.body = fn(body)
   }
 }
 

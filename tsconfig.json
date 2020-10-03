@@ -4,6 +4,7 @@
     "esModuleInterop": true,
     "module": "ESNext",
     "target": "es2018",
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "lib": ["esnext.asynciterable"]
   }
 }
