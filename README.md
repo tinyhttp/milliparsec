@@ -133,7 +133,7 @@ Minimal body parsing without any urlencodedatting (even without converting to st
 
 ```js
 // Request: curl -d "Hello World"
-await parsec.raw()(req)
+await parsec.raw()(req, res, (err) => {})
 res.end(req.body) // "Hello World"
 ```
 
@@ -143,7 +143,7 @@ Converts request body to string.
 
 ```js
 // Request: curl -d "Hello World"
-await parsec.text()(req)
+await parsec.text()(req, res, (err) => {})
 res.end(req.body) // "Hello World"
 ```
 
@@ -155,7 +155,11 @@ Here we make a request body upper case:
 
 ```js
 // Request: curl -d "this text must be uppercased" localhost
-await parsec.custom(req, (data) => data.toUpperCase())
+await parsec.custom(
+  req,
+  (data) => data.toUpperCase(),
+  (err) => {}
+)
 res.end(req.body) // "THIS TEXT MUST BE UPPERCASED"
 ```
 
@@ -165,7 +169,7 @@ Parses request body using `JSON.parse`.
 
 ```js
 // Request: curl -d { "hello": "world" } localhost
-await parsec.json()(req)
+await parsec.json()(req, res, (err) => {})
 res.end(req.body.hello) // world
 ```
 
@@ -175,7 +179,7 @@ Parses request body using `querystring.parse`.
 
 ```js
 // Request: curl -d 'username=pro_gamer'
-await parsec.urlencoded()(req)
+await parsec.urlencoded()(req, res, (err) => {})
 res.end(req.body.username) // pro_gamer
 ```
 
