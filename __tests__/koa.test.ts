@@ -1,65 +1,50 @@
 import Koa from 'koa'
-import supertest from 'supertest'
-import { json, urlencoded, CtxWithBody } from '../src/koa'
+import { makeFetch } from 'supertest-fetch'
+import { test } from 'uvu'
+import { CtxWithBody, json, urlencoded } from '../src/koa'
 
-describe('Koa middleware test', () => {
-  it('should parse JSON body', (done) => {
-    const app = new Koa()
+test('should parse JSON body', async () => {
+  const app = new Koa()
 
-    app.use(json())
+  app.use(json())
 
-    app.use((ctx: CtxWithBody) => {
-      if (ctx.method === 'POST') {
-        ctx.type = 'application/json'
-        ctx.body = ctx.req.body
-      }
-    })
-
-    const server = app.listen()
-
-    const request = supertest(server)
-
-    request
-      .post('/')
-      .send({ hello: 'world' })
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /application\/json/)
-      .expect(200, {
-        hello: 'world',
-      })
-      .end((err) => {
-        server.close()
-        if (err) return done(err)
-        done()
-      })
+  app.use(async (ctx: CtxWithBody) => {
+    ctx.body = ctx.req.body
+    ctx.res.setHeader('Content-Type', 'application/json')
   })
-  it('should parse form', (done) => {
-    const app = new Koa()
 
-    app.use(urlencoded())
+  const server = app.listen()
 
-    app.use((ctx: CtxWithBody) => {
-      if (ctx.method === 'POST') {
-        ctx.type = 'application/json'
-        ctx.body = ctx.req.body
-      }
-    })
-
-    const server = app.listen()
-
-    const request = supertest(server)
-
-    request
-      .post('/')
-      .send('hello=world')
-      .set('Accept', 'application/json')
-      .expect(200, {
-        hello: 'world',
-      })
-      .end((err) => {
-        server.close()
-        if (err) return done(err)
-        done()
-      })
-  })
+  await makeFetch(server)('/', {
+    body: JSON.stringify({ hello: 'world' }),
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+    },
+  }).expect(200, { hello: 'world' })
 })
+
+test.run()
+
+test('should parse urlencoded body', async () => {
+  const app = new Koa()
+
+  app.use(urlencoded())
+
+  app.use(async (ctx: CtxWithBody) => {
+    ctx.body = ctx.req.body
+    ctx.res.setHeader('Content-Type', 'application/x-www-form-urlencoded')
+  })
+
+  const server = app.listen()
+
+  await makeFetch(server)('/', {
+    method: 'POST',
+    body: 'hello=world',
+    headers: {
+      Accept: 'application/x-www-form-urlencoded',
+    },
+  }).expect(200, { hello: 'world' })
+})
+
+test.run()

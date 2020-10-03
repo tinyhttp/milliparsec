@@ -1,10 +1,18 @@
 {
+  "ts-node": {
+    "transpileOnly": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    },
+    "include": ["__tests__/**/*"]
+  },
   "exclude": ["dist", "examples", "__tests__"],
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "ESNext",
     "target": "es2018",
     "moduleResolution": "Node",
+
     "lib": ["esnext.asynciterable"]
   }
 }

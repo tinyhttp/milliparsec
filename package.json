@@ -1,6 +1,7 @@
 {
-  "name": "body-parsec",
-  "version": "2.1.0",
+  "name": "milliparsec",
+  "version": "1.0.0",
+  "description": "tiniest body parser in the universe",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
   "license": "MIT",
@@ -8,6 +9,16 @@
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
   "type": "module",
+  "keywords": [
+    "nodejs",
+    "backend",
+    "body-parser",
+    "parser",
+    "express",
+    "http",
+    "node",
+    "body-parsing"
+  ],
   "engines": {
     "node": ">=12.4"
   },
@@ -30,25 +41,26 @@
     "@types/koa": "^2.11.4",
     "@types/node": "^14.6.2",
     "@types/supertest": "^2.0.10",
+    "c8": "^7.3.1",
     "express": "^4.17.1",
-    "jest": "^26.4.2",
     "koa": "^2.12.0",
-    "supertest": "^4.0.2",
-    "ts-jest": "^26.3.0",
+    "supertest-fetch": "^1.4.3",
+    "ts-node": "^9.0.0",
     "tsup": "^3.6.1",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "uvu": "^0.3.4"
   },
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "uvu -r ts-node/register __tests__",
+    "coverage": "c8 pnpm test",
     "build": "tsup src/*.ts --format cjs,esm --dts --minify-whitespace",
     "prepare": "pnpm build && pnpm test"
   },
   "optionalDependencies": {
-    "express": "^4.17.1",
     "koa": "^2.12.0"
   }
 }

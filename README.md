@@ -1,55 +1,58 @@
-# parsec 🌌
+# milliparsec 🌌
 
 ![Twitter](https://img.shields.io/twitter/follow/v1rtl.svg?label=twitter&style=flat-square)
 ![Top lang](https://img.shields.io/github/languages/top/talentlessguy/parsec.svg?style=flat-square)
-![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/body-parsec.svg?style=flat-square)
-![Version](https://img.shields.io/npm/v/body-parsec.svg?style=flat-square)
+![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=flat-square)
+![Version](https://img.shields.io/npm/v/milliparsec.svg?style=flat-square)
 ![Last commit](https://img.shields.io/github/last-commit/talentlessguy/parsec.svg?style=flat-square)
-![Minified size](https://img.shields.io/bundlephobia/min/body-parsec.svg?style=flat-square) ![Codecov](https://img.shields.io/codecov/c/gh/talentlessguy/parsec?style=flat-square)
+![Minified size](https://img.shields.io/bundlephobia/min/milliparsec.svg?style=flat-square) ![Codecov](https://img.shields.io/codecov/c/gh/talentlessguy/parsec?style=flat-square)
 
-Tiniest body parser ever for Node.js.
+Tiniest body parser in the universe. Built for modern Node.js.
 
-It puts all the data into `req.body` so you don't have to create a separate array for it.
-
-> parsec is a part of [tinyhttp](https://github.com/talentlessguy/tinyhttp) ecosystem.
+> milliparsec is a part of [tinyhttp](https://github.com/talentlessguy/tinyhttp) ecosystem.
 
 ## Features 👀
 
-- works with Node 13+ ESM and CommonJS 🚀
-- built with `async` / `await` ⏩
-- JSON / raw / urlencoded / text data support 🛠
-- tiny package size (879B) 📦
-- no dependencies 🔥
+- 🚀 works with Node 13+ ESM and CommonJS
+- ⏩ built with `async` / `await`
+- 🛠 JSON / raw / urlencoded / text data support
+- 📦 tiny package size (879B)
+- 🔥 no dependencies
 - [tinyhttp](https://github.com/talentlessguy/tinyhttp), Koa and Express support
 
 ## Installation 🔄
 
 ```sh
 # pnpm
-pnpm i body-parsec
+pnpm i milliparsec
 
 # yarn
-yarn add body-parsec
+yarn add milliparsec
 
 # npm
-npm i body-parsec
+npm i milliparsec
 ```
 
-## Usage ⏩
+## Usage
 
-### Basic example 🖐
+### Basic example
 
 Use a middleware inside a server:
 
 ```js
 import { createServer } = from 'http'
-import { json } from 'body-parsec'
+import { json } from 'milliparsec'
 
 createServer(async (req, res) => {
-  const parsedData = await json()(req)
+  const parsedData = await json()(req, res, (err) => {
+    if (err) {
+      res.writeHead(500)
+      res.end('oops')
+    }
+  })
   console.log(parsedData) // { 'hello': 'world' }
   res.setHeader('Content-Type', 'application/json')
-  res.end(req.body.hello)
+  res.end(req.body.hello) // 'world'
 }).listen(80)
 ```
 
@@ -61,13 +64,13 @@ curl -d '{ "hello": "world" }' localhost
 
 After sending a request, it should output `world`.
 
-### Parsec and web frameworks 💻
+### Parsec and web frameworks
 
 ## [tinyhttp](https://github.com/talentlessguy/tinyhttp) ⚡
 
 ```ts
 import { App } from '@tinyhttp/app'
-import { urlencoded } from 'body-parsec'
+import { urlencoded } from 'milliparsec'
 
 const app = new App()
 
@@ -82,7 +85,7 @@ app.listen(3000, () => console.log(`Started on http://localhost:3000`))
 
 ```ts
 import Express from 'express'
-import { urlencoded } from 'body-parsec'
+import { urlencoded } from 'milliparsec'
 
 const app = Express()
 
@@ -107,7 +110,7 @@ app.listen(3000, () => console.log(`Running on http://localhost:3000`))
 
 ```ts
 import Koa from 'koa'
-import { json, CtxWithBody } from 'body-parsec/koa'
+import { json, CtxWithBody } from 'milliparsec/koa'
 
 const app = new Koa()
 
@@ -123,7 +126,7 @@ app.use((ctx: CtxWithBody) => {
 app.listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
-### API 📦
+### API
 
 #### `parsec.raw(req)`
 
