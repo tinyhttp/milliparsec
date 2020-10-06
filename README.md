@@ -1,4 +1,9 @@
-# milliparsec 🌌
+<img src="mp2.jpg" width="100%" />
+
+
+<div align="center">
+  <h1>milliparsec 🌌</h1>
+</div>
 
 ![Top lang](https://img.shields.io/github/languages/top/talentlessguy/parsec.svg?style=flat-square)
 ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=flat-square)
