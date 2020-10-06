@@ -17,7 +17,7 @@ Tiniest body parser in the universe. Built for modern Node.js.
 
 > milliparsec is a part of [tinyhttp](https://github.com/talentlessguy/tinyhttp) ecosystem.
 
-## Features 👀
+## Features
 
 - 🚀 works with Node 13+ ESM and CommonJS
 - ⏩ built with `async` / `await`
@@ -26,7 +26,7 @@ Tiniest body parser in the universe. Built for modern Node.js.
 - 🔥 no dependencies
 - [tinyhttp](https://github.com/talentlessguy/tinyhttp), Koa and Express support
 
-## Installation 🔄
+## Installation
 
 ```sh
 # pnpm
