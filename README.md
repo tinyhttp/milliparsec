@@ -9,7 +9,7 @@
 ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=flat-square)
 ![Version](https://img.shields.io/npm/v/milliparsec.svg?style=flat-square)
 ![Last commit](https://img.shields.io/github/last-commit/talentlessguy/parsec.svg?style=flat-square)
-![Minified size](https://img.shields.io/bundlephobia/min/milliparsec.svg?style=flat-square) ![Codecov](https://img.shields.io/codecov/c/gh/talentlessguy/parsec?style=flat-square)
+![Minified size](https://img.shields.io/bundlephobia/min/milliparsec.svg?style=flat-square) ![Codecov](https://img.shields.io/codecov/c/gh/talentlessguy/milliparsec?style=flat-square)
 
 Tiniest body parser in the universe. Built for modern Node.js.
 
