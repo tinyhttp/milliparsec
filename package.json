@@ -1,6 +1,6 @@
 {
   "name": "milliparsec",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "tiniest body parser in the universe",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
@@ -60,7 +60,7 @@
     "build": "tsup src/*.ts --format cjs,esm --dts --minify-whitespace",
     "prepare": "pnpm build && pnpm test"
   },
-  "optionalDependencies": {
+  "peerDependencies": {
     "koa": "^2.12.0"
   }
 }
