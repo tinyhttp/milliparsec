@@ -10,7 +10,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "ESNext",
-    "target": "es2018",
+    "target": "ES2019",
     "moduleResolution": "Node",
 
     "lib": ["esnext.asynciterable"]
