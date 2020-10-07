@@ -15,8 +15,6 @@
 
 Tiniest body parser in the universe. Built for modern Node.js.
 
-> milliparsec is a part of [tinyhttp](https://github.com/talentlessguy/tinyhttp) ecosystem.
-
 ## Features
 
 - 🚀 works with Node 13+ ESM and CommonJS
@@ -112,7 +110,7 @@ app.post('/', (req, res) => {
 app.listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
-## Koa
+## [Koa](https://github.com/koajs/koa)
 
 ```ts
 import Koa from 'koa'
@@ -134,9 +132,9 @@ app.listen(3000, () => console.log(`Running on http://localhost:3000`))
 
 ### API
 
-#### `parsec.raw(req)`
+#### `parsec.raw(req, res, cb)`
 
-Minimal body parsing without any urlencodedatting (even without converting to string):
+Minimal body parsing without any formatting (even without converting to string):
 
 ```js
 // Request: curl -d "Hello World"
@@ -144,7 +142,7 @@ await parsec.raw()(req, res, (err) => {})
 res.end(req.body) // "Hello World"
 ```
 
-#### `parsec.text(req)`
+#### `parsec.text(req, res, cb)`
 
 Converts request body to string.
 
@@ -154,9 +152,29 @@ await parsec.text()(req, res, (err) => {})
 res.end(req.body) // "Hello World"
 ```
 
-#### `parsec.custom(req, fn)`
+#### `parsec.urlencoded(req, res, cb)`
 
-You can use `parsec` as a a handler for `IncomingMessage` with a custom urlencodedatter.
+Parses request body using `querystring.parse`.
+
+```js
+// Request: curl -d 'username=pro_gamer'
+await parsec.urlencoded()(req, res, (err) => {})
+res.end(req.body.username) // pro_gamer
+```
+
+#### `parsec.json(req, res, cb)`
+
+Parses request body using `JSON.parse`.
+
+```js
+// Request: curl -d { "hello": "world" } localhost
+await parsec.json()(req, res, (err) => {})
+res.end(req.body.hello) // world
+```
+
+#### `parsec.custom(fn)(req, res, cb)`
+
+You can use `parsec` as a a handler for `IncomingMessage` with a custom formatter.
 
 Here we make a request body upper case:
 
@@ -168,26 +186,6 @@ await parsec.custom(
   (err) => {}
 )
 res.end(req.body) // "THIS TEXT MUST BE UPPERCASED"
-```
-
-#### `parsec.json(req)`
-
-Parses request body using `JSON.parse`.
-
-```js
-// Request: curl -d { "hello": "world" } localhost
-await parsec.json()(req, res, (err) => {})
-res.end(req.body.hello) // world
-```
-
-#### `parsec.urlencoded(req)`
-
-Parses request body using `querystring.parse`.
-
-```js
-// Request: curl -d 'username=pro_gamer'
-await parsec.urlencoded()(req, res, (err) => {})
-res.end(req.body.username) // pro_gamer
 ```
 
 ### What is "parsec"?
