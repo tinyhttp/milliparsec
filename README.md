@@ -70,7 +70,7 @@ curl -d '{ "hello": "world" }' localhost
 
 After sending a request, it should output `world`.
 
-### Parsec and web frameworks
+### Web frameworks integration
 
 ## [tinyhttp](https://github.com/talentlessguy/tinyhttp) ⚡
 
