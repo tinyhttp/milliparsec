@@ -17,7 +17,7 @@ Tiniest body parser in the universe. Built for modern Node.js.
 
 ## Features
 
-- 🚀 works with Node 13+ ESM and CommonJS
+- 🚀 works with Node 12.4+ ESM and CommonJS
 - ⏩ built with `async` / `await`
 - 🛠 JSON / raw / urlencoded / text data support
 - 📦 tiny package size (800B)
@@ -57,7 +57,7 @@ createServer(async (req, res) => {
   console.log(parsedData) // { 'hello': 'world' }
   res.setHeader('Content-Type', 'application/json')
   res.end(req.body.hello) // 'world'
-}).listen(80)
+}).listen(3000)
 ```
 
 Then try to make a request to our server:
