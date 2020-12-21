@@ -1,17 +1,16 @@
 <img src="mp2.jpg" width="100%" />
 
-
 <div align="center">
   <h1>milliparsec 🌌</h1>
 </div>
 
 > _Photo by NASA published on [Unsplash](https://unsplash.com/photos/rTZW4f02zY8)_
 
-![Top lang](https://img.shields.io/github/languages/top/talentlessguy/parsec.svg?style=flat-square)
-![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=flat-square)
-![Version](https://img.shields.io/npm/v/milliparsec.svg?style=flat-square)
-![Last commit](https://img.shields.io/github/last-commit/talentlessguy/parsec.svg?style=flat-square)
-![Minified size](https://img.shields.io/bundlephobia/min/milliparsec.svg?style=flat-square) ![Codecov](https://img.shields.io/codecov/c/gh/talentlessguy/milliparsec?style=flat-square)
+![Top lang][top-lang-badge-url]
+![Vulnerabilities][vulns-badge-url]
+[![Version][v-badge-url]][npm-url]
+![Last commit][last-commit-badge-url]
+![Minified size][size-badge-url] [![Codecov][cov-badge-url]][cov-url] [![Downloads][dl-badge-url]][npm-url]
 
 Tiniest body parser in the universe. Built for modern Node.js.
 
@@ -22,7 +21,7 @@ Tiniest body parser in the universe. Built for modern Node.js.
 - 🛠 JSON / raw / urlencoded / text data support
 - 📦 tiny package size (800B)
 - 🔥 no dependencies
-- [tinyhttp](https://github.com/talentlessguy/tinyhttp), Koa and Express support
+- ⚡ [tinyhttp](https://github.com/talentlessguy/tinyhttp), Koa and Express support
 
 ## Installation
 
@@ -70,7 +69,7 @@ After sending a request, it should output `world`.
 
 ### Web frameworks integration
 
-## [tinyhttp](https://github.com/talentlessguy/tinyhttp) ⚡
+## [tinyhttp](https://github.com/talentlessguy/tinyhttp)
 
 ```ts
 import { App } from '@tinyhttp/app'
@@ -190,4 +189,14 @@ res.end(req.body) // "THIS TEXT MUST BE UPPERCASED"
 
 ### What is "parsec"?
 
-The parsec (symbol: pc) is a unit of length used to measure large distances to astronomical objects outside the Solar System.
+The parsec is a unit of length used to measure large distances to astronomical objects outside the Solar System.
+
+[top-lang-badge-url]: https://img.shields.io/github/languages/top/talentlessguy/milliparsec.svg?style=flat-square
+[vulns-badge-url]: https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=flat-square
+[v-badge-url]: https://img.shields.io/npm/v/milliparsec.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/milliparsec
+[last-commit-badge-url]: https://img.shields.io/github/last-commit/talentlessguy/milliparsec.svg?style=flat-square
+[size-badge-url]: https://img.shields.io/bundlephobia/min/milliparsec.svg?style=flat-square
+[cov-badge-url]: https://img.shields.io/codecov/c/gh/talentlessguy/milliparsec?style=flat-square
+[cov-url]: https://codecov.io/gh/talentlessguy/milliparsec
+[dl-badge-url]: https://img.shields.io/npm/dt/milliparsec?style=flat-square
