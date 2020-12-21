@@ -54,7 +54,8 @@
   ],
   "scripts": {
     "test": "uvu -r ts-node/register __tests__",
-    "coverage": "c8 pnpm test",
+    "test:coverage": "c8 --include=src pnpm test",
+    "test:report": "c8 report --reporter=text-lcov > coverage.lcov",
     "build": "tsup src/*.ts --format cjs,esm --dts --minify-whitespace",
     "prepare": "pnpm build && pnpm test"
   },

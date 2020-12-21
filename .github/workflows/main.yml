@@ -29,6 +29,7 @@ jobs:
         with:
           version: 5.6.0
       - run: pnpm install
-      - run: pnpm coverage
+      - run: pnpm test:coverage
+      - run: pnpm test:report
       - name: Codecov
         uses: codecov/codecov-action@v1.0.10
