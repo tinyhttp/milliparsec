@@ -1,7 +1,9 @@
 import Koa from 'koa'
 import { makeFetch } from 'supertest-fetch'
-import { test } from 'uvu'
+import { suite } from 'uvu'
 import { CtxWithBody, json, urlencoded } from '../src/koa'
+
+const test = suite('koa')
 
 test('should parse JSON body', async () => {
   const app = new Koa()
@@ -21,10 +23,12 @@ test('should parse JSON body', async () => {
     headers: {
       Accept: 'application/json',
     },
-  }).expect(200, { hello: 'world' })
+  })
+    .expect(200, { hello: 'world' })
+    .then(() => {
+      server.close()
+    })
 })
-
-test.run()
 
 test('should parse urlencoded body', async () => {
   const app = new Koa()
@@ -44,7 +48,11 @@ test('should parse urlencoded body', async () => {
     headers: {
       Accept: 'application/x-www-form-urlencoded',
     },
-  }).expect(200, { hello: 'world' })
+  })
+    .expect(200, { hello: 'world' })
+    .then(() => {
+      server.close()
+    })
 })
 
 test.run()

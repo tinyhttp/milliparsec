@@ -1,7 +1,9 @@
 import Express from 'express'
 import { makeFetch } from 'supertest-fetch'
-import { test } from 'uvu'
+import { suite } from 'uvu'
 import { json, urlencoded } from '../src/index'
+
+const test = suite('express')
 
 test('should parse JSON body', async () => {
   const app = Express()
