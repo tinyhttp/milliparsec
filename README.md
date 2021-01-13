@@ -1,8 +1,6 @@
 <img src="logo.jpg" width="100%" />
 
-<div align="center">
-  <h1>milliparsec 🌌</h1>
-</div>
+<div align="center"><h1>milliparsec 🌌</h1></div>
 
 > _Photo by NASA published on [Unsplash](https://unsplash.com/photos/rTZW4f02zY8)_
 
@@ -16,14 +14,13 @@ Tiniest body parser in the universe. Built for modern Node.js.
 
 ## Features
 
-- 🚀 works for Node 12.4+ ESM
 - ⏩ built with `async` / `await`
 - 🛠 JSON / raw / urlencoded data support
 - 📦 tiny package size (800B)
 - 🔥 no dependencies
-- ⚡ [tinyhttp](https://github.com/talentlessguy/tinyhttp), Koa and Express support
+- ⚡ [tinyhttp](https://github.com/talentlessguy/tinyhttp), [Koa](https://github.com/koajs/koa) and Express support
 
-## Installation
+## Install
 
 ```sh
 # pnpm
@@ -59,17 +56,17 @@ createServer(async (req, res) => {
 }).listen(3000)
 ```
 
-Then try to make a request to our server:
+Then send a request:
 
 ```sh
 curl -d '{ "hello": "world" }' localhost
 ```
 
-After sending a request, it should output `world`.
+It should output `world`.
 
 ### Web frameworks integration
 
-## [tinyhttp](https://github.com/talentlessguy/tinyhttp)
+## tinyhttp
 
 ```ts
 import { App } from '@tinyhttp/app'
@@ -102,7 +99,7 @@ Express()
   .listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
-## [Koa](https://github.com/koajs/koa)
+## Koa
 
 ```ts
 import Koa from 'koa'
