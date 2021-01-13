@@ -5,13 +5,13 @@ import { once, EventEmitter } from 'events'
 type NextFunction = (err?: any) => void
 
 // Extend the request object with body
-export type ReqWithBody = IncomingMessage & {
-  body?: any
+export type ReqWithBody<T = any> = IncomingMessage & {
+  body?: T
 } & EventEmitter
 
 // Main function
-const parsec = <T extends ReqWithBody>(fn: (body: any) => void) => async (
-  req: ReqWithBody | T,
+const p = <T = any>(fn: (body: any) => any) => async (
+  req: ReqWithBody<T>,
   _res: Response,
   next: (err?: any) => void
 ) => {
@@ -19,9 +19,7 @@ const parsec = <T extends ReqWithBody>(fn: (body: any) => void) => async (
     try {
       let body = ''
 
-      for await (const chunk of req) {
-        body += chunk
-      }
+      for await (const chunk of req) body += chunk
 
       req.body = fn(body)
     } catch (e) {
@@ -33,20 +31,15 @@ const parsec = <T extends ReqWithBody>(fn: (body: any) => void) => async (
 
 // JSON, raw, FormData
 
-const json = () => async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-  await parsec((x) => JSON.parse(x.toString()))(req, _res, next)
-}
+const json = () => async (req: ReqWithBody, _res: Response, next: NextFunction) =>
+  await p((x) => JSON.parse(x.toString()))(req, _res, next)
 
-const raw = () => async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-  await parsec((x) => x)(req, _res, next)
-}
+const raw = () => async (req: ReqWithBody, _res: Response, next: NextFunction) => await p((x) => x)(req, _res, next)
 
-const text = () => async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-  await parsec((x) => x.toString())(req, _res, next)
-}
+const text = () => async (req: ReqWithBody, _res: Response, next: NextFunction) =>
+  await p((x) => x.toString())(req, _res, next)
 
-const urlencoded = () => async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-  await parsec((x) => qs.parse(x.toString()))(req, _res, next)
-}
+const urlencoded = () => async (req: ReqWithBody, _res: Response, next: NextFunction) =>
+  await p((x) => qs.parse(x.toString()))(req, _res, next)
 
-export { parsec as custom, json, raw, text, urlencoded }
+export { p as custom, json, raw, text, urlencoded }
