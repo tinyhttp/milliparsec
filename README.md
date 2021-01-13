@@ -16,9 +16,9 @@ Tiniest body parser in the universe. Built for modern Node.js.
 
 ## Features
 
-- 🚀 works with Node 12.4+ ESM and CommonJS
+- 🚀 works for Node 12.4+ ESM
 - ⏩ built with `async` / `await`
-- 🛠 JSON / raw / urlencoded / text data support
+- 🛠 JSON / raw / urlencoded data support
 - 📦 tiny package size (800B)
 - 🔥 no dependencies
 - ⚡ [tinyhttp](https://github.com/talentlessguy/tinyhttp), Koa and Express support
@@ -75,13 +75,10 @@ After sending a request, it should output `world`.
 import { App } from '@tinyhttp/app'
 import { urlencoded } from 'milliparsec'
 
-const app = new App()
-
-app.use(urlencoded()).post('/', (req, res) => {
-  res.send(req.body)
-})
-
-app.listen(3000, () => console.log(`Started on http://localhost:3000`))
+new App()
+  .use(urlencoded())
+  .post('/', (req, res) => void res.send(req.body))
+  .listen(3000, () => console.log(`Started on http://localhost:3000`))
 ```
 
 ## Express
@@ -90,23 +87,19 @@ app.listen(3000, () => console.log(`Started on http://localhost:3000`))
 import Express from 'express'
 import { urlencoded } from 'milliparsec'
 
-const app = Express()
-
-app.use(urlencoded())
-
-app.get('/', (req, res) => {
-  res.send(`
+Express()
+  .use(urlencoded())
+  .get(
+    '/',
+    (req, res) =>
+      void res.send(`
   <form method="POST" action="/" enctype="application/x-www-form-urlencoded">
   <input name="name" />
   </form>
   `)
-})
-
-app.post('/', (req, res) => {
-  res.send(`Hello ${req.body.name}!`)
-})
-
-app.listen(3000, () => console.log(`Running on http://localhost:3000`))
+  )
+  .post('/', (req, res) => void res.send(`Hello ${req.body.name}!`))
+  .listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
 ## [Koa](https://github.com/koajs/koa)
@@ -115,73 +108,44 @@ app.listen(3000, () => console.log(`Running on http://localhost:3000`))
 import Koa from 'koa'
 import { json, CtxWithBody } from 'milliparsec/koa'
 
-const app = new Koa()
-
-app.use(json())
-
-app.use((ctx: CtxWithBody) => {
-  if (ctx.method === 'POST') {
-    ctx.type = 'application/json'
-    ctx.body = ctx.req.body
-  }
-})
-
-app.listen(3000, () => console.log(`Running on http://localhost:3000`))
+new Koa()
+  .use(json())
+  .use((ctx: CtxWithBody) => {
+    if (ctx.method === 'POST') {
+      ctx.type = 'application/json'
+      ctx.body = ctx.req.body
+    }
+  })
+  .listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
 ### API
 
 #### `parsec.raw(req, res, cb)`
 
-Minimal body parsing without any formatting (even without converting to string):
-
-```js
-// Request: curl -d "Hello World"
-await parsec.raw()(req, res, (err) => {})
-res.end(req.body) // "Hello World"
-```
+Minimal body parsing without any formatting.
 
 #### `parsec.text(req, res, cb)`
 
 Converts request body to string.
 
-```js
-// Request: curl -d "Hello World"
-await parsec.text()(req, res, (err) => {})
-res.end(req.body) // "Hello World"
-```
-
 #### `parsec.urlencoded(req, res, cb)`
 
 Parses request body using `querystring.parse`.
-
-```js
-// Request: curl -d 'username=pro_gamer'
-await parsec.urlencoded()(req, res, (err) => {})
-res.end(req.body.username) // pro_gamer
-```
 
 #### `parsec.json(req, res, cb)`
 
 Parses request body using `JSON.parse`.
 
-```js
-// Request: curl -d { "hello": "world" } localhost
-await parsec.json()(req, res, (err) => {})
-res.end(req.body.hello) // world
-```
-
 #### `parsec.custom(fn)(req, res, cb)`
 
-You can use `parsec` as a a handler for `IncomingMessage` with a custom formatter.
-
-Here we make a request body upper case:
+Custom function for `parsec`.
 
 ```js
-// Request: curl -d "this text must be uppercased" localhost
+// curl -d "this text must be uppercased" localhost
 await parsec.custom(
   req,
-  (data) => data.toUpperCase(),
+  (d) => d.toUpperCase(),
   (err) => {}
 )
 res.end(req.body) // "THIS TEXT MUST BE UPPERCASED"
