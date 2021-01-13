@@ -12,7 +12,8 @@
     "module": "ESNext",
     "target": "ES2019",
     "moduleResolution": "Node",
-
-    "lib": ["esnext.asynciterable"]
+    "declaration": true,
+    "outDir": "dist",
+    "rootDir": "src"
   }
 }

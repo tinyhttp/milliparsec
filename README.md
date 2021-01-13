@@ -1,4 +1,4 @@
-<img src="mp2.jpg" width="100%" />
+<img src="logo.jpg" width="100%" />
 
 <div align="center">
   <h1>milliparsec 🌌</h1>
