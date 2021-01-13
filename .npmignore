@@ -7,3 +7,4 @@ node_modules
 __tests__
 src
 logo.jpg
+.eslintrc

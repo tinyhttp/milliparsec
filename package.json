@@ -1,6 +1,6 @@
 {
   "name": "milliparsec",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "tiniest body parser in the universe",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
@@ -9,13 +9,9 @@
   "module": "dist/index.js",
   "type": "module",
   "keywords": [
-    "nodejs",
-    "backend",
     "body-parser",
-    "parser",
     "express",
     "http",
-    "node",
     "body-parsing"
   ],
   "engines": {
@@ -37,7 +33,6 @@
     "@types/express": "^4.17.11",
     "@types/koa": "^2.11.6",
     "@types/node": "^14.14.20",
-    "@types/supertest": "^2.0.10",
     "c8": "^7.4.0",
     "express": "^4.17.1",
     "koa": "^2.13.1",
