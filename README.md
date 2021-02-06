@@ -66,7 +66,7 @@ It should output `world`.
 
 ### Web frameworks integration
 
-## tinyhttp
+#### tinyhttp
 
 ```ts
 import { App } from '@tinyhttp/app'
@@ -78,7 +78,7 @@ new App()
   .listen(3000, () => console.log(`Started on http://localhost:3000`))
 ```
 
-## Express
+#### Express
 
 ```ts
 import Express from 'express'
@@ -99,7 +99,7 @@ Express()
   .listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
-## Koa
+#### Koa
 
 ```ts
 import Koa from 'koa'
@@ -116,25 +116,25 @@ new Koa()
   .listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
-### API
+## API
 
-#### `parsec.raw(req, res, cb)`
+### `parsec.raw(req, res, cb)`
 
 Minimal body parsing without any formatting.
 
-#### `parsec.text(req, res, cb)`
+### `parsec.text(req, res, cb)`
 
 Converts request body to string.
 
-#### `parsec.urlencoded(req, res, cb)`
+### `parsec.urlencoded(req, res, cb)`
 
 Parses request body using `querystring.parse`.
 
-#### `parsec.json(req, res, cb)`
+### `parsec.json(req, res, cb)`
 
 Parses request body using `JSON.parse`.
 
-#### `parsec.custom(fn)(req, res, cb)`
+### `parsec.custom(fn)(req, res, cb)`
 
 Custom function for `parsec`.
 
