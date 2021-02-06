@@ -16,7 +16,7 @@ Tiniest body parser in the universe. Built for modern Node.js.
 
 - ⏩ built with `async` / `await`
 - 🛠 JSON / raw / urlencoded data support
-- 📦 tiny package size (800B)
+- 📦 tiny package size (728B)
 - 🔥 no dependencies
 - ⚡ [tinyhttp](https://github.com/talentlessguy/tinyhttp), [Koa](https://github.com/koajs/koa) and Express support
 
