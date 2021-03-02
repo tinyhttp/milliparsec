@@ -40,7 +40,7 @@ npm i milliparsec
 Use a middleware inside a server:
 
 ```js
-import { createServer } = from 'http'
+import { createServer } from 'http'
 import { json } from 'milliparsec'
 
 createServer(async (req, res) => {
