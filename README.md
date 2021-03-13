@@ -12,6 +12,8 @@
 
 Tiniest body parser in the universe. Built for modern Node.js.
 
+> ℹ️ Check out [deno-libs/parsec](https://github.com/deno-libs/parsec) for Deno port.
+
 ## Features
 
 - ⏩ built with `async` / `await`
