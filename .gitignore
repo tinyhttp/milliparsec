@@ -41,3 +41,4 @@ typings/
 
 dist
 coverage
+pnpm-lock.yaml
