@@ -1,22 +1,42 @@
-import { custom } from './index'
+import { p as custom } from './index'
+import { STATUS_CODES } from 'http'
 import { Next, ParameterizedContext, DefaultState, DefaultContext } from 'koa'
-import { IncomingMessage } from 'http'
 import * as qs from 'querystring'
 
-export type CtxWithBody<T = any> = ParameterizedContext<DefaultState, DefaultContext> & {
-  req: IncomingMessage & {
-    body: T
+export type CtxWithBody<T = any> = ParameterizedContext<
+  DefaultState,
+  DefaultContext & {
+    parsedBody: T
+  }
+>
+
+const p = (fn = (body: any) => body) => async <T = any>(ctx: CtxWithBody<T>, next: Next) => {
+  ctx.parsedBody = await custom(fn)(ctx.req, ctx.res, next)
+  next()
+}
+
+const json = () => async <T = any>(ctx: CtxWithBody<T>, next: Next) => {
+  if (ctx.header['content-type'] === 'application/json') {
+    await p((x) => JSON.parse(x.toString()))<T>(ctx, next)
+  } else {
+    ctx.status = 415
+    ctx.body = STATUS_CODES[415]
   }
 }
 
-const p = (fn = (body: any) => body) => async (ctx: CtxWithBody, next: Next) => await custom(fn)(ctx.req, ctx.res, next)
+const raw = () => async <T = any>(ctx: CtxWithBody<T>, next: Next) => {
+  await p((x) => x)<T>(ctx, next)
+}
 
-const json = () => async (ctx: CtxWithBody, next: Next) => await p((x) => JSON.parse(x.toString()))(ctx, next)
+const text = () => async <T = any>(ctx: CtxWithBody<T>, next: Next) => await p((x) => x.toString())<T>(ctx, next)
 
-const raw = () => async (ctx: CtxWithBody, next: Next) => await p((x) => x)(ctx, next)
-
-const text = () => async (ctx: CtxWithBody, next: Next) => await p((x) => x.toString())(ctx, next)
-
-const urlencoded = () => async (ctx: CtxWithBody, next: Next) => await p((x) => qs.parse(x.toString()))(ctx, next)
+const urlencoded = () => async <T = any>(ctx: CtxWithBody, next: Next) => {
+  if (ctx.header['content-type'] === 'application/x-www-form-urlencoded') {
+    await p((x) => qs.parse(x.toString()))<T>(ctx, next)
+  } else {
+    ctx.response.status = 415
+    ctx.response.body = STATUS_CODES[415]
+  }
+}
 
 export { p as custom, json, raw, text, urlencoded }

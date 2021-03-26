@@ -17,6 +17,7 @@ test('should parse JSON body', async () => {
     method: 'POST',
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
   }).expect(200, { hello: 'world' })
 })
@@ -37,6 +38,7 @@ test('should parse urlencoded body', async () => {
     method: 'POST',
     headers: {
       Accept: 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
   }).expect(200, { hello: 'world' })
 })

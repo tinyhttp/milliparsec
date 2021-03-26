@@ -11,9 +11,7 @@ test('should parse JSON body', async () => {
   app.use(json())
 
   app.post('/', (req, res) => {
-    res.setHeader('Content-Type', 'application/json')
-
-    res.json(req.body)
+    res.set('Content-Type', 'application/json').json(req.body)
   })
 
   await makeFetch(app)('/', {
@@ -21,6 +19,7 @@ test('should parse JSON body', async () => {
     method: 'POST',
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
   }).expect(200, { hello: 'world' })
 })
@@ -33,9 +32,7 @@ test('should parse urlencoded body', async () => {
   app.use(urlencoded())
 
   app.post('/', (req, res) => {
-    res.setHeader('Content-Type', 'application/x-www-form-urlencoded')
-
-    res.json(req.body)
+    res.set('Content-Type', 'application/x-www-form-urlencoded').json(req.body)
   })
 
   await makeFetch(app)('/', {
@@ -43,8 +40,25 @@ test('should parse urlencoded body', async () => {
     body: 'hello=world',
     headers: {
       Accept: 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
   }).expect(200, { hello: 'world' })
+})
+
+test('should not parse if Content-Type is not present', async () => {
+  const app = Express()
+
+  app.use(urlencoded())
+
+  app.post('/', (req, res) => {
+    res.set('Content-Type', 'application/x-www-form-urlencoded').json(req.body)
+  })
+
+  await makeFetch(app)('/', {
+    method: 'POST',
+    body: 'hello=world',
+    headers: {},
+  }).expect(415)
 })
 
 test.run()

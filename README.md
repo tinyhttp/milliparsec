@@ -21,6 +21,7 @@ Tiniest body parser in the universe. Built for modern Node.js.
 - 📦 tiny package size (728B)
 - 🔥 no dependencies
 - ⚡ [tinyhttp](https://github.com/talentlessguy/tinyhttp), [Koa](https://github.com/koajs/koa) and Express support
+- 💂 send `415 Unsupported Media Type` on
 
 ## Install
 

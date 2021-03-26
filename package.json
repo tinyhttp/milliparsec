@@ -1,6 +1,6 @@
 {
   "name": "milliparsec",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "tiniest body parser in the universe",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.1.0",
     "@tinyhttp/app": "^1.1.10",
+    "@types/koa": "^2.13.1",
     "@types/node": "^14.14.20",
     "c8": "^7.4.0",
     "express": "^4.17.1",
@@ -52,7 +53,7 @@
     "build": "rollup -c",
     "prepare": "pnpm build && pnpm test"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "koa": "^2.12.0"
   }
 }
