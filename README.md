@@ -47,13 +47,7 @@ import { createServer } from 'http'
 import { json } from 'milliparsec'
 
 createServer(async (req, res) => {
-  const parsedData = await json()(req, res, (err) => {
-    if (err) {
-      res.writeHead(500)
-      res.end('oops')
-    }
-  })
-  console.log(parsedData) // { 'hello': 'world' }
+  const parsedData = await json()(req, res, () => {})
   res.setHeader('Content-Type', 'application/json')
   res.end(req.body.hello) // 'world'
 }).listen(3000)
