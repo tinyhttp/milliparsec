@@ -47,19 +47,10 @@ import { createServer } from 'http'
 import { json } from 'milliparsec'
 
 createServer(async (req, res) => {
-  const parsedData = await json()(req, res, () => {})
   res.setHeader('Content-Type', 'application/json')
   res.end(req.body.hello) // 'world'
 }).listen(3000)
 ```
-
-Then send a request:
-
-```sh
-curl -d '{ "hello": "world" }' localhost
-```
-
-It should output `world`.
 
 ### Web frameworks integration
 
@@ -83,15 +74,6 @@ import { urlencoded } from 'milliparsec'
 
 Express()
   .use(urlencoded())
-  .get(
-    '/',
-    (req, res) =>
-      void res.send(`
-  <form method="POST" action="/" enctype="application/x-www-form-urlencoded">
-  <input name="name" />
-  </form>
-  `)
-  )
   .post('/', (req, res) => void res.send(`Hello ${req.body.name}!`))
   .listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
@@ -107,7 +89,7 @@ new Koa()
   .use((ctx: CtxWithBody) => {
     if (ctx.method === 'POST') {
       ctx.type = 'application/json'
-      ctx.body = ctx.req.body
+      ctx.body = ctx.parsedBody
     }
   })
   .listen(3000, () => console.log(`Running on http://localhost:3000`))
@@ -115,29 +97,29 @@ new Koa()
 
 ## API
 
-### `parsec.raw(req, res, cb)`
+### `raw(req, res, cb)`
 
 Minimal body parsing without any formatting.
 
-### `parsec.text(req, res, cb)`
+### `text(req, res, cb)`
 
 Converts request body to string.
 
-### `parsec.urlencoded(req, res, cb)`
+### `urlencoded(req, res, cb)`
 
 Parses request body using `querystring.parse`.
 
-### `parsec.json(req, res, cb)`
+### `json(req, res, cb)`
 
 Parses request body using `JSON.parse`.
 
-### `parsec.custom(fn)(req, res, cb)`
+### `custom(fn)(req, res, cb)`
 
 Custom function for `parsec`.
 
 ```js
 // curl -d "this text must be uppercased" localhost
-await parsec.custom(
+await custom(
   req,
   (d) => d.toUpperCase(),
   (err) => {}

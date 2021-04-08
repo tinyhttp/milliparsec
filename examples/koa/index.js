@@ -10,7 +10,7 @@ app.use((ctx) => {
   if (ctx.method === 'POST') {
     ctx.type = 'application/json'
     // @ts-ignore
-    ctx.body = ctx.req.body
+    ctx.body = ctx.parsedBody
   }
 })
 

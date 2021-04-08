@@ -1,6 +1,6 @@
 {
   "name": "milliparsec",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "tiniest body parser in the universe",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
@@ -13,6 +13,7 @@
     "body-parser",
     "express",
     "http",
+    "koa",
     "body-parsing"
   ],
   "engines": {
@@ -50,6 +51,6 @@
     "prepare": "pnpm build && pnpm test"
   },
   "optionalDependencies": {
-    "koa": "^2.12.0"
+    "koa": ">=2.12.0"
   }
 }
