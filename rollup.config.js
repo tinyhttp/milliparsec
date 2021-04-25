@@ -14,11 +14,11 @@ export default [
   {
     input: 'src/index.ts',
     ...common,
-    external: ['querystring'],
+    external: ['querystring', 'http'],
   },
   {
     input: 'src/koa.ts',
     ...common,
-    external: ['koa', 'querystring'],
+    external: ['koa', 'querystring', 'http'],
   },
 ]

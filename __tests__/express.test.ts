@@ -24,8 +24,6 @@ test('should parse JSON body', async () => {
   }).expect(200, { hello: 'world' })
 })
 
-test.run()
-
 test('should parse urlencoded body', async () => {
   const app = Express()
 

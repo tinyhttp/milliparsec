@@ -22,8 +22,6 @@ test('should parse JSON body', async () => {
   }).expect(200, { hello: 'world' })
 })
 
-test.run()
-
 test('should parse urlencoded body', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
     await urlencoded()(req, res, (err) => void err && console.log(err))
@@ -41,6 +39,18 @@ test('should parse urlencoded body', async () => {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   }).expect(200, { hello: 'world' })
+})
+
+test('should ignore GET request', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await urlencoded()(req, res, (err) => void err && console.log(err))
+
+    res.end('GET is ignored')
+  })
+
+  await makeFetch(server)('/', {
+    method: 'GET',
+  }).expect(200, 'GET is ignored')
 })
 
 test.run()

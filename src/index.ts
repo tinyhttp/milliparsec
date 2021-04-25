@@ -1,6 +1,6 @@
 import { ServerResponse as Response, IncomingMessage, STATUS_CODES } from 'http'
 import * as qs from 'querystring'
-import { once, EventEmitter } from 'events'
+import { EventEmitter } from 'events'
 
 type NextFunction = (err?: any) => void
 
@@ -9,22 +9,22 @@ export type ReqWithBody<T = any> = IncomingMessage & {
   body?: T
 } & EventEmitter
 
+export const hasBody = (method: string) => ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
+
 // Main function
 export const p = <T = any>(fn: (body: any) => any) => async (
   req: ReqWithBody<T>,
   _res: Response,
   next: (err?: any) => void
 ) => {
-  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
-    try {
-      let body = ''
+  try {
+    let body = ''
 
-      for await (const chunk of req) body += chunk
+    for await (const chunk of req) body += chunk
 
-      return fn(body)
-    } catch (e) {
-      next(e)
-    }
+    return fn(body)
+  } catch (e) {
+    next(e)
   }
 }
 
@@ -36,27 +36,31 @@ const custom = <T = any>(fn: (body: any) => any) => async (req: ReqWithBody, _re
 }
 
 const json = () => async (req: ReqWithBody, res: Response, next: NextFunction) => {
-  if (req.headers['content-type'] === 'application/json') {
-    req.body = await p((x) => JSON.parse(x.toString()))(req, res, next)
-    next()
-  } else {
-    res.writeHead(415).end(STATUS_CODES[415])
-  }
+  if (hasBody(req.method)) {
+    if (req.headers['content-type'] === 'application/json') {
+      req.body = await p((x) => JSON.parse(x.toString()))(req, res, next)
+      next()
+    } else res.writeHead(415).end(STATUS_CODES[415])
+  } else next()
 }
 
-const raw = () => async (req: ReqWithBody, _res: Response, next: NextFunction) =>
-  (req.body = await p((x) => x)(req, _res, next))
+const raw = () => async (req: ReqWithBody, _res: Response, next: NextFunction) => {
+  if (hasBody(req.method)) req.body = await p((x) => x)(req, _res, next)
+  else next()
+}
 
-const text = () => async (req: ReqWithBody, _res: Response, next: NextFunction) =>
-  (req.body = await p((x) => x.toString())(req, _res, next))
+const text = () => async (req: ReqWithBody, _res: Response, next: NextFunction) => {
+  if (hasBody(req.method)) req.body = await p((x) => x.toString())(req, _res, next)
+  else next()
+}
 
 const urlencoded = () => async (req: ReqWithBody, res: Response, next: NextFunction) => {
-  if (req.headers['content-type'] === 'application/x-www-form-urlencoded') {
-    req.body = await p((x) => qs.parse(x.toString()))(req, res, next)
-    next()
-  } else {
-    res.writeHead(415).end(STATUS_CODES[415])
-  }
+  if (hasBody(req.method)) {
+    if (req.headers['content-type'] === 'application/x-www-form-urlencoded') {
+      req.body = await p((x) => qs.parse(x.toString()))(req, res, next)
+      next()
+    } else res.writeHead(415).end(STATUS_CODES[415])
+  } else next()
 }
 
 export { custom, json, raw, text, urlencoded }

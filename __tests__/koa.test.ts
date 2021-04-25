@@ -8,9 +8,7 @@ const test = suite('koa')
 test('should parse JSON body', async () => {
   const app = new Koa<Koa.DefaultState, CtxWithBody>()
 
-  app.use(json())
-
-  app.use(async (ctx: CtxWithBody) => {
+  app.use(json()).use(async (ctx: CtxWithBody) => {
     ctx.body = ctx.parsedBody
     ctx.set('Content-Type', 'application/json')
   })
@@ -26,9 +24,7 @@ test('should parse JSON body', async () => {
     },
   })
     .expect(200, { hello: 'world' })
-    .then(() => {
-      server.close()
-    })
+    .then(() => server.close())
 })
 
 test('should parse urlencoded body', async () => {
@@ -52,9 +48,7 @@ test('should parse urlencoded body', async () => {
     },
   })
     .expect(200, { hello: 'world' })
-    .then(() => {
-      server.close()
-    })
+    .then(() => server.close())
 })
 
 test('should not parse body on incorrect Content-Type', async () => {
@@ -62,9 +56,7 @@ test('should not parse body on incorrect Content-Type', async () => {
 
   app.use(urlencoded())
 
-  app.use(async (ctx: CtxWithBody) => {
-    ctx.body = ctx.parsedBody
-  })
+  app.use(async (ctx: CtxWithBody) => (ctx.body = ctx.parsedBody))
 
   const server = app.listen()
 
@@ -73,9 +65,7 @@ test('should not parse body on incorrect Content-Type', async () => {
     body: 'hello=world',
   })
     .expect(415)
-    .then(() => {
-      server.close()
-    })
+    .then(() => server.close())
 })
 
 test.run()
