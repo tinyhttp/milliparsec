@@ -4,10 +4,8 @@
 
 > _Photo by NASA published on [Unsplash](https://unsplash.com/photos/rTZW4f02zY8)_
 
-![Top lang][top-lang-badge-url]
 ![Vulnerabilities][vulns-badge-url]
 [![Version][v-badge-url]][npm-url]
-![Last commit][last-commit-badge-url]
 ![Minified size][size-badge-url] [![Codecov][cov-badge-url]][cov-url] [![Downloads][dl-badge-url]][npm-url]
 
 Tiniest body parser in the universe. Built for modern Node.js.
@@ -46,10 +44,13 @@ Use a middleware inside a server:
 import { createServer } from 'http'
 import { json } from 'milliparsec'
 
-createServer(async (req, res) => {
+const server = createServer(async (req: ReqWithBody, res) => {
+  await json()(req, res, (err) => void err && console.log(err))
+
   res.setHeader('Content-Type', 'application/json')
-  res.end(req.body.hello) // 'world'
-}).listen(3000)
+
+  res.end(JSON.stringify(req.body))
+})
 ```
 
 ### Web frameworks integration
@@ -131,11 +132,9 @@ res.end(req.body) // "THIS TEXT MUST BE UPPERCASED"
 
 The parsec is a unit of length used to measure large distances to astronomical objects outside the Solar System.
 
-[top-lang-badge-url]: https://img.shields.io/github/languages/top/talentlessguy/milliparsec.svg?style=flat-square
 [vulns-badge-url]: https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=flat-square
 [v-badge-url]: https://img.shields.io/npm/v/milliparsec.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/milliparsec
-[last-commit-badge-url]: https://img.shields.io/github/last-commit/talentlessguy/milliparsec.svg?style=flat-square
 [size-badge-url]: https://img.shields.io/bundlephobia/min/milliparsec.svg?style=flat-square
 [cov-badge-url]: https://img.shields.io/codecov/c/gh/talentlessguy/milliparsec?style=flat-square
 [cov-url]: https://codecov.io/gh/talentlessguy/milliparsec

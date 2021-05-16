@@ -1,6 +1,6 @@
 {
   "name": "milliparsec",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "tiniest body parser in the universe",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
@@ -22,7 +22,6 @@
   "exports": {
     ".": "./dist/index.js",
     "./koa": "./dist/koa.js",
-    "./package.json": "./package.json",
     "./": "./"
   },
   "devDependencies": {
@@ -44,7 +43,7 @@
     "dist"
   ],
   "scripts": {
-    "test": "uvu -r ts-node/register __tests__",
+    "test": "uvu -r ts-node/register tests",
     "test:coverage": "c8 --include=src pnpm test",
     "test:report": "c8 report --reporter=text-lcov > coverage.lcov",
     "build": "rollup -c",

@@ -4,9 +4,9 @@
     "compilerOptions": {
       "module": "commonjs"
     },
-    "include": ["__tests__/**/*"]
+    "include": ["tests/**/*"]
   },
-  "exclude": ["dist", "examples", "__tests__"],
+  "exclude": ["dist", "examples", "tests"],
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "ESNext",
