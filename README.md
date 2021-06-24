@@ -67,18 +67,6 @@ new App()
   .listen(3000, () => console.log(`Started on http://localhost:3000`))
 ```
 
-#### Express
-
-```ts
-import Express from 'express'
-import { urlencoded } from 'milliparsec'
-
-Express()
-  .use(urlencoded())
-  .post('/', (req, res) => void res.send(`Hello ${req.body.name}!`))
-  .listen(3000, () => console.log(`Running on http://localhost:3000`))
-```
-
 #### Koa
 
 ```ts
