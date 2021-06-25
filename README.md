@@ -1,6 +1,7 @@
-<img src="logo.jpg" width="100%" />
+<div align="center">
 
-<div align="center"><h1>milliparsec 🌌</h1>
+<img src="milliparsec.svg" alt="Milliparsec" />
+ 
 
 ![Vulnerabilities][vulns-badge-url]
 [![Version][v-badge-url]][npm-url] [![Codecov][cov-badge-url]][cov-url] [![Github actions][gh-actions-img]][github-actions] [![Downloads][dl-badge-url]][npm-url]
