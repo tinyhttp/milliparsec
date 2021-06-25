@@ -18,8 +18,7 @@
     "node": ">=12.4"
   },
   "exports": {
-    ".": "./dist/index.js",
-    "./koa": "./dist/koa.js"
+    ".": "./dist/index.js"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.2.1",
