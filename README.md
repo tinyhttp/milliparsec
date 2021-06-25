@@ -21,7 +21,7 @@ Check out [deno-libs/parsec](https://github.com/deno-libs/parsec) for Deno port.
 - 🛠 JSON / raw / urlencoded data support
 - 📦 tiny package size (728B)
 - 🔥 no dependencies
-- ⚡ [tinyhttp](https://github.com/talentlessguy/tinyhttp), [Koa](https://github.com/koajs/koa) and Express support
+- ⚡ [tinyhttp](https://github.com/talentlessguy/tinyhttp) and Express support
 
 ## Install
 
@@ -67,23 +67,6 @@ new App()
   .use(urlencoded())
   .post('/', (req, res) => void res.send(req.body))
   .listen(3000, () => console.log(`Started on http://localhost:3000`))
-```
-
-#### Koa
-
-```ts
-import Koa from 'koa'
-import { json, CtxWithBody } from 'milliparsec/koa'
-
-new Koa()
-  .use(json())
-  .use((ctx: CtxWithBody) => {
-    if (ctx.method === 'POST') {
-      ctx.type = 'application/json'
-      ctx.body = ctx.parsedBody
-    }
-  })
-  .listen(3000, () => console.log(`Running on http://localhost:3000`))
 ```
 
 ## API

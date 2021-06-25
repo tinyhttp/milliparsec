@@ -16,9 +16,4 @@ export default [
     ...common,
     external: ['querystring', 'http'],
   },
-  {
-    input: 'src/koa.ts',
-    ...common,
-    external: ['koa', 'querystring', 'http'],
-  },
 ]
