@@ -1,16 +1,17 @@
 <img src="logo.jpg" width="100%" />
 
-<div align="center"><h1>milliparsec 🌌</h1></div>
+<div align="center"><h1>milliparsec 🌌</h1>
+
+![Vulnerabilities][vulns-badge-url]
+[![Version][v-badge-url]][npm-url] [![Codecov][cov-badge-url]][cov-url] [![Github actions][gh-actions-img]][github-actions] [![Downloads][dl-badge-url]][npm-url]
+
+</div>
 
 > _Photo by NASA published on [Unsplash](https://unsplash.com/photos/rTZW4f02zY8)_
 
-![Vulnerabilities][vulns-badge-url]
-[![Version][v-badge-url]][npm-url]
-![Minified size][size-badge-url] [![Codecov][cov-badge-url]][cov-url] [![Downloads][dl-badge-url]][npm-url]
-
 Tiniest body parser in the universe. Built for modern Node.js.
 
-> ℹ️ Check out [deno-libs/parsec](https://github.com/deno-libs/parsec) for Deno port.
+Check out [deno-libs/parsec](https://github.com/deno-libs/parsec) for Deno port.
 
 ## Features
 
@@ -119,10 +120,11 @@ res.end(req.body) // "THIS TEXT MUST BE UPPERCASED"
 
 The parsec is a unit of length used to measure large distances to astronomical objects outside the Solar System.
 
-[vulns-badge-url]: https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=flat-square
-[v-badge-url]: https://img.shields.io/npm/v/milliparsec.svg?style=flat-square
+[vulns-badge-url]: https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=for-the-badge&color=25608B&label=vulns
+[v-badge-url]: https://img.shields.io/npm/v/milliparsec.svg?style=for-the-badge&color=25608B&logo=npm&label=
 [npm-url]: https://www.npmjs.com/package/milliparsec
-[size-badge-url]: https://img.shields.io/bundlephobia/min/milliparsec.svg?style=flat-square
-[cov-badge-url]: https://img.shields.io/codecov/c/gh/talentlessguy/milliparsec?style=flat-square
+[cov-badge-url]: https://img.shields.io/codecov/c/gh/talentlessguy/milliparsec?style=for-the-badge&color=25608B
 [cov-url]: https://codecov.io/gh/talentlessguy/milliparsec
-[dl-badge-url]: https://img.shields.io/npm/dt/milliparsec?style=flat-square
+[dl-badge-url]: https://img.shields.io/npm/dt/milliparsec?style=for-the-badge&color=25608B
+[github-actions]: https://github.com/talentlessguy/milliparsec/actions
+[gh-actions-img]: https://img.shields.io/github/workflow/status/talentlessguy/milliparsec/CI?style=for-the-badge&color=25608B&label=&logo=github

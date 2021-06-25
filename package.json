@@ -1,13 +1,11 @@
 {
   "name": "milliparsec",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "tiniest body parser in the universe",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
   "license": "MIT",
   "types": "./dist/index.d.ts",
-  "module": "./dist/index.js",
-  "main": "./dist/index.js",
   "type": "module",
   "keywords": [
     "body-parser",
@@ -21,8 +19,7 @@
   },
   "exports": {
     ".": "./dist/index.js",
-    "./koa": "./dist/koa.js",
-    "./": "./"
+    "./koa": "./dist/koa.js"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.2.1",
