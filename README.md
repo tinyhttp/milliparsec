@@ -1,11 +1,13 @@
-<img src="logo.jpg" width="100%" />
-
-<div align="center"><h1>milliparsec 🌌</h1>
+<div align="center">
+<br /><br /><br />
+<img src="logo.png" width="400px" />
+<br /><br />
 
 ![Vulnerabilities][vulns-badge-url]
 [![Version][v-badge-url]][npm-url] [![Codecov][cov-badge-url]][cov-url] [![Github actions][gh-actions-img]][github-actions] [![Downloads][dl-badge-url]][npm-url]
 
 </div>
+<br />
 
 > _Photo by NASA published on [Unsplash](https://unsplash.com/photos/rTZW4f02zY8)_
 
