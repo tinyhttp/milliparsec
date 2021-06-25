@@ -18,10 +18,6 @@ test('should parse JSON body', async () => {
   await makeFetch(server)('/', {
     body: JSON.stringify({ hello: 'world' }),
     method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
   })
     .expect(200, { hello: 'world' })
     .then(() => server.close())
@@ -42,29 +38,8 @@ test('should parse urlencoded body', async () => {
   await makeFetch(server)('/', {
     method: 'POST',
     body: 'hello=world',
-    headers: {
-      Accept: 'application/x-www-form-urlencoded',
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
   })
     .expect(200, { hello: 'world' })
-    .then(() => server.close())
-})
-
-test('should not parse body on incorrect Content-Type', async () => {
-  const app = new Koa<Koa.DefaultState, CtxWithBody>()
-
-  app.use(urlencoded())
-
-  app.use(async (ctx: CtxWithBody) => (ctx.body = ctx.parsedBody))
-
-  const server = app.listen()
-
-  await makeFetch(server)('/', {
-    method: 'POST',
-    body: 'hello=world',
-  })
-    .expect(415)
     .then(() => server.close())
 })
 

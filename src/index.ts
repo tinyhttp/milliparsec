@@ -12,35 +12,33 @@ export type ReqWithBody<T = any> = IncomingMessage & {
 export const hasBody = (method: string) => ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
 
 // Main function
-export const p = <T = any>(fn: (body: any) => any) => async (
-  req: ReqWithBody<T>,
-  _res: Response,
-  next: (err?: any) => void
-) => {
-  try {
-    let body = ''
+export const p =
+  <T = any>(fn: (body: any) => any) =>
+  async (req: ReqWithBody<T>, _res: Response, next: (err?: any) => void) => {
+    try {
+      let body = ''
 
-    for await (const chunk of req) body += chunk
+      for await (const chunk of req) body += chunk
 
-    return fn(body)
-  } catch (e) {
-    next(e)
+      return fn(body)
+    } catch (e) {
+      next(e)
+    }
   }
-}
 
 // JSON, raw, FormData
 
-const custom = <T = any>(fn: (body: any) => any) => async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-  req.body = await p<T>(fn)(req, undefined, next)
-  next()
-}
+const custom =
+  <T = any>(fn: (body: any) => any) =>
+  async (req: ReqWithBody, _res: Response, next: NextFunction) => {
+    req.body = await p<T>(fn)(req, undefined, next)
+    next()
+  }
 
 const json = () => async (req: ReqWithBody, res: Response, next: NextFunction) => {
   if (hasBody(req.method)) {
-    if (req.headers['content-type'] === 'application/json') {
-      req.body = await p((x) => JSON.parse(x.toString()))(req, res, next)
-      next()
-    } else res.writeHead(415).end(STATUS_CODES[415])
+    req.body = await p((x) => JSON.parse(x.toString()))(req, res, next)
+    next()
   } else next()
 }
 
@@ -56,10 +54,8 @@ const text = () => async (req: ReqWithBody, _res: Response, next: NextFunction) 
 
 const urlencoded = () => async (req: ReqWithBody, res: Response, next: NextFunction) => {
   if (hasBody(req.method)) {
-    if (req.headers['content-type'] === 'application/x-www-form-urlencoded') {
-      req.body = await p((x) => qs.parse(x.toString()))(req, res, next)
-      next()
-    } else res.writeHead(415).end(STATUS_CODES[415])
+    req.body = await p((x) => qs.parse(x.toString()))(req, res, next)
+    next()
   } else next()
 }
 
