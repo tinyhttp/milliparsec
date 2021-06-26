@@ -4,12 +4,10 @@
 <br /><br />
 
 ![Vulnerabilities][vulns-badge-url]
-[![Version][v-badge-url]][npm-url] [![Codecov][cov-badge-url]][cov-url] [![Github actions][gh-actions-img]][github-actions] [![Downloads][dl-badge-url]][npm-url]
+[![Version][v-badge-url]][npm-url] [![Coverage][codacy-coverage]][codacy-url] [![Codacy grade][codacy-grade]][codacy-url] [![Github actions][gh-actions-img]][github-actions] [![Downloads][dl-badge-url]][npm-url]
 
 </div>
 <br />
-
-> _Photo by NASA published on [Unsplash](https://unsplash.com/photos/rTZW4f02zY8)_
 
 Tiniest body parser in the universe. Built for modern Node.js.
 
@@ -108,8 +106,9 @@ The parsec is a unit of length used to measure large distances to astronomical o
 [vulns-badge-url]: https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=for-the-badge&color=25608B&label=vulns
 [v-badge-url]: https://img.shields.io/npm/v/milliparsec.svg?style=for-the-badge&color=25608B&logo=npm&label=
 [npm-url]: https://www.npmjs.com/package/milliparsec
-[cov-badge-url]: https://img.shields.io/codecov/c/gh/talentlessguy/milliparsec?style=for-the-badge&color=25608B
-[cov-url]: https://codecov.io/gh/talentlessguy/milliparsec
 [dl-badge-url]: https://img.shields.io/npm/dt/milliparsec?style=for-the-badge&color=25608B
 [github-actions]: https://github.com/talentlessguy/milliparsec/actions
 [gh-actions-img]: https://img.shields.io/github/workflow/status/talentlessguy/milliparsec/CI?style=for-the-badge&color=25608B&label=&logo=github
+[codacy-url]: https://app.codacy.com/gh/tinyhttp/milliparsec
+[codacy-grade]: https://img.shields.io/codacy/grade/f72e0f9927c5489f90a7d0318888a38d?style=for-the-badge&logo=codacy&label=codacy&color=25608B
+[codacy-coverage]: https://img.shields.io/codacy/coverage/f72e0f9927c5489f90a7d0318888a38d?style=for-the-badge&color=25608B
