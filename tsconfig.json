@@ -1,12 +1,5 @@
 {
-  "ts-node": {
-    "transpileOnly": true,
-    "compilerOptions": {
-      "module": "commonjs"
-    },
-    "include": ["tests/**/*"]
-  },
-  "exclude": ["dist", "examples", "tests"],
+  "exclude": ["dist"],
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "ESNext",

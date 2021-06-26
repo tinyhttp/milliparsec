@@ -1,7 +1,7 @@
 import { createServer } from 'http'
 import { makeFetch } from 'supertest-fetch'
 import { test } from 'uvu'
-import { json, raw, ReqWithBody, text, urlencoded, custom } from '../src/index'
+import { json, raw, ReqWithBody, text, urlencoded, custom } from './src/index'
 
 test('should parse JSON body', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {

@@ -43,3 +43,4 @@ typings/
 
 dist
 coverage
+coverage.lcov
