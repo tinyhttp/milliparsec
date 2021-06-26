@@ -1,7 +1,7 @@
 import { createServer } from 'http'
 import { makeFetch } from 'supertest-fetch'
 import { test } from 'uvu'
-import { json, ReqWithBody, urlencoded } from '../src/index'
+import { json, raw, ReqWithBody, text, urlencoded, custom } from '../src/index'
 
 test('should parse JSON body', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
@@ -20,6 +20,67 @@ test('should parse JSON body', async () => {
       'Content-Type': 'application/json',
     },
   }).expect(200, { hello: 'world' })
+})
+
+test('should parse json body with no content-type headers', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await json()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'application/json')
+
+    res.end(JSON.stringify(req.body))
+  })
+
+  await makeFetch(server)('/', {
+    body: JSON.stringify({ hello: 'world' }),
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+    },
+  }).expect(200, { hello: 'world' })
+})
+
+test('json should call next() without a body', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await json()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'application/json')
+
+    res.end()
+  })
+
+  await makeFetch(server)('/', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }).expect(200)
+})
+
+test('json should ignore GET request', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await json()(req, res, (err) => void err && console.log(err))
+
+    res.end('GET is ignored')
+  })
+
+  await makeFetch(server)('/', {
+    method: 'GET',
+  }).expect(200, 'GET is ignored')
+})
+
+test('json should ignore DELETE request', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await json()(req, res, (err) => void err && console.log(err))
+
+    res.end(`DELETE is ignored, ${JSON.stringify(req.body)}`)
+  })
+
+  await makeFetch(server)('/', {
+    body: JSON.stringify({ this: 'should not be parsed, because it is DELETE method' }),
+    method: 'DELETE',
+  }).expect(200, 'DELETE is ignored, undefined')
 })
 
 test('should parse urlencoded body', async () => {
@@ -41,7 +102,7 @@ test('should parse urlencoded body', async () => {
   }).expect(200, { hello: 'world' })
 })
 
-test('should ignore GET request', async () => {
+test('urlencoded should ignore GET request', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
     await urlencoded()(req, res, (err) => void err && console.log(err))
 
@@ -50,6 +111,117 @@ test('should ignore GET request', async () => {
 
   await makeFetch(server)('/', {
     method: 'GET',
+  }).expect(200, 'GET is ignored')
+})
+
+test('should parse text body', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await text()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'text/plain')
+
+    res.end(req.body)
+  })
+
+  await makeFetch(server)('/', {
+    body: 'hello world',
+    method: 'POST',
+    headers: {
+      Accept: 'text/plain',
+      'Content-Type': 'text/plain',
+    },
+  }).expect(200, 'hello world')
+})
+
+test('text should ignore GET request', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await text()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'text/plain')
+
+    res.end('GET is ignored')
+  })
+
+  await makeFetch(server)('/', {
+    method: 'GET',
+    headers: {
+      Accept: 'text/plain',
+      'Content-Type': 'text/plain',
+    },
+  }).expect(200, 'GET is ignored')
+})
+
+test('should parse raw body', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await raw()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'text/plain')
+
+    res.end(req.body)
+  })
+
+  await makeFetch(server)('/', {
+    body: 'hello world',
+    method: 'POST',
+    headers: {
+      Accept: 'text/plain',
+      'Content-Type': 'text/plain',
+    },
+  }).expect(200, 'hello world')
+})
+
+test('raw should ignore GET request', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await raw()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'text/plain')
+
+    res.end('GET is ignored')
+  })
+
+  await makeFetch(server)('/', {
+    method: 'GET',
+    headers: {
+      Accept: 'text/plain',
+      'Content-Type': 'text/plain',
+    },
+  }).expect(200, 'GET is ignored')
+})
+
+test('should parse custom body', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await custom((d) => d.toUpperCase())(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'text/plain')
+
+    res.end(req.body)
+  })
+
+  await makeFetch(server)('/', {
+    body: 'hello world',
+    method: 'POST',
+    headers: {
+      Accept: 'text/plain',
+      'Content-Type': 'text/plain',
+    },
+  }).expect(200, 'HELLO WORLD')
+})
+
+test('custom should ignore GET request', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await custom((d) => d.toUpperCase())(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'text/plain')
+
+    res.end('GET is ignored')
+  })
+
+  await makeFetch(server)('/', {
+    method: 'GET',
+    headers: {
+      Accept: 'text/plain',
+      'Content-Type': 'text/plain',
+    },
   }).expect(200, 'GET is ignored')
 })
 

@@ -9,7 +9,7 @@ export type ReqWithBody<T = any> = IncomingMessage & {
   body?: T
 } & EventEmitter
 
-export const hasBody = (method: string) => ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
+export const hasBody = (method: string) => ['POST', 'PUT', 'PATCH'].includes(method)
 
 // Main function
 export const p =
