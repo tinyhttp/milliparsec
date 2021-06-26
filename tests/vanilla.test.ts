@@ -22,6 +22,24 @@ test('should parse JSON body', async () => {
   }).expect(200, { hello: 'world' })
 })
 
+test('should parse json body with no content-type headers', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await json()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'application/json')
+
+    res.end(JSON.stringify(req.body))
+  })
+
+  await makeFetch(server)('/', {
+    body: JSON.stringify({ hello: 'world' }),
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+    },
+  }).expect(200, { hello: 'world' })
+})
+
 test('json should call next() without a body', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
     await json()(req, res, (err) => void err && console.log(err))
@@ -50,6 +68,19 @@ test('json should ignore GET request', async () => {
   await makeFetch(server)('/', {
     method: 'GET',
   }).expect(200, 'GET is ignored')
+})
+
+test('json should ignore DELETE request', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await json()(req, res, (err) => void err && console.log(err))
+
+    res.end(`DELETE is ignored, ${JSON.stringify(req.body)}`)
+  })
+
+  await makeFetch(server)('/', {
+    body: JSON.stringify({ this: 'should not be parsed, because it is DELETE method' }),
+    method: 'DELETE',
+  }).expect(200, 'DELETE is ignored, undefined')
 })
 
 test('should parse urlencoded body', async () => {
