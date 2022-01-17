@@ -79,7 +79,7 @@ Converts request body to string.
 
 ### `urlencoded(req, res, cb)`
 
-Parses request body using `querystring.parse`.
+Parses request body using `new URLSearchParams`.
 
 ### `json(req, res, cb)`
 
