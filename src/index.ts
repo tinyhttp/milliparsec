@@ -1,5 +1,4 @@
 import { ServerResponse as Response, IncomingMessage, STATUS_CODES } from 'http'
-import * as qs from 'querystring'
 import { EventEmitter } from 'events'
 
 type NextFunction = (err?: any) => void
@@ -54,7 +53,10 @@ const text = () => async (req: ReqWithBody, _res: Response, next: NextFunction) 
 
 const urlencoded = () => async (req: ReqWithBody, res: Response, next: NextFunction) => {
   if (hasBody(req.method)) {
-    req.body = await p((x) => qs.parse(x.toString()))(req, res, next)
+    req.body = await p((x) => {
+      const urlSearchParam = new URLSearchParams(x.toString());
+      return Object.fromEntries(urlSearchParam.entries())
+    })(req, res, next)
     next()
   } else next()
 }

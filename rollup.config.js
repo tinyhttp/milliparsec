@@ -14,6 +14,6 @@ export default [
   {
     input: 'src/index.ts',
     ...common,
-    external: ['querystring', 'http'],
+    external: ['http'],
   },
 ]
