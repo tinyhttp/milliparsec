@@ -70,19 +70,6 @@ test('json should ignore GET request', async () => {
   }).expect(200, 'GET is ignored')
 })
 
-test('json should ignore DELETE request', async () => {
-  const server = createServer(async (req: ReqWithBody, res) => {
-    await json()(req, res, (err) => void err && console.log(err))
-
-    res.end(`DELETE is ignored, ${JSON.stringify(req.body)}`)
-  })
-
-  await makeFetch(server)('/', {
-    body: JSON.stringify({ this: 'should not be parsed, because it is DELETE method' }),
-    method: 'DELETE',
-  }).expect(200, 'DELETE is ignored, undefined')
-})
-
 test('should parse urlencoded body', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
     await urlencoded()(req, res, (err) => void err && console.log(err))
