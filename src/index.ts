@@ -42,12 +42,18 @@ const json = () => async (req: ReqWithBody, res: Response, next: NextFunction) =
 }
 
 const raw = () => async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-  if (hasBody(req.method)) req.body = await p((x) => x)(req, _res, next)
+  if (hasBody(req.method)) {
+    req.body = await p((x) => x)(req, _res, next)
+    next()
+  }
   else next()
 }
 
 const text = () => async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-  if (hasBody(req.method)) req.body = await p((x) => x.toString())(req, _res, next)
+  if (hasBody(req.method)) {
+    req.body = await p((x) => x.toString())(req, _res, next)
+    next()
+  }
   else next()
 }
 
