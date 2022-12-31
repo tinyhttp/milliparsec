@@ -67,4 +67,55 @@ const urlencoded = () => async (req: ReqWithBody, res: Response, next: NextFunct
   } else next()
 }
 
-export { custom, json, raw, text, urlencoded }
+const formData = () => async (req: ReqWithBody, res: Response, next: NextFunction) => {
+  if (hasBody(req.method)) {
+    req.body = await p((x) => {
+      const boundary = getBoundary(req.headers['content-type']);
+      if (boundary) {
+        // This is a multipart request
+        const parts = parseMultipart(x, boundary);
+        console.log(parts);
+
+        return parts;
+      }
+
+      function getBoundary (contentType) {
+        // Extract the boundary from the Content-Type header
+        const match = /boundary=(.+);?/.exec(contentType);
+        return match ? `--${match[1]}` : null;
+      }
+
+      function parseMultipart (body, boundary) {
+        // Split the body into an array of parts
+        const parts = body.split(new RegExp(`${boundary}(--)?`)).filter(part => !!part && (/content-disposition/i.test(part)));
+
+        // Parse each part into a form data object
+        return parts.map(part => {
+          const [headers, ...lines] = part.split('\r\n').filter(part => !!part);
+          const data = lines.join('\r\n').trim();
+
+          // Extract the name and filename from the headers
+          const name = /name="(.+?)"/.exec(headers)[1];
+          const filename = /filename="(.+?)"/.exec(headers);
+          if (filename) {
+            // This is a file field
+            return {
+              [name]: {
+                filename: filename[1],
+                data: data,
+              }
+            };
+          } else {
+            // This is a regular field
+            return { [name]: data };
+          }
+        });
+      }
+
+    })(req, res, next);
+
+    next();
+  } else next();
+};
+
+export { custom, json, raw, text, urlencoded, formData };
