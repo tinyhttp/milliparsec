@@ -22,6 +22,25 @@ test('should parse JSON body', async () => {
   }).expect(200, { hello: 'world' })
 })
 
+test('should ignore JSON empty body', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await json()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'application/json')
+
+    res.end(JSON.stringify({ok: true}));
+  })
+
+  await makeFetch(server)('/', {
+    body: '',
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }).expect(200, { ok: true })
+})
+
 test('should parse json body with no content-type headers', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
     await json()(req, res, (err) => void err && console.log(err))

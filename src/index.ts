@@ -36,7 +36,7 @@ const custom =
 
 const json = () => async (req: ReqWithBody, res: Response, next: NextFunction) => {
   if (hasBody(req.method)) {
-    req.body = await p((x) => JSON.parse(x.toString()))(req, res, next)
+    req.body = await p((x) => x ? JSON.parse(x.toString()) : {})(req, res, next)
     next()
   } else next()
 }
