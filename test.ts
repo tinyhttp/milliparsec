@@ -1,7 +1,7 @@
 import { createServer } from 'http'
 import { makeFetch } from 'supertest-fetch'
 import { test } from 'uvu'
-import { json, raw, ReqWithBody, text, urlencoded, custom } from './src/index'
+import { json, raw, ReqWithBody, text, urlencoded, custom, multipart } from './src/index'
 
 test('should parse JSON body', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
@@ -208,6 +208,47 @@ test('custom should ignore GET request', async () => {
     headers: {
       Accept: 'text/plain',
       'Content-Type': 'text/plain',
+    },
+  }).expect(200, 'GET is ignored')
+})
+
+test('should parse multipart body', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await multipart()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'multipart/form-data; boundary=some-boundary')
+
+    res.end(JSON.stringify(req.body))
+  })
+
+  await makeFetch(server)('/', {
+    // probaly better to use form-data package
+    body: "--some-boundary\r\nContent-Disposition: form-data; name=\"textfield\"\r\n\r\ntextfield data\nwith new lines\nbecause this is valid\r\n--some-boundary\r\nContent-Disposition: form-data; name=\"someother\"\r\n\r\ntextfield with text\r\n--some-boundary--\r\n",
+    method: 'POST',
+    headers: {
+      Accept: 'multipart/form-data',
+      'Content-Type': 'multipart/form-data; boundary=some-boundary',
+    },
+  }).expect(200, {
+    textfield: "textfield data\nwith new lines\nbecause this is valid",
+    someother: "textfield with text",
+  })
+})
+
+test('multipart should ignore GET request', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await multipart()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'multipart/form-data; boundary=some-boundary')
+
+    res.end('GET is ignored')
+  })
+
+  await makeFetch(server)('/', {
+    method: 'GET',
+    headers: {
+      Accept: 'multipart/form-data',
+      'Content-Type': 'multipart/form-data; boundary=some-boundary',
     },
   }).expect(200, 'GET is ignored')
 })
