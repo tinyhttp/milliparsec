@@ -31,8 +31,18 @@ test('should ignore JSON empty body', async () => {
     res.end(JSON.stringify({ok: true}));
   })
 
+  // Empty string body
   await makeFetch(server)('/', {
     body: '',
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }).expect(200, { ok: true })
+
+  // Unset body
+  await makeFetch(server)('/', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
