@@ -36,7 +36,7 @@ const custom =
 
 const json = () => async (req: ReqWithBody, res: Response, next: NextFunction) => {
   if (hasBody(req.method)) {
-    req.body = await p((x) => x ? JSON.parse(x.toString()) : {})(req, res, next)
+    req.body = await p((x) => (x ? JSON.parse(x.toString()) : {}))(req, res, next)
     next()
   } else next()
 }
@@ -45,22 +45,20 @@ const raw = () => async (req: ReqWithBody, _res: Response, next: NextFunction) =
   if (hasBody(req.method)) {
     req.body = await p((x) => x)(req, _res, next)
     next()
-  }
-  else next()
+  } else next()
 }
 
 const text = () => async (req: ReqWithBody, _res: Response, next: NextFunction) => {
   if (hasBody(req.method)) {
     req.body = await p((x) => x.toString())(req, _res, next)
     next()
-  }
-  else next()
+  } else next()
 }
 
 const urlencoded = () => async (req: ReqWithBody, res: Response, next: NextFunction) => {
   if (hasBody(req.method)) {
     req.body = await p((x) => {
-      const urlSearchParam = new URLSearchParams(x.toString());
+      const urlSearchParam = new URLSearchParams(x.toString())
       return Object.fromEntries(urlSearchParam.entries())
     })(req, res, next)
     next()

@@ -28,7 +28,7 @@ test('should ignore JSON empty body', async () => {
 
     res.setHeader('Content-Type', 'application/json')
 
-    res.end(JSON.stringify({ok: true}));
+    res.end(JSON.stringify({ ok: true }))
   })
 
   // Empty string body
