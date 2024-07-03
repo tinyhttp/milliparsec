@@ -14,19 +14,17 @@
     "body-parsing"
   ],
   "engines": {
-    "node": ">=12.4"
+    "node": ">=12.20"
   },
   "exports": "./dist/index.js",
   "devDependencies": {
-    "@rollup/plugin-typescript": "^11.1.0",
-    "@tinyhttp/app": "^2.0.31",
-    "@types/node": "^18.16.3",
-    "c8": "7.13.0",
-    "rollup": "^3.21.4",
-    "supertest-fetch": "^1.5.0",
-    "tslib": "^2.5.0",
+    "@biomejs/biome": "1.8.3",
+    "@tinyhttp/app": "^2.2.4",
+    "@types/node": "^20.14.9",
+    "c8": "10.1.2",
+    "supertest-fetch": "^2.0.0",
     "tsm": "^2.3.0",
-    "typescript": "^5.0.4",
+    "typescript": "^5.5.3",
     "uvu": "^0.5.6"
   },
   "files": [
@@ -36,7 +34,8 @@
     "test": "uvu -r tsm",
     "test:coverage": "c8 --include=src pnpm test",
     "test:report": "c8 report --reporter=text-lcov > coverage.lcov",
-    "build": "rollup -c",
-    "prepare": "pnpm build && pnpm test"
-  }
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "pnpm build && pnpm test"
+  },
+  "packageManager": "pnpm@9.4.0"
 }

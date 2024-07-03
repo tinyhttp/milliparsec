@@ -1,5 +1,5 @@
-import { ServerResponse as Response, IncomingMessage, STATUS_CODES } from 'http'
-import { EventEmitter } from 'events'
+import type { EventEmitter } from 'node:events'
+import type { IncomingMessage, ServerResponse as Response } from 'node:http'
 
 type NextFunction = (err?: any) => void
 
