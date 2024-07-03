@@ -22,14 +22,13 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/checkout@v4
+      - name: Enable corepack
+        run: corepack enable pnpm
+      - uses: actions/setup-node@v4
         with:
-          node-version: '16.3.0'
-      - name: install pnpm
-        uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.8.0
+          node-version: 18
+          cache: 'pnpm'
       - run: pnpm install
       - run: pnpm test:coverage
       - run: pnpm test:report
