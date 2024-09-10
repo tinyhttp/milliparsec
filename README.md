@@ -17,7 +17,7 @@ Check out [deno-libs/parsec](https://github.com/deno-libs/parsec) for Deno port.
 
 - ⏩ built with `async` / `await`
 - 🛠 JSON / raw / urlencoded data support
-- 📦 tiny package size (675B)
+- 📦 tiny package size (7.39KB)
 - 🔥 no dependencies
 - ✨ [tinyhttp](https://github.com/tinyhttp/tinyhttp) and Express support
 - ⚡ 30% faster than body-parser
