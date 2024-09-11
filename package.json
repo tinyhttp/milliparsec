@@ -1,13 +1,18 @@
 {
   "name": "milliparsec",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "tiniest body parser in the universe",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "type": "module",
-  "keywords": ["body-parser", "express", "http", "body-parsing"],
+  "keywords": [
+    "body-parser",
+    "express",
+    "http",
+    "body-parsing"
+  ],
   "engines": {
     "node": ">=20"
   },
@@ -21,7 +26,9 @@
     "typescript": "^5.5.3",
     "uvu": "^0.5.6"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "uvu -r tsm",
     "test:coverage": "c8 --include=src pnpm test",
