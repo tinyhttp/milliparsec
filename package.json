@@ -9,7 +9,7 @@
   "type": "module",
   "keywords": ["body-parser", "express", "http", "body-parsing"],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "exports": "./dist/index.js",
   "devDependencies": {

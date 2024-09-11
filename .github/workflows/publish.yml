@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           cache: 'pnpm'
-          node-version: 22
+          node-version: 20
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install
       - run: pnpm build
