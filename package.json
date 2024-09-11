@@ -7,14 +7,18 @@
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "type": "module",
-  "keywords": ["body-parser", "express", "http", "body-parsing"],
+  "keywords": [
+    "body-parser",
+    "express",
+    "http",
+    "body-parsing"
+  ],
   "engines": {
     "node": ">=20"
   },
   "exports": "./dist/index.js",
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
-    "@tinyhttp/app": "^2.2.4",
     "@types/node": "^20.14.9",
     "c8": "10.1.2",
     "supertest-fetch": "^2.0.0",
@@ -22,7 +26,9 @@
     "typescript": "^5.5.3",
     "uvu": "^0.5.6"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "uvu -r tsm",
     "test:coverage": "c8 --include=src pnpm test",
