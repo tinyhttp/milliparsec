@@ -2,10 +2,12 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "esModuleInterop": true,
-    "module": "ESNext",
+    "module": "NodeNext",
     "target": "ES2019",
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "declaration": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "strict": true,
+    "removeComments": true
   }
 }

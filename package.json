@@ -7,14 +7,9 @@
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "type": "module",
-  "keywords": [
-    "body-parser",
-    "express",
-    "http",
-    "body-parsing"
-  ],
+  "keywords": ["body-parser", "express", "http", "body-parsing"],
   "engines": {
-    "node": ">=12.20"
+    "node": ">=20"
   },
   "exports": "./dist/index.js",
   "devDependencies": {
@@ -27,9 +22,7 @@
     "typescript": "^5.5.3",
     "uvu": "^0.5.6"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "test": "uvu -r tsm",
     "test:coverage": "c8 --include=src pnpm test",
@@ -37,5 +30,8 @@
     "build": "tsc -p tsconfig.build.json",
     "prepublishOnly": "pnpm build && pnpm test"
   },
-  "packageManager": "pnpm@9.4.0"
+  "packageManager": "pnpm@9.4.0",
+  "publishConfig": {
+    "provenance": true
+  }
 }
