@@ -1,7 +1,7 @@
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { makeFetch } from 'supertest-fetch'
 import { test } from 'uvu'
-import { json, raw, ReqWithBody, text, urlencoded, custom, multipart } from './src/index'
+import { json, raw, type ReqWithBody, text, urlencoded, custom, multipart } from './src/index'
 
 test('should parse JSON body', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
@@ -17,9 +17,38 @@ test('should parse JSON body', async () => {
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   }).expect(200, { hello: 'world' })
+})
+
+test('should ignore JSON empty body', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await json()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'application/json')
+
+    res.end(JSON.stringify({ ok: true }))
+  })
+
+  // Empty string body
+  await makeFetch(server)('/', {
+    body: '',
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }).expect(200, { ok: true })
+
+  // Unset body
+  await makeFetch(server)('/', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }).expect(200, { ok: true })
 })
 
 test('should parse json body with no content-type headers', async () => {
@@ -35,8 +64,8 @@ test('should parse json body with no content-type headers', async () => {
     body: JSON.stringify({ hello: 'world' }),
     method: 'POST',
     headers: {
-      Accept: 'application/json',
-    },
+      Accept: 'application/json'
+    }
   }).expect(200, { hello: 'world' })
 })
 
@@ -53,8 +82,8 @@ test('json should call next() without a body', async () => {
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   }).expect(200)
 })
 
@@ -66,7 +95,7 @@ test('json should ignore GET request', async () => {
   })
 
   await makeFetch(server)('/', {
-    method: 'GET',
+    method: 'GET'
   }).expect(200, 'GET is ignored')
 })
 
@@ -84,8 +113,8 @@ test('should parse urlencoded body', async () => {
     method: 'POST',
     headers: {
       Accept: 'application/x-www-form-urlencoded',
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   }).expect(200, { hello: 'world' })
 })
 
@@ -97,7 +126,7 @@ test('urlencoded should ignore GET request', async () => {
   })
 
   await makeFetch(server)('/', {
-    method: 'GET',
+    method: 'GET'
   }).expect(200, 'GET is ignored')
 })
 
@@ -115,8 +144,8 @@ test('should parse text body', async () => {
     method: 'POST',
     headers: {
       Accept: 'text/plain',
-      'Content-Type': 'text/plain',
-    },
+      'Content-Type': 'text/plain'
+    }
   }).expect(200, 'hello world')
 })
 
@@ -133,8 +162,8 @@ test('text should ignore GET request', async () => {
     method: 'GET',
     headers: {
       Accept: 'text/plain',
-      'Content-Type': 'text/plain',
-    },
+      'Content-Type': 'text/plain'
+    }
   }).expect(200, 'GET is ignored')
 })
 
@@ -152,8 +181,8 @@ test('should parse raw body', async () => {
     method: 'POST',
     headers: {
       Accept: 'text/plain',
-      'Content-Type': 'text/plain',
-    },
+      'Content-Type': 'text/plain'
+    }
   }).expect(200, 'hello world')
 })
 
@@ -170,8 +199,8 @@ test('raw should ignore GET request', async () => {
     method: 'GET',
     headers: {
       Accept: 'text/plain',
-      'Content-Type': 'text/plain',
-    },
+      'Content-Type': 'text/plain'
+    }
   }).expect(200, 'GET is ignored')
 })
 
@@ -189,8 +218,8 @@ test('should parse custom body', async () => {
     method: 'POST',
     headers: {
       Accept: 'text/plain',
-      'Content-Type': 'text/plain',
-    },
+      'Content-Type': 'text/plain'
+    }
   }).expect(200, 'HELLO WORLD')
 })
 
@@ -207,8 +236,8 @@ test('custom should ignore GET request', async () => {
     method: 'GET',
     headers: {
       Accept: 'text/plain',
-      'Content-Type': 'text/plain',
-    },
+      'Content-Type': 'text/plain'
+    }
   }).expect(200, 'GET is ignored')
 })
 

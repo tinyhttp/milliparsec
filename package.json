@@ -1,6 +1,6 @@
 {
   "name": "milliparsec",
-  "version": "2.2.1",
+  "version": "3.0.0",
   "description": "tiniest body parser in the universe",
   "repository": "https://github.com/talentlessguy/parsec.git",
   "author": "talentlessguy <pilll.PL22@gmail.com>",
@@ -14,29 +14,28 @@
     "body-parsing"
   ],
   "engines": {
-    "node": ">=12.4"
+    "node": ">=12.20"
   },
   "exports": "./dist/index.js",
   "devDependencies": {
-    "@rollup/plugin-typescript": "6",
-    "@tinyhttp/app": "^2.0.16",
-    "@types/node": "^17.0.12",
-    "c8": "7.11.0",
-    "esbuild-node-loader": "^0.6.4",
-    "rollup": "^2.66.1",
-    "supertest-fetch": "^1.5.0",
-    "tslib": "^2.3.1",
-    "typescript": "^4.5.5",
-    "uvu": "^0.5.3"
+    "@biomejs/biome": "1.8.3",
+    "@tinyhttp/app": "^2.2.4",
+    "@types/node": "^20.14.9",
+    "c8": "10.1.2",
+    "supertest-fetch": "^2.0.0",
+    "tsm": "^2.3.0",
+    "typescript": "^5.5.3",
+    "uvu": "^0.5.6"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "test": "node --experimental-loader esbuild-node-loader test.ts",
+    "test": "uvu -r tsm",
     "test:coverage": "c8 --include=src pnpm test",
     "test:report": "c8 report --reporter=text-lcov > coverage.lcov",
-    "build": "rollup -c",
-    "prepare": "pnpm build && pnpm test"
-  }
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "pnpm build && pnpm test"
+  },
+  "packageManager": "pnpm@9.4.0"
 }

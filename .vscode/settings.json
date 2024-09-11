@@ -1,0 +1,16 @@
+{
+  "biome.enabled": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "prettier.enable": false,
+  "eslint.enable": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
+}
