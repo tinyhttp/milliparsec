@@ -9,7 +9,7 @@
   "type": "module",
   "keywords": ["body-parser", "express", "http", "body-parsing"],
   "engines": {
-    "node": ">=12.20"
+    "node": ">=18"
   },
   "exports": "./dist/index.js",
   "devDependencies": {
@@ -30,5 +30,8 @@
     "build": "tsc -p tsconfig.build.json",
     "prepublishOnly": "pnpm build && pnpm test"
   },
-  "packageManager": "pnpm@9.4.0"
+  "packageManager": "pnpm@9.4.0",
+  "publishConfig": {
+    "provenance": true
+  }
 }
