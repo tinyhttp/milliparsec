@@ -1,9 +1,9 @@
 {
   "name": "milliparsec",
-  "version": "4.0.0",
+  "version": "3.0.0",
   "description": "tiniest body parser in the universe",
-  "repository": "https://github.com/talentlessguy/parsec.git",
-  "author": "talentlessguy <pilll.PL22@gmail.com>",
+  "repository": "https://github.com/tinyhttp/parsec.git",
+  "author": "talentlessguy <hi@v1rtl.site>",
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "type": "module",
