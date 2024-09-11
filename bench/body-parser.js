@@ -1,7 +1,7 @@
 // @ts-check
 
-import bodyParser from 'body-parser'
 import { createServer } from 'node:http'
+import bodyParser from 'body-parser'
 
 const mw = bodyParser.json()
 

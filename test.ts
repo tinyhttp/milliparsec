@@ -1,9 +1,9 @@
+import assert from 'node:assert'
+import { Buffer } from 'node:buffer'
 import { createServer } from 'node:http'
 import { makeFetch } from 'supertest-fetch'
 import { test } from 'uvu'
-import { json, raw, type ReqWithBody, text, urlencoded, custom, multipart } from './src/index.js'
-import assert from 'node:assert'
-import { Buffer } from 'node:buffer'
+import { type ReqWithBody, custom, json, multipart, raw, text, urlencoded } from './src/index.js'
 
 test('should parse JSON body', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
