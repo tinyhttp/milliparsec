@@ -2,6 +2,8 @@ import { createServer } from 'node:http'
 import { makeFetch } from 'supertest-fetch'
 import { test } from 'uvu'
 import { json, raw, type ReqWithBody, text, urlencoded, custom, multipart } from './src/index'
+import assert from 'node:assert'
+import { Buffer } from 'node:buffer'
 
 test('should parse JSON body', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
@@ -245,6 +247,29 @@ test('should parse multipart body', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
     await multipart()(req, res, (err) => void err && console.log(err))
 
+    res.setHeader('Content-Type', 'multipart/form-data')
+    res.end(JSON.stringify(req.body))
+  })
+
+  const fd = new FormData()
+
+  fd.set('textfield', 'textfield data\nwith new lines\nbecause this is valid')
+  fd.set('someother', 'textfield with text')
+
+  await makeFetch(server)('/', {
+    // probaly better to use form-data package
+    body: fd,
+    method: 'POST'
+  }).expect(200, {
+    textfield: 'textfield data\r\nwith new lines\r\nbecause this is valid',
+    someother: 'textfield with text'
+  })
+})
+
+test('should parse multipart with boundary', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await multipart()(req, res, (err) => void err && console.log(err))
+
     res.setHeader('Content-Type', 'multipart/form-data; boundary=some-boundary')
 
     res.end(JSON.stringify(req.body))
@@ -252,15 +277,15 @@ test('should parse multipart body', async () => {
 
   await makeFetch(server)('/', {
     // probaly better to use form-data package
-    body: "--some-boundary\r\nContent-Disposition: form-data; name=\"textfield\"\r\n\r\ntextfield data\nwith new lines\nbecause this is valid\r\n--some-boundary\r\nContent-Disposition: form-data; name=\"someother\"\r\n\r\ntextfield with text\r\n--some-boundary--\r\n",
+    body: '--some-boundary\r\nContent-Disposition: form-data; name="textfield"\r\n\r\ntextfield data\nwith new lines\nbecause this is valid\r\n--some-boundary\r\nContent-Disposition: form-data; name="someother"\r\n\r\ntextfield with text\r\n--some-boundary--\r\n',
     method: 'POST',
     headers: {
       Accept: 'multipart/form-data',
-      'Content-Type': 'multipart/form-data; boundary=some-boundary',
-    },
+      'Content-Type': 'multipart/form-data; boundary=some-boundary'
+    }
   }).expect(200, {
-    textfield: "textfield data\nwith new lines\nbecause this is valid",
-    someother: "textfield with text",
+    textfield: 'textfield data\nwith new lines\nbecause this is valid',
+    someother: 'textfield with text'
   })
 })
 
@@ -277,9 +302,66 @@ test('multipart should ignore GET request', async () => {
     method: 'GET',
     headers: {
       Accept: 'multipart/form-data',
-      'Content-Type': 'multipart/form-data; boundary=some-boundary',
-    },
+      'Content-Type': 'multipart/form-data; boundary=some-boundary'
+    }
   }).expect(200, 'GET is ignored')
+})
+
+test('should parse multipart with files', async () => {
+  const fd = new FormData()
+  const file = new File(['hello world'], 'hello.txt', { type: 'text/plain' })
+  fd.set('file', file)
+  const server = createServer(async (req: ReqWithBody<{ file: File }>, res) => {
+    await multipart()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'multipart/form-data')
+
+    const formBuf = new Uint8Array(await file.arrayBuffer())
+    const buf = new Uint8Array(await (req.body?.file as File).arrayBuffer())
+
+    assert.equal(Buffer.compare(buf, formBuf), 0)
+
+    res.end(req.body?.file.name)
+  })
+
+  await makeFetch(server)('/', {
+    // probaly better to use form-data package
+    body: fd,
+    method: 'POST'
+  }).expect(200, 'hello.txt')
+})
+
+test('should support multiple files', async () => {
+  const fd = new FormData()
+
+  const files = [
+    new File(['hello world'], 'hello.txt', { type: 'text/plain' }),
+    new File(['bye world'], 'bye.txt', { type: 'text/plain' })
+  ]
+
+  fd.set('file1', files[0])
+  fd.set('file2', files[1])
+
+  const server = createServer(async (req: ReqWithBody<{ file1: File; file2: File }>, res) => {
+    await multipart()(req, res, (err) => void err && console.log(err))
+
+    res.setHeader('Content-Type', 'multipart/form-data')
+
+    const files = Object.values(req.body!)
+
+    for (const file of files) {
+      const buf = new Uint8Array(await file.arrayBuffer())
+      const i = files.indexOf(file)
+      const formBuf = new Uint8Array(await files[i].arrayBuffer())
+      assert.strictEqual(Buffer.compare(buf, formBuf), 0)
+    }
+    res.end('ok')
+  })
+
+  await makeFetch(server)('/', {
+    body: fd,
+    method: 'POST'
+  }).expect(200)
 })
 
 test.run()

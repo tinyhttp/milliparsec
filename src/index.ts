@@ -71,28 +71,26 @@ const getBoundary = (contentType: string) => {
 
 const parseMultipart = (body: string, boundary: string) => {
   // Split the body into an array of parts
-  const parts = body.split(new RegExp(`${boundary}(--)?`)).filter(part => !!part && (/content-disposition/i.test(part)))
+  const parts = body.split(new RegExp(`${boundary}(--)?`)).filter((part) => !!part && /content-disposition/i.test(part))
   const parsedBody = {}
   // Parse each part into a form data object
-  parts.map(part => {
-    const [headers, ...lines] = part.split('\r\n').filter(part => !!part)
+  parts.map((part) => {
+    const [headers, ...lines] = part.split('\r\n').filter((part) => !!part)
     const data = lines.join('\r\n').trim()
 
     // Extract the name and filename from the headers
     const name = /name="(.+?)"/.exec(headers)![1]
     const filename = /filename="(.+?)"/.exec(headers)
     if (filename) {
+      const contentTypeMatch = /Content-Type: (.+)/i.exec(data)!
+      const fileContent = data.slice(contentTypeMatch[0].length + 2)
       // This is a file field
       return Object.assign(parsedBody, {
-        [name]: {
-          filename: filename[1],
-          value: data,
-        }
+        [name]: new File([fileContent], filename[1], { type: contentTypeMatch[1] })
       })
-    } 
-      // This is a regular field
-      return Object.assign(parsedBody, { [name]: data })
-    
+    }
+    // This is a regular field
+    return Object.assign(parsedBody, { [name]: data })
   })
 
   return parsedBody
@@ -107,7 +105,6 @@ const multipart = () => async (req: ReqWithBody, res: Response, next: NextFuncti
 
     next()
   } else next()
-};
-
+}
 
 export { custom, json, raw, text, urlencoded, multipart }

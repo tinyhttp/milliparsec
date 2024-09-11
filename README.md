@@ -86,6 +86,16 @@ Parses request body using `new URLSearchParams`.
 
 Parses request body using `JSON.parse`.
 
+### `multipart(req, res, cb)`
+
+Parses request body using `multipart/form-data` content type and boundary.
+
+```js
+// curl -F "textfield=textfield data\nwith new lines\nbecause this is valid" -F "someother=textfield with text" localhost
+await multipart()(req, res, (err) => void err && console.log(err))
+res.end(req.body) // { textfield: "textfield data\nwith new lines\nbecause this is valid", someother: "textfield with text" }
+```
+
 ### `custom(fn)(req, res, cb)`
 
 Custom function for `parsec`.
