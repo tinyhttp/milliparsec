@@ -6,6 +6,8 @@
     "target": "ES2019",
     "moduleResolution": "Node",
     "declaration": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "strict": true,
+    "removeComments": true
   }
 }
