@@ -1,6 +1,6 @@
 {
   "name": "milliparsec",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "tiniest body parser in the universe",
   "repository": "https://github.com/tinyhttp/parsec.git",
   "author": "talentlessguy <hi@v1rtl.site>",
