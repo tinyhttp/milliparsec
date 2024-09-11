@@ -1,7 +1,7 @@
 import { createServer } from 'node:http'
 import { makeFetch } from 'supertest-fetch'
 import { test } from 'uvu'
-import { json, raw, type ReqWithBody, text, urlencoded, custom, multipart } from './src/index'
+import { json, raw, type ReqWithBody, text, urlencoded, custom, multipart } from './src/index.js'
 import assert from 'node:assert'
 import { Buffer } from 'node:buffer'
 

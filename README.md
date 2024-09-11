@@ -17,7 +17,7 @@ Check out [deno-libs/parsec](https://github.com/deno-libs/parsec) for Deno port.
 
 - ⏩ built with `async` / `await`
 - 🛠 JSON / raw / urlencoded data support
-- 📦 tiny package size (7.39KB)
+- 📦 tiny package size (8KB dist size)
 - 🔥 no dependencies
 - ✨ [tinyhttp](https://github.com/tinyhttp/tinyhttp) and Express support
 - ⚡ 30% faster than body-parser
@@ -28,11 +28,8 @@ Check out [deno-libs/parsec](https://github.com/deno-libs/parsec) for Deno port.
 # pnpm
 pnpm i milliparsec
 
-# yarn
-yarn add milliparsec
-
-# npm
-npm i milliparsec
+# bun
+bun i milliparsec
 ```
 
 ## Usage
@@ -42,7 +39,7 @@ npm i milliparsec
 Use a middleware inside a server:
 
 ```js
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { json } from 'milliparsec'
 
 const server = createServer(async (req: ReqWithBody, res) => {
@@ -88,12 +85,12 @@ Parses request body using `JSON.parse`.
 
 ### `multipart(req, res, cb)`
 
-Parses request body using `multipart/form-data` content type and boundary.
+Parses request body using `multipart/form-data` content type and boundary. Supports files as well.
 
 ```js
-// curl -F "textfield=textfield data\nwith new lines\nbecause this is valid" -F "someother=textfield with text" localhost
+// curl -F "textfield=textfield" -F "someother=textfield with text" localhost:3000
 await multipart()(req, res, (err) => void err && console.log(err))
-res.end(req.body) // { textfield: "textfield data\nwith new lines\nbecause this is valid", someother: "textfield with text" }
+res.end(req.body) // { textfield: "textfield", someother: "textfield with text" }
 ```
 
 ### `custom(fn)(req, res, cb)`
@@ -101,7 +98,7 @@ res.end(req.body) // { textfield: "textfield data\nwith new lines\nbecause this 
 Custom function for `parsec`.
 
 ```js
-// curl -d "this text must be uppercased" localhost
+// curl -d "this text must be uppercased" localhost:3000
 await custom(
   req,
   (d) => d.toUpperCase(),
