@@ -24,66 +24,66 @@ const defaultErrorFn: LimitErrorFn = (limit) => `Payload too large. Limit: ${lim
 // Main function
 export const p =
   <T = any>(fn: (body: any) => any, limit = defaultPayloadLimit, errorFn: LimitErrorFn = defaultErrorFn) =>
-  async (req: ReqWithBody<T>, _res: Response, next: (err?: any) => void) => {
-    try {
-      let body = ''
+    async (req: ReqWithBody<T>, _res: Response, next: (err?: any) => void) => {
+      try {
+        let body = ''
 
-      for await (const chunk of req) {
-        if (body.length > limit) throw new Error(errorFn(limit))
-        body += chunk
+        for await (const chunk of req) {
+          if (body.length > limit) throw new Error(errorFn(limit))
+          body += chunk
+        }
+
+        return fn(body)
+      } catch (e) {
+        next(e)
       }
-
-      return fn(body)
-    } catch (e) {
-      next(e)
     }
-  }
 
 const custom =
   <T = any>(fn: (body: any) => any) =>
-  async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-    if (hasBody(req.method!)) req.body = await p<T>(fn)(req, _res, next)
-    next()
-  }
+    async (req: ReqWithBody, _res: Response, next: NextFunction) => {
+      if (hasBody(req.method!)) req.body = await p<T>(fn)(req, _res, next)
+      next()
+    }
 
 const json =
   ({ limit, errorFn }: ParserOptions = {}) =>
-  async (req: ReqWithBody, res: Response, next: NextFunction) => {
-    if (hasBody(req.method!)) {
-      req.body = await p((x) => (x ? JSON.parse(x.toString()) : {}), limit, errorFn)(req, res, next)
-    } else next()
-  }
+    async (req: ReqWithBody, res: Response, next: NextFunction) => {
+      if (hasBody(req.method!)) {
+        req.body = await p((x) => (x ? JSON.parse(x.toString()) : {}), limit, errorFn)(req, res, next)
+      } else next()
+    }
 
 const raw =
   ({ limit, errorFn }: ParserOptions = {}) =>
-  async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-    if (hasBody(req.method!)) {
-      req.body = await p((x) => x, limit, errorFn)(req, _res, next)
-    } else next()
-  }
+    async (req: ReqWithBody, _res: Response, next: NextFunction) => {
+      if (hasBody(req.method!)) {
+        req.body = await p((x) => x, limit, errorFn)(req, _res, next)
+      } else next()
+    }
 
 const text =
   ({ limit, errorFn }: ParserOptions = {}) =>
-  async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-    if (hasBody(req.method!)) {
-      req.body = await p((x) => x.toString(), limit, errorFn)(req, _res, next)
-    } else next()
-  }
+    async (req: ReqWithBody, _res: Response, next: NextFunction) => {
+      if (hasBody(req.method!)) {
+        req.body = await p((x) => x.toString(), limit, errorFn)(req, _res, next)
+      } else next()
+    }
 
 const urlencoded =
   ({ limit, errorFn }: ParserOptions = {}) =>
-  async (req: ReqWithBody, _res: Response, next: NextFunction) => {
-    if (hasBody(req.method!)) {
-      req.body = await p(
-        (x) => {
-          const urlSearchParam = new URLSearchParams(x.toString())
-          return Object.fromEntries(urlSearchParam.entries())
-        },
-        limit,
-        errorFn
-      )(req, _res, next)
-    } else next()
-  }
+    async (req: ReqWithBody, _res: Response, next: NextFunction) => {
+      if (hasBody(req.method!)) {
+        req.body = await p(
+          (x) => {
+            const urlSearchParam = new URLSearchParams(x.toString())
+            return Object.fromEntries(urlSearchParam.entries())
+          },
+          limit,
+          errorFn
+        )(req, _res, next)
+      } else next()
+    }
 
 const getBoundary = (contentType: string) => {
   // Extract the boundary from the Content-Type header
@@ -94,9 +94,10 @@ const getBoundary = (contentType: string) => {
 const parseMultipart = (body: string, boundary: string) => {
   // Split the body into an array of parts
   const parts = body.split(new RegExp(`${boundary}(--)?`)).filter((part) => !!part && /content-disposition/i.test(part))
-  const parsedBody = {}
+  const parsedBody: Record<string, (File | string)[]> = {}
   // Parse each part into a form data object
-  parts.map((part) => {
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  parts.forEach((part) => {
     const [headers, ...lines] = part.split('\r\n').filter((part) => !!part)
     const data = lines.join('\r\n').trim()
 
@@ -107,17 +108,18 @@ const parseMultipart = (body: string, boundary: string) => {
       const contentTypeMatch = /Content-Type: (.+)/i.exec(data)!
       const fileContent = data.slice(contentTypeMatch[0].length + 2)
 
-      return Object.assign(parsedBody, {
-        [name]: new File([fileContent], filename[1], { type: contentTypeMatch[1] })
-      })
+      const file = new File([fileContent], filename[1], { type: contentTypeMatch[1] })
+
+      parsedBody[name] = parsedBody[name] ? [...parsedBody[name], file] : [file]
+      return
     }
     // This is a regular field
-    return Object.assign(parsedBody, { [name]: data })
+    parsedBody[name] = parsedBody[name] ? [...parsedBody[name], data] : [data]
+    return
   })
 
   return parsedBody
 }
-
 type MultipartOptions = Partial<{
   fileCountLimit: number
   fileSizeLimit: number
@@ -125,13 +127,14 @@ type MultipartOptions = Partial<{
 
 const multipart =
   (opts: MultipartOptions = {}) =>
-  async (req: ReqWithBody, res: Response, next: NextFunction) => {
-    if (hasBody(req.method!)) {
-      req.body = await p((x) => {
-        const boundary = getBoundary(req.headers['content-type']!)
-        if (boundary) return parseMultipart(x, boundary)
-      })(req, res, next)
-    } else next()
-  }
+    async (req: ReqWithBody, res: Response, next: NextFunction) => {
+      if (hasBody(req.method!)) {
+        req.body = await p((x) => {
+          const boundary = getBoundary(req.headers['content-type']!)
+          if (boundary) return parseMultipart(x, boundary)
+        })(req, res, next)
+        next()
+      } else next()
+    }
 
 export { custom, json, raw, text, urlencoded, multipart }

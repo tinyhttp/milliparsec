@@ -90,7 +90,7 @@ Parses request body using `multipart/form-data` content type and boundary. Suppo
 ```js
 // curl -F "textfield=textfield" -F "someother=textfield with text" localhost:3000
 await multipart()(req, res, (err) => void err && console.log(err))
-res.end(req.body) // { textfield: "textfield", someother: "textfield with text" }
+res.end(req.body) // { textfield: ["textfield"], someother: ["textfield with text"] }
 ```
 
 ### `custom(fn)(req, res, cb)`

@@ -10,8 +10,7 @@ const server = createServer((req, res) => {
      * @type {File}
      */
     // @ts-ignore
-    const file = req.body.file
-
+    const file = req.body.file[0]
     const stream = file.stream()
 
     res.writeHead(200, {
