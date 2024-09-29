@@ -364,4 +364,59 @@ test('should support multiple files', async () => {
   }).expect(200)
 })
 
+test('should throw on default limit', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await text()(req, res, (err) => {
+      console.log('here')
+      if (err) res.writeHead(413).end(err.message)
+      else res.end('ok')
+    })
+  })
+
+  await makeFetch(server)('/', {
+    body: new Uint8Array(Buffer.alloc(104897728, 'a').buffer),
+    method: 'POST',
+    headers: {
+      Accept: 'text/plain',
+      'Content-Type': 'text/plain'
+    }
+  }).expect(413, 'Payload too large. Limit: 104857600 bytes')
+})
+
+test('should throw on custom limit', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await text({ limit: 1024 })(req, res, (err) => {
+      if (err) res.writeHead(413).end(err.message)
+      else res.end(req.body)
+    })
+  })
+
+  await makeFetch(server)('/', {
+    body: new Uint8Array(Buffer.alloc(1024 ** 2, 'a').buffer),
+    method: 'POST',
+    headers: {
+      Accept: 'text/plain',
+      'Content-Type': 'text/plain'
+    }
+  }).expect(413, 'Payload too large. Limit: 1024 bytes')
+})
+
+test('should throw on limit with custom error message', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await text({ limit: 1024, errorFn: (limit) => `Payload too large. Limit: ${limit / 1024}KB` })(req, res, (err) => {
+      if (err) res.writeHead(413).end(err.message)
+      else res.end(req.body)
+    })
+  })
+
+  await makeFetch(server)('/', {
+    body: new Uint8Array(Buffer.alloc(1024 ** 2, 'a').buffer),
+    method: 'POST',
+    headers: {
+      Accept: 'text/plain',
+      'Content-Type': 'text/plain'
+    }
+  }).expect(413, 'Payload too large. Limit: 1KB')
+})
+
 test.run()
