@@ -106,7 +106,7 @@ const parseMultipart = (body: string, boundary: string) => {
     if (filename) {
       const contentTypeMatch = /Content-Type: (.+)/i.exec(data)!
       const fileContent = data.slice(contentTypeMatch[0].length + 2)
-      // This is a file field
+
       return Object.assign(parsedBody, {
         [name]: new File([fileContent], filename[1], { type: contentTypeMatch[1] })
       })
@@ -118,14 +118,20 @@ const parseMultipart = (body: string, boundary: string) => {
   return parsedBody
 }
 
-const multipart = () => async (req: ReqWithBody, res: Response, next: NextFunction) => {
-  if (hasBody(req.method!)) {
-    req.body = await p((x) => {
-      const boundary = getBoundary(req.headers['content-type']!)
-      if (boundary) return parseMultipart(x, boundary)
-    })(req, res, next)
+type MultipartOptions = Partial<{
+  fileCountLimit: number
+  fileSizeLimit: number
+}>
+
+const multipart =
+  (opts: MultipartOptions = {}) =>
+  async (req: ReqWithBody, res: Response, next: NextFunction) => {
+    if (hasBody(req.method!)) {
+      req.body = await p((x) => {
+        const boundary = getBoundary(req.headers['content-type']!)
+        if (boundary) return parseMultipart(x, boundary)
+      })(req, res, next)
+    } else next()
   }
-  else next()
-}
 
 export { custom, json, raw, text, urlencoded, multipart }

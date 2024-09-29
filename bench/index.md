@@ -8,13 +8,15 @@ Below is a comparison of body-parser and milliparsec in terms of parsing a reque
 - System: Linux 6.9.7
 - Machine: Asus ROG Zephyrus G16
 
-### Benchmark command:
+### JSON parsing
+
+#### Benchmark command:
 
 ```sh
 autocannon -b '{"a":1}' -H "Content-Type=application/json" localhost:3002 # or 3003
 ```
 
-### Results
+#### Results
 
 body-parser result:
 
@@ -60,6 +62,18 @@ Req/Bytes counts sampled once per second.
 697k requests in 11.02s, 85.1 MB rea
 ```
 
-## Verdict
+### Verdict
 
 milliparsec, on average, is ~34% faster.
+
+### Multipart with files
+
+#### Benchmark command:
+
+```sh
+autocannon -m POST --form '{ "file": {  "type": "file", "path": "./file.txt"  } }' localhost:3004 
+```
+
+#### Results
+
+TBD
