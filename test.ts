@@ -425,7 +425,7 @@ test('should throw on custom payloadLimit', async () => {
 
 test('should throw on payloadLimit with custom error message', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
-    await text({ payloadLimit: 1024, errorFn: (payloadLimit) => `Payload too large. Limit: ${payloadLimit / 1024}KB` })(req, res, (err) => {
+    await text({ payloadLimit: 1024, payloadLimitErrorFn: (payloadLimit) => new Error(`Payload too large. Limit: ${payloadLimit / 1024}KB`) })(req, res, (err) => {
       if (err) res.writeHead(413).end(err.message)
       else res.end(req.body)
     })
