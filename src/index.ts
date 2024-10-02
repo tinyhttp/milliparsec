@@ -91,10 +91,13 @@ const getBoundary = (contentType: string) => {
   return match ? `--${match[1]}` : null
 }
 
-const parseMultipart = (body: string, boundary: string) => {
+const parseMultipart = (body: string, boundary: string, { fileCountLimit }: MultipartOptions) => {
   // Split the body into an array of parts
   const parts = body.split(new RegExp(`${boundary}(--)?`)).filter((part) => !!part && /content-disposition/i.test(part))
   const parsedBody: Record<string, (File | string)[]> = {}
+
+  if (fileCountLimit && parts.length > fileCountLimit) throw new Error(`Too many files. Limit: ${fileCountLimit}`)
+
   // Parse each part into a form data object
   // biome-ignore lint/complexity/noForEach: <explanation>
   parts.forEach((part) => {
@@ -126,13 +129,13 @@ type MultipartOptions = Partial<{
 }>
 
 const multipart =
-  (opts: MultipartOptions = {}) =>
+  ({ limit, errorFn, ...opts }: MultipartOptions & ParserOptions = {}) =>
     async (req: ReqWithBody, res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) {
         req.body = await p((x) => {
           const boundary = getBoundary(req.headers['content-type']!)
-          if (boundary) return parseMultipart(x, boundary)
-        })(req, res, next)
+          if (boundary) return parseMultipart(x, boundary, opts)
+        }, limit, errorFn)(req, res, next)
         next()
       } else next()
     }

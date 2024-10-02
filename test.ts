@@ -442,4 +442,23 @@ test('should throw on limit with custom error message', async () => {
   }).expect(413, 'Payload too large. Limit: 1KB')
 })
 
+test('should throw multipart if amount of files exceeds limit', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await multipart({ fileCountLimit: 1 })(req, res, (err) => {
+      if (err) res.writeHead(413).end(err.message)
+      else res.end(req.body)
+    })
+  })
+
+  const fd = new FormData()
+
+  fd.set('file1', new File(['hello world'], 'hello.txt', { type: 'text/plain' }))
+  fd.set('file2', new File(['bye world'], 'bye.txt', { type: 'text/plain' }))
+
+  await makeFetch(server)('/', {
+    body: fd,
+    method: 'POST',
+  }).expect(413, 'Too many files. Limit: 1')
+})
+
 test.run()
