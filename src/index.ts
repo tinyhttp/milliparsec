@@ -140,6 +140,7 @@ const multipart =
         req.body = await p((x) => {
           const boundary = getBoundary(req.headers['content-type']!)
           if (boundary) return parseMultipart(x, boundary, opts)
+          return {}
         }, payloadLimit, payloadLimitErrorFn)(req, res, next)
         next()
       } else next()
