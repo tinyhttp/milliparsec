@@ -13,11 +13,6 @@ const server = createServer((req, res) => {
     const file = req.body.file[0]
     const stream = file.stream()
 
-    res.writeHead(200, {
-      'Content-Type': file.type,
-      'Content-Disposition': `attachment; filename="${file.name}"`
-    })
-
     // Pipe the stream to the response
     stream.pipeTo(
       new WritableStream({
