@@ -1,8 +1,8 @@
 import assert from 'node:assert'
 import { Buffer } from 'node:buffer'
 import { createServer } from 'node:http'
+import { test } from 'node:test'
 import { makeFetch } from 'supertest-fetch'
-import { test } from 'uvu'
 import { type ReqWithBody, custom, json, multipart, raw, text, urlencoded } from './src/index.js'
 
 test('should parse JSON body', async () => {
@@ -460,5 +460,3 @@ test('should throw multipart if amount of files exceeds limit', async () => {
     method: 'POST',
   }).expect(413, 'Too many files. Limit: 1')
 })
-
-test.run()
