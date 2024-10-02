@@ -390,14 +390,13 @@ test('should support multiple files', async () => {
 test('should throw on default limit', async () => {
   const server = createServer(async (req: ReqWithBody, res) => {
     await text()(req, res, (err) => {
-      console.log('here')
       if (err) res.writeHead(413).end(err.message)
-      else res.end('ok')
+      else res.end(req.body)
     })
   })
 
   await makeFetch(server)('/', {
-    body: new Uint8Array(Buffer.alloc(104897728, 'a').buffer),
+    body: new Uint8Array(Buffer.alloc(200 * 1024 ** 2, 'a').buffer),
     method: 'POST',
     headers: {
       Accept: 'text/plain',
