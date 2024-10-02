@@ -12,24 +12,24 @@ export const hasBody = (method: string) => ['POST', 'PUT', 'PATCH', 'DELETE'].in
 
 const defaultPayloadLimit = 104857600 // 100KB
 
-export type LimitErrorFn = (limit: number) => string
+export type LimitErrorFn = (payloadLimit: number) => string
 
 export type ParserOptions = Partial<{
-  limit: number
+  payloadLimit: number
   errorFn: LimitErrorFn
 }>
 
-const defaultErrorFn: LimitErrorFn = (limit) => `Payload too large. Limit: ${limit} bytes`
+const defaultErrorFn: LimitErrorFn = (payloadLimit) => `Payload too large. Limit: ${payloadLimit} bytes`
 
 // Main function
 export const p =
-  <T = any>(fn: (body: any) => any, limit = defaultPayloadLimit, errorFn: LimitErrorFn = defaultErrorFn) =>
+  <T = any>(fn: (body: any) => any, payloadLimit = defaultPayloadLimit, errorFn: LimitErrorFn = defaultErrorFn) =>
     async (req: ReqWithBody<T>, _res: Response, next: (err?: any) => void) => {
       try {
         let body = ''
 
         for await (const chunk of req) {
-          if (body.length > limit) throw new Error(errorFn(limit))
+          if (body.length > payloadLimit) throw new Error(errorFn(payloadLimit))
           body += chunk
         }
 
@@ -47,31 +47,31 @@ const custom =
     }
 
 const json =
-  ({ limit, errorFn }: ParserOptions = {}) =>
+  ({ payloadLimit, errorFn }: ParserOptions = {}) =>
     async (req: ReqWithBody, res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) {
-        req.body = await p((x) => (x ? JSON.parse(x.toString()) : {}), limit, errorFn)(req, res, next)
+        req.body = await p((x) => (x ? JSON.parse(x.toString()) : {}), payloadLimit, errorFn)(req, res, next)
       } else next()
     }
 
 const raw =
-  ({ limit, errorFn }: ParserOptions = {}) =>
+  ({ payloadLimit, errorFn }: ParserOptions = {}) =>
     async (req: ReqWithBody, _res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) {
-        req.body = await p((x) => x, limit, errorFn)(req, _res, next)
+        req.body = await p((x) => x, payloadLimit, errorFn)(req, _res, next)
       } else next()
     }
 
 const text =
-  ({ limit, errorFn }: ParserOptions = {}) =>
+  ({ payloadLimit, errorFn }: ParserOptions = {}) =>
     async (req: ReqWithBody, _res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) {
-        req.body = await p((x) => x.toString(), limit, errorFn)(req, _res, next)
+        req.body = await p((x) => x.toString(), payloadLimit, errorFn)(req, _res, next)
       } else next()
     }
 
 const urlencoded =
-  ({ limit, errorFn }: ParserOptions = {}) =>
+  ({ payloadLimit, errorFn }: ParserOptions = {}) =>
     async (req: ReqWithBody, _res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) {
         req.body = await p(
@@ -79,7 +79,7 @@ const urlencoded =
             const urlSearchParam = new URLSearchParams(x.toString())
             return Object.fromEntries(urlSearchParam.entries())
           },
-          limit,
+          payloadLimit,
           errorFn
         )(req, _res, next)
       } else next()
@@ -129,13 +129,13 @@ type MultipartOptions = Partial<{
 }>
 
 const multipart =
-  ({ limit, errorFn, ...opts }: MultipartOptions & ParserOptions = {}) =>
+  ({ payloadLimit, errorFn, ...opts }: MultipartOptions & ParserOptions = {}) =>
     async (req: ReqWithBody, res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) {
         req.body = await p((x) => {
           const boundary = getBoundary(req.headers['content-type']!)
           if (boundary) return parseMultipart(x, boundary, opts)
-        }, limit, errorFn)(req, res, next)
+        }, payloadLimit, errorFn)(req, res, next)
         next()
       } else next()
     }
