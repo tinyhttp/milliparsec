@@ -12,7 +12,7 @@ export const hasBody = (method: string) => ['POST', 'PUT', 'PATCH', 'DELETE'].in
 
 const defaultPayloadLimit = 104857600 // 100KB
 
-export type LimitErrorFn = (payloadLimit: number) => Error
+export type LimitErrorFn = (limit: number) => Error
 
 export type ParserOptions = Partial<{
   payloadLimit: number
@@ -91,7 +91,9 @@ const getBoundary = (contentType: string) => {
   return match ? `--${match[1]}` : null
 }
 
-const parseMultipart = (body: string, boundary: string, { fileCountLimit }: MultipartOptions) => {
+const defaultFileSizeLimitErrorFn: LimitErrorFn = (limit) => new Error(`File too large. Limit: ${limit} bytes`)
+
+const parseMultipart = (body: string, boundary: string, { fileCountLimit, fileSizeLimit, fileSizeLimitErrorFn = defaultFileSizeLimitErrorFn }: MultipartOptions) => {
   // Split the body into an array of parts
   const parts = body.split(new RegExp(`${boundary}(--)?`)).filter((part) => !!part && /content-disposition/i.test(part))
   const parsedBody: Record<string, (File | string)[]> = {}
@@ -103,6 +105,8 @@ const parseMultipart = (body: string, boundary: string, { fileCountLimit }: Mult
   parts.forEach((part) => {
     const [headers, ...lines] = part.split('\r\n').filter((part) => !!part)
     const data = lines.join('\r\n').trim()
+
+    if (fileSizeLimit && data.length > fileSizeLimit) throw fileSizeLimitErrorFn(fileSizeLimit)
 
     // Extract the name and filename from the headers
     const name = /name="(.+?)"/.exec(headers)![1]
@@ -126,6 +130,7 @@ const parseMultipart = (body: string, boundary: string, { fileCountLimit }: Mult
 type MultipartOptions = Partial<{
   fileCountLimit: number
   fileSizeLimit: number
+  fileSizeLimitErrorFn: LimitErrorFn
 }>
 
 const multipart =

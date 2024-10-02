@@ -459,3 +459,39 @@ test('should throw multipart if amount of files exceeds limit', async () => {
     method: 'POST',
   }).expect(413, 'Too many files. Limit: 1')
 })
+
+test('should throw multipart if exceeds allowed file size', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await multipart({ fileSizeLimit: 10 })(req, res, (err) => {
+      if (err) res.writeHead(413).end(err.message)
+      else res.end(req.body)
+    })
+  })
+
+  const fd = new FormData()
+
+  fd.set('file', new File(['hello world'], 'hello.txt', { type: 'text/plain' }))
+
+  await makeFetch(server)('/', {
+    body: fd,
+    method: 'POST',
+  }).expect(413, 'File too large. Limit: 10 bytes')
+})
+
+test('should throw multipart if exceeds allowed file size with a custom error', async () => {
+  const server = createServer(async (req: ReqWithBody, res) => {
+    await multipart({ fileSizeLimit: 10, fileSizeLimitErrorFn: (limit) => new Error(`File too large. Limit: ${limit / 1024}KB`) })(req, res, (err) => {
+      if (err) res.writeHead(413).end(err.message)
+      else res.end(req.body)
+    })
+  })
+
+  const fd = new FormData()
+
+  fd.set('file', new File(['hello world'], 'hello.txt', { type: 'text/plain' }))
+
+  await makeFetch(server)('/', {
+    body: fd,
+    method: 'POST',
+  }).expect(413, 'File too large. Limit: 0.009765625KB')
+})
