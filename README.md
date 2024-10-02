@@ -3,7 +3,6 @@
 <img src="logo.png" width="400px" />
 <br /><br />
 
-![Vulnerabilities][vulns-badge-url]
 [![Version][v-badge-url]][npm-url] [![Coverage][cov-img]][cov-url] [![Github actions][gh-actions-img]][github-actions] [![Downloads][dl-badge-url]][npm-url]
 
 </div>
@@ -15,8 +14,7 @@ Check out [deno-libs/parsec](https://github.com/deno-libs/parsec) for Deno port.
 
 ## Features
 
-- ⏩ built with `async` / `await`
-- 🛠 JSON / raw / urlencoded data support
+- 🛠 JSON / raw / urlencoded / multipart support
 - 📦 tiny package size (8KB dist size)
 - 🔥 no dependencies
 - ✨ [tinyhttp](https://github.com/tinyhttp/tinyhttp) and Express support
@@ -43,26 +41,12 @@ import { createServer } from 'node:http'
 import { json } from 'milliparsec'
 
 const server = createServer(async (req: ReqWithBody, res) => {
-  await json()(req, res, (err) => void err && console.log(err))
+  await json()(req, res, (err) => void err && res.end(err))
 
   res.setHeader('Content-Type', 'application/json')
 
   res.end(JSON.stringify(req.body))
 })
-```
-
-### Web frameworks integration
-
-#### tinyhttp
-
-```ts
-import { App } from '@tinyhttp/app'
-import { urlencoded } from 'milliparsec'
-
-new App()
-  .use(urlencoded())
-  .post('/', (req, res) => void res.send(req.body))
-  .listen(3000, () => console.log(`Started on http://localhost:3000`))
 ```
 
 ## API
@@ -111,7 +95,6 @@ res.end(req.body) // "THIS TEXT MUST BE UPPERCASED"
 
 The parsec is a unit of length used to measure large distances to astronomical objects outside the Solar System.
 
-[vulns-badge-url]: https://img.shields.io/snyk/vulnerabilities/npm/milliparsec.svg?style=for-the-badge&color=25608B&label=vulns
 [v-badge-url]: https://img.shields.io/npm/v/milliparsec.svg?style=for-the-badge&color=25608B&logo=npm&label=
 [npm-url]: https://www.npmjs.com/package/milliparsec
 [dl-badge-url]: https://img.shields.io/npm/dt/milliparsec?style=for-the-badge&color=25608B
