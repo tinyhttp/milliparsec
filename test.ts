@@ -251,8 +251,6 @@ describe('Multipart', () => {
   it('should parse multipart body', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
-
-      res.setHeader('Content-Type', 'multipart/form-data')
       res.end(JSON.stringify(req.body))
     })
 
@@ -297,8 +295,6 @@ describe('Multipart', () => {
     const server = createServer(async (req: ReqWithBody, res) => {
       await multipart()(req, res, (err) => err && res.end(err))
 
-      res.setHeader('Content-Type', 'multipart/form-data; boundary=some-boundary')
-
       res.end(JSON.stringify(req.body))
     })
 
@@ -319,8 +315,6 @@ describe('Multipart', () => {
   it('should parse an array of multipart values', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
-
-      res.setHeader('Content-Type', 'multipart/form-data; boundary=some-boundary')
 
       res.end(JSON.stringify(req.body))
     })
@@ -343,8 +337,6 @@ describe('Multipart', () => {
     const server = createServer(async (req: ReqWithBody, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
 
-      res.setHeader('Content-Type', 'multipart/form-data; boundary=some-boundary')
-
       res.end('GET is ignored')
     })
 
@@ -363,8 +355,6 @@ describe('Multipart', () => {
     fd.set('file', file)
     const server = createServer(async (req: ReqWithBody<{ file: [File] }>, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
-
-      res.setHeader('Content-Type', 'multipart/form-data')
 
       const formBuf = new Uint8Array(await file.arrayBuffer())
       const buf = new Uint8Array(await req.body!.file[0].arrayBuffer())
@@ -395,8 +385,6 @@ describe('Multipart', () => {
     const server = createServer(async (req: ReqWithBody<{ file1: [File]; file2: [File] }>, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
 
-      res.setHeader('Content-Type', 'multipart/form-data')
-
       const files = Object.values(req.body!)
 
       for (const file of files) {
@@ -412,6 +400,30 @@ describe('Multipart', () => {
       body: fd,
       method: 'POST'
     }).expect(200)
+  })
+  it('should support binary files', async () => {
+    const fd = new FormData()
+    const file = new File([new Uint8Array([1, 2, 3])], 'blob.bin', { type: 'application/octet-stream' })
+    fd.set('file', file)
+
+    const server = createServer(async (req: ReqWithBody<{ file: [File] }>, res) => {
+      await multipart()(req, res, (err) => err && console.log(err))
+
+
+      const formBuf = new Uint8Array(await file.arrayBuffer())
+      const buf = new Uint8Array(await req.body!.file[0].arrayBuffer())
+
+      assert.equal(Buffer.compare(buf, formBuf), 0)
+      assert.equal(req.body?.file[0].type, 'application/octet-stream')
+
+      res.end(req.body?.file[0].name)
+    })
+
+    await makeFetch(server)('/', {
+      // probaly better to use form-data package
+      body: fd,
+      method: 'POST'
+    }).expect(200, 'blob.bin')
   })
 })
 
