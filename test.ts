@@ -409,7 +409,6 @@ describe('Multipart', () => {
     const server = createServer(async (req: ReqWithBody<{ file: [File] }>, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
 
-
       const formBuf = new Uint8Array(await file.arrayBuffer())
       const buf = new Uint8Array(await req.body!.file[0].arrayBuffer())
 
