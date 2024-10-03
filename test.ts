@@ -5,10 +5,12 @@ import { describe, it } from 'node:test'
 import { makeFetch } from 'supertest-fetch'
 import { type ReqWithBody, custom, json, multipart, raw, text, urlencoded } from './src/index.js'
 
+const td = new TextDecoder()
+
 describe('Basic parsing', () => {
   it('should parse JSON body', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await json()(req, res, (err) => void err && console.log(err))
+      await json()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'application/json')
 
@@ -27,7 +29,7 @@ describe('Basic parsing', () => {
 
   it('should ignore JSON empty body', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await json()(req, res, (err) => void err && console.log(err))
+      await json()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'application/json')
 
@@ -56,7 +58,7 @@ describe('Basic parsing', () => {
 
   it('should parse json body with no content-type headers', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await json()(req, res, (err) => void err && console.log(err))
+      await json()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'application/json')
 
@@ -74,7 +76,7 @@ describe('Basic parsing', () => {
 
   it('json should call next() without a body', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await json()(req, res, (err) => void err && console.log(err))
+      await json()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'application/json')
 
@@ -92,7 +94,7 @@ describe('Basic parsing', () => {
 
   it('json should ignore GET request', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await json()(req, res, (err) => void err && console.log(err))
+      await json()(req, res, (err) => err && console.log(err))
 
       res.end('GET is ignored')
     })
@@ -104,7 +106,7 @@ describe('Basic parsing', () => {
 
   it('should parse urlencoded body', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await urlencoded()(req, res, (err) => void err && console.log(err))
+      await urlencoded()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'application/x-www-form-urlencoded')
 
@@ -123,7 +125,7 @@ describe('Basic parsing', () => {
 
   it('urlencoded should ignore GET request', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await urlencoded()(req, res, (err) => void err && console.log(err))
+      await urlencoded()(req, res, (err) => err && console.log(err))
 
       res.end('GET is ignored')
     })
@@ -135,7 +137,7 @@ describe('Basic parsing', () => {
 
   it('should parse text body', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await text()(req, res, (err) => void err && console.log(err))
+      await text()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'text/plain')
 
@@ -154,7 +156,7 @@ describe('Basic parsing', () => {
 
   it('text should ignore GET request', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await text()(req, res, (err) => void err && console.log(err))
+      await text()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'text/plain')
 
@@ -172,7 +174,7 @@ describe('Basic parsing', () => {
 
   it('should parse raw body', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await raw()(req, res, (err) => void err && console.log(err))
+      await raw()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'text/plain')
 
@@ -191,7 +193,7 @@ describe('Basic parsing', () => {
 
   it('raw should ignore GET request', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await raw()(req, res, (err) => void err && console.log(err))
+      await raw()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'text/plain')
 
@@ -209,7 +211,7 @@ describe('Basic parsing', () => {
 
   it('should parse custom body', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await custom((d) => d.toUpperCase())(req, res, (err) => void err && console.log(err))
+      await custom((d) => td.decode(d).toUpperCase())(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'text/plain')
 
@@ -228,7 +230,7 @@ describe('Basic parsing', () => {
 
   it('custom should ignore GET request', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await custom((d) => d.toUpperCase())(req, res, (err) => void err && console.log(err))
+      await custom((d) => td.decode(d).toUpperCase())(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'text/plain')
 
@@ -248,7 +250,7 @@ describe('Basic parsing', () => {
 describe('Multipart', () => {
   it('should parse multipart body', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await multipart()(req, res, (err) => void err && console.log(err))
+      await multipart()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'multipart/form-data')
       res.end(JSON.stringify(req.body))
@@ -271,7 +273,7 @@ describe('Multipart', () => {
 
   it('should not parse if boundary is not present', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await multipart()(req, res, (err) => void err && res.end(err))
+      await multipart()(req, res, (err) => err && res.end(err))
 
       res.end(JSON.stringify(req.body))
     })
@@ -293,7 +295,7 @@ describe('Multipart', () => {
 
   it('should parse multipart with boundary', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await multipart()(req, res, (err) => void err && res.end(err))
+      await multipart()(req, res, (err) => err && res.end(err))
 
       res.setHeader('Content-Type', 'multipart/form-data; boundary=some-boundary')
 
@@ -316,7 +318,7 @@ describe('Multipart', () => {
 
   it('should parse an array of multipart values', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await multipart()(req, res, (err) => void err && console.log(err))
+      await multipart()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'multipart/form-data; boundary=some-boundary')
 
@@ -333,13 +335,13 @@ describe('Multipart', () => {
       body: fd,
       method: 'POST'
     }).expect(200, {
-      textfield: ['textfield data\r\nwith new lines\r\nbecause this is valid', 'textfield with text'],
+      textfield: ['textfield data\r\nwith new lines\r\nbecause this is valid', 'textfield with text']
     })
   })
 
   it('multipart should ignore GET request', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await multipart()(req, res, (err) => void err && console.log(err))
+      await multipart()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'multipart/form-data; boundary=some-boundary')
 
@@ -360,12 +362,12 @@ describe('Multipart', () => {
     const file = new File(['hello world'], 'hello.txt', { type: 'text/plain' })
     fd.set('file', file)
     const server = createServer(async (req: ReqWithBody<{ file: [File] }>, res) => {
-      await multipart()(req, res, (err) => void err && console.log(err))
+      await multipart()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'multipart/form-data')
 
       const formBuf = new Uint8Array(await file.arrayBuffer())
-      const buf = new Uint8Array(await (req.body!.file[0]).arrayBuffer())
+      const buf = new Uint8Array(await req.body!.file[0].arrayBuffer())
 
       assert.equal(Buffer.compare(buf, formBuf), 0)
 
@@ -391,7 +393,7 @@ describe('Multipart', () => {
     fd.set('file2', files[1])
 
     const server = createServer(async (req: ReqWithBody<{ file1: [File]; file2: [File] }>, res) => {
-      await multipart()(req, res, (err) => void err && console.log(err))
+      await multipart()(req, res, (err) => err && console.log(err))
 
       res.setHeader('Content-Type', 'multipart/form-data')
 
@@ -411,7 +413,6 @@ describe('Multipart', () => {
       method: 'POST'
     }).expect(200)
   })
-
 })
 
 describe('Limits', () => {
@@ -453,7 +454,10 @@ describe('Limits', () => {
 
   it('should throw on payloadLimit with custom error message', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await text({ payloadLimit: 1024, payloadLimitErrorFn: (payloadLimit) => new Error(`Payload too large. Limit: ${payloadLimit / 1024}KB`) })(req, res, (err) => {
+      await text({
+        payloadLimit: 1024,
+        payloadLimitErrorFn: (payloadLimit) => new Error(`Payload too large. Limit: ${payloadLimit / 1024}KB`)
+      })(req, res, (err) => {
         if (err) res.writeHead(413).end(err.message)
         else res.end(req.body)
       })
@@ -484,7 +488,7 @@ describe('Limits', () => {
 
     await makeFetch(server)('/', {
       body: fd,
-      method: 'POST',
+      method: 'POST'
     }).expect(413, 'Too many files. Limit: 1')
   })
 
@@ -502,13 +506,16 @@ describe('Limits', () => {
 
     await makeFetch(server)('/', {
       body: fd,
-      method: 'POST',
+      method: 'POST'
     }).expect(413, 'File too large. Limit: 10 bytes')
   })
 
   it('should throw multipart if exceeds allowed file size with a custom error', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
-      await multipart({ fileSizeLimit: 10, fileSizeLimitErrorFn: (limit) => new Error(`File too large. Limit: ${limit / 1024}KB`) })(req, res, (err) => {
+      await multipart({
+        fileSizeLimit: 10,
+        fileSizeLimitErrorFn: (limit) => new Error(`File too large. Limit: ${limit / 1024}KB`)
+      })(req, res, (err) => {
         if (err) res.writeHead(413).end(err.message)
         else res.end(req.body)
       })
@@ -520,7 +527,7 @@ describe('Limits', () => {
 
     await makeFetch(server)('/', {
       body: fd,
-      method: 'POST',
+      method: 'POST'
     }).expect(413, 'File too large. Limit: 0.009765625KB')
   })
 })

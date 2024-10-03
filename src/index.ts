@@ -1,12 +1,14 @@
-import type { EventEmitter } from 'node:events'
+import { Buffer } from 'node:buffer'
 import type { IncomingMessage, ServerResponse as Response } from 'node:http'
 
 type NextFunction = (err?: any) => void
 
-// Extend the request object with body
+/**
+ * Request extension with a body
+ */
 export type ReqWithBody<T = any> = IncomingMessage & {
   body?: T
-} & EventEmitter
+}
 
 export const hasBody = (method: string) => ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
 
@@ -15,7 +17,14 @@ const defaultPayloadLimit = 104857600 // 100KB
 export type LimitErrorFn = (limit: number) => Error
 
 export type ParserOptions = Partial<{
+  /**
+   * Limit payload size (in bytes)
+   * @default '100KB'
+   */
   payloadLimit: number
+  /**
+   * Custom error function for payload limit
+   */
   payloadLimitErrorFn: LimitErrorFn
 }>
 
@@ -23,37 +32,61 @@ const defaultErrorFn: LimitErrorFn = (payloadLimit) => new Error(`Payload too la
 
 // Main function
 export const p =
-  <T = any>(fn: (body: any) => any, payloadLimit = defaultPayloadLimit, payloadLimitErrorFn: LimitErrorFn = defaultErrorFn) =>
+  <T = any>(
+    fn: (body: Buffer) => void,
+    payloadLimit = defaultPayloadLimit,
+    payloadLimitErrorFn: LimitErrorFn = defaultErrorFn
+  ) =>
     async (req: ReqWithBody<T>, _res: Response, next: (err?: any) => void) => {
       try {
-        let body = ''
+        const body: Buffer[] = []
 
         for await (const chunk of req) {
-          if (body.length > payloadLimit) throw payloadLimitErrorFn(payloadLimit)
-          body += chunk
+          const totalSize = body.reduce((total, buffer) => total + buffer.byteLength, 0)
+          if (totalSize > payloadLimit) throw payloadLimitErrorFn(payloadLimit)
+          body.push(chunk as Buffer)
         }
 
-        return fn(body)
+        return fn(Buffer.concat(body))
       } catch (e) {
         next(e)
       }
     }
 
+/**
+ * Parse payload with a custom function
+ * @param fn
+ */
 const custom =
-  <T = any>(fn: (body: any) => any) =>
+  <T = any>(fn: (body: Buffer) => any) =>
     async (req: ReqWithBody, _res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) req.body = await p<T>(fn)(req, _res, next)
       next()
     }
 
+/**
+ * Parse JSON payload
+ * @param options
+ */
 const json =
   ({ payloadLimit, payloadLimitErrorFn }: ParserOptions = {}) =>
     async (req: ReqWithBody, res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) {
-        req.body = await p((x) => (x ? JSON.parse(x.toString()) : {}), payloadLimit, payloadLimitErrorFn)(req, res, next)
+        req.body = await p(
+          (x) => {
+            const str = td.decode(x)
+            return str ? JSON.parse(str) : {}
+          },
+          payloadLimit,
+          payloadLimitErrorFn
+        )(req, res, next)
       } else next()
     }
 
+/**
+ * Parse raw payload
+ * @param options
+ */
 const raw =
   ({ payloadLimit, payloadLimitErrorFn }: ParserOptions = {}) =>
     async (req: ReqWithBody, _res: Response, next: NextFunction) => {
@@ -62,23 +95,30 @@ const raw =
       } else next()
     }
 
+const td = new TextDecoder()
+/**
+ * Stringify request payload
+ * @param param0
+ * @returns
+ */
 const text =
   ({ payloadLimit, payloadLimitErrorFn }: ParserOptions = {}) =>
     async (req: ReqWithBody, _res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) {
-        req.body = await p((x) => x.toString(), payloadLimit, payloadLimitErrorFn)(req, _res, next)
+        req.body = await p((x) => td.decode(x), payloadLimit, payloadLimitErrorFn)(req, _res, next)
       } else next()
     }
 
+/**
+ * Parse urlencoded payload
+ * @param options
+ */
 const urlencoded =
   ({ payloadLimit, payloadLimitErrorFn }: ParserOptions = {}) =>
     async (req: ReqWithBody, _res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) {
         req.body = await p(
-          (x) => {
-            const urlSearchParam = new URLSearchParams(x.toString())
-            return Object.fromEntries(urlSearchParam.entries())
-          },
+          (x) => Object.fromEntries(new URLSearchParams(x.toString()).entries()),
           payloadLimit,
           payloadLimitErrorFn
         )(req, _res, next)
@@ -86,22 +126,23 @@ const urlencoded =
     }
 
 const getBoundary = (contentType: string) => {
-  // Extract the boundary from the Content-Type header
   const match = /boundary=(.+);?/.exec(contentType)
   return match ? `--${match[1]}` : null
 }
 
 const defaultFileSizeLimitErrorFn: LimitErrorFn = (limit) => new Error(`File too large. Limit: ${limit} bytes`)
 
-const parseMultipart = (body: string, boundary: string, { fileCountLimit, fileSizeLimit, fileSizeLimitErrorFn = defaultFileSizeLimitErrorFn }: MultipartOptions) => {
-  // Split the body into an array of parts
+const parseMultipart = (
+  body: string,
+  boundary: string,
+  { fileCountLimit, fileSizeLimit, fileSizeLimitErrorFn = defaultFileSizeLimitErrorFn }: MultipartOptions
+) => {
   const parts = body.split(new RegExp(`${boundary}(--)?`)).filter((part) => !!part && /content-disposition/i.test(part))
   const parsedBody: Record<string, (File | string)[]> = {}
 
   if (fileCountLimit && parts.length > fileCountLimit) throw new Error(`Too many files. Limit: ${fileCountLimit}`)
 
-  // Parse each part into a form data object
-  // biome-ignore lint/complexity/noForEach: <explanation>
+  // biome-ignore lint/complexity/noForEach: for...of fails
   parts.forEach((part) => {
     const [headers, ...lines] = part.split('\r\n').filter((part) => !!part)
     const data = lines.join('\r\n').trim()
@@ -120,7 +161,6 @@ const parseMultipart = (body: string, boundary: string, { fileCountLimit, fileSi
       parsedBody[name] = parsedBody[name] ? [...parsedBody[name], file] : [file]
       return
     }
-    // This is a regular field
     parsedBody[name] = parsedBody[name] ? [...parsedBody[name], data] : [data]
     return
   })
@@ -128,20 +168,38 @@ const parseMultipart = (body: string, boundary: string, { fileCountLimit, fileSi
   return parsedBody
 }
 type MultipartOptions = Partial<{
+  /**
+   * Limit number of files
+   */
   fileCountLimit: number
+  /**
+   * Limit file size (in bytes)
+   */
   fileSizeLimit: number
+  /**
+   * Custom error function for file size limit
+   */
   fileSizeLimitErrorFn: LimitErrorFn
 }>
-
+/**
+ * Parse multipart form data (supports files as well)
+ *
+ * Does not restrict total payload size by default
+ * @param options
+ */
 const multipart =
-  ({ payloadLimit, payloadLimitErrorFn, ...opts }: MultipartOptions & ParserOptions = {}) =>
+  ({ payloadLimit = Number.POSITIVE_INFINITY, payloadLimitErrorFn, ...opts }: MultipartOptions & ParserOptions = {}) =>
     async (req: ReqWithBody, res: Response, next: NextFunction) => {
       if (hasBody(req.method!)) {
-        req.body = await p((x) => {
-          const boundary = getBoundary(req.headers['content-type']!)
-          if (boundary) return parseMultipart(x, boundary, opts)
-          return {}
-        }, payloadLimit, payloadLimitErrorFn)(req, res, next)
+        req.body = await p(
+          (x) => {
+            const boundary = getBoundary(req.headers['content-type']!)
+            if (boundary) return parseMultipart(td.decode(x), boundary, opts)
+            return {}
+          },
+          payloadLimit,
+          payloadLimitErrorFn
+        )(req, res, next)
         next()
       } else next()
     }
