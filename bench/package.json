@@ -5,14 +5,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "bench": "autocannon -b '{\"a\":1}' -H \"Content-Type=application/json\""
+    "bench": "autocannon -b '{\"a\":1}' -H \"Content-Type=application/json\"",
+    "bench:multipart": "autocannon -m POST --form '{ \"file\": { \"type\": \"file\", \"path\": \"./file.txt\" } }'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/body-parser": "^1.19.5",
+    "@types/formidable": "^3.4.5",
     "autocannon": "^7.15.0",
     "body-parser": "^1.20.2"
+  },
+  "dependencies": {
+    "formidable": "^3.5.1"
   }
 }

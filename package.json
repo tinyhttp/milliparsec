@@ -21,19 +21,18 @@
   },
   "exports": "./dist/index.js",
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
-    "@types/node": "^20.14.9",
+    "@biomejs/biome": "1.9.3",
+    "@types/node": "^22.7.4",
     "c8": "10.1.2",
     "supertest-fetch": "^2.0.0",
-    "tsm": "^2.3.0",
-    "typescript": "^5.5.3",
-    "uvu": "^0.5.6"
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "test": "uvu -r tsm",
+    "test": "tsx --test test.ts",
     "test:coverage": "c8 --include=src pnpm test",
     "test:report": "c8 report --reporter=text-lcov > coverage.lcov",
     "build": "tsc -p tsconfig.build.json",

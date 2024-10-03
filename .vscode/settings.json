@@ -1,16 +1,12 @@
 {
+  "npm.packageManager": "pnpm",
+  "editor.formatOnSave": true,
   "biome.enabled": true,
-  "editor.defaultFormatter": "biomejs.biome",
-  "prettier.enable": false,
   "eslint.enable": false,
+  "prettier.enable": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll": "always"
+    "source.fixAll": "explicit",
+    "source.organizeImports.biome": "explicit"
   },
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "[typescript]": {
-    "editor.defaultFormatter": "biomejs.biome"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "biomejs.biome"
-  }
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
