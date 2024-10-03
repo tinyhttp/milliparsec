@@ -431,7 +431,7 @@ describe('Limits', () => {
         Accept: 'text/plain',
         'Content-Type': 'text/plain'
       }
-    }).expect(413, 'Payload too large. Limit: 104857600 bytes')
+    }).expect(413, 'Payload too large. Limit: 102400 bytes')
   })
 
   it('should throw on custom payloadLimit', async () => {
@@ -513,21 +513,21 @@ describe('Limits', () => {
   it('should throw multipart if exceeds allowed file size with a custom error', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
       await multipart({
-        fileSizeLimit: 10,
+        fileSizeLimit: 20,
         fileSizeLimitErrorFn: (limit) => new Error(`File too large. Limit: ${limit / 1024}KB`)
       })(req, res, (err) => {
         if (err) res.writeHead(413).end(err.message)
-        else res.end(req.body)
+        else res.end('ok')
       })
     })
 
     const fd = new FormData()
 
-    fd.set('file', new File(['hello world'], 'hello.txt', { type: 'text/plain' }))
+    fd.set('file', new File(['hello world to everyone'], 'hello.txt', { type: 'text/plain' }))
 
     await makeFetch(server)('/', {
       body: fd,
       method: 'POST'
-    }).expect(413, 'File too large. Limit: 0.009765625KB')
+    }).expect(413, 'File too large. Limit: 0.01953125KB')
   })
 })

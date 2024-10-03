@@ -12,7 +12,7 @@ export type ReqWithBody<T = any> = IncomingMessage & {
 
 export const hasBody = (method: string) => ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
 
-const defaultPayloadLimit = 104857600 // 100KB
+const defaultPayloadLimit = 102400 // 100KB
 
 export type LimitErrorFn = (limit: number) => Error
 
@@ -132,10 +132,16 @@ const getBoundary = (contentType: string) => {
 
 const defaultFileSizeLimitErrorFn: LimitErrorFn = (limit) => new Error(`File too large. Limit: ${limit} bytes`)
 
+const defaultFileSizeLimit = 200 * 1024 * 1024
+
 const parseMultipart = (
   body: string,
   boundary: string,
-  { fileCountLimit, fileSizeLimit, fileSizeLimitErrorFn = defaultFileSizeLimitErrorFn }: MultipartOptions
+  {
+    fileCountLimit,
+    fileSizeLimit = defaultFileSizeLimit,
+    fileSizeLimitErrorFn = defaultFileSizeLimitErrorFn
+  }: MultipartOptions
 ) => {
   const parts = body.split(new RegExp(`${boundary}(--)?`)).filter((part) => !!part && /content-disposition/i.test(part))
   const parsedBody: Record<string, (File | string)[]> = {}
@@ -147,7 +153,7 @@ const parseMultipart = (
     const [headers, ...lines] = part.split('\r\n').filter((part) => !!part)
     const data = lines.join('\r\n').trim()
 
-    if (fileSizeLimit && data.length > fileSizeLimit) throw fileSizeLimitErrorFn(fileSizeLimit)
+    if (data.length > fileSizeLimit) throw fileSizeLimitErrorFn(fileSizeLimit)
 
     // Extract the name and filename from the headers
     const name = /name="(.+?)"/.exec(headers)![1]
@@ -184,7 +190,7 @@ type MultipartOptions = Partial<{
 /**
  * Parse multipart form data (supports files as well)
  *
- * Does not restrict total payload size by default
+ * Does not restrict total payload size by default.
  * @param options
  */
 const multipart =
@@ -200,7 +206,6 @@ const multipart =
           payloadLimit,
           payloadLimitErrorFn
         )(req, res, next)
-        next()
       } else next()
     }
 
