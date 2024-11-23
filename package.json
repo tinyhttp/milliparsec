@@ -37,7 +37,8 @@
     "test:coverage": "c8 --include=src pnpm test",
     "test:report": "c8 report --reporter=text-lcov > coverage.lcov",
     "build": "tsc -p tsconfig.build.json",
-    "prepublishOnly": "pnpm build && pnpm test"
+    "prepublishOnly": "pnpm build && pnpm test",
+    "check": "biome check --write"
   },
   "packageManager": "pnpm@9.4.0",
   "publishConfig": {

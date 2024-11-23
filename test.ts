@@ -560,14 +560,14 @@ describe('Framework integration', { timeout: 500 }, () => {
 
     await fetch('/json', {
       body: JSON.stringify({ hello: 'world' }),
-      method: 'POST',
-    })
-      .expect(200, { hello: 'world' })
+      method: 'POST'
+    }).expect(200, { hello: 'world' })
 
     await fetch('/url', {
       body: 'hello=world',
       method: 'POST'
     })
-      .expect(200, { hello: 'world' }).then(() => server.close())
+      .expect(200, { hello: 'world' })
+      .then(() => server.close())
   })
 })
