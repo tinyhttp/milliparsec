@@ -17,7 +17,7 @@
     "body-parsing"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=18.13 || >=19.20 || >=20"
   },
   "exports": "./dist/index.js",
   "devDependencies": {
