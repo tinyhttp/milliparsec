@@ -1,13 +1,16 @@
 # Benchmark
 
-Below are benchmarks of body-parser vs milliparsec and formidable vs milliparsec. Please take into account that these benchmarks are not entirely accurate, since they are taken on a regular desktop computer in usual conditions.
+Below are benchmarks of body-parser vs milliparsec and formidable vs
+milliparsec. Please take into account that these benchmarks are not entirely
+accurate, since they are taken on a regular desktop computer in usual
+conditions.
 
 ## Environment
 
 - Node.js 22.3.0
-- System: Linux 6.10.10
-- CPU: Intel Core i9-13900H
-- Machine: Asus ROG Zephyrus G16
+- System: macOS Sequoia 15.3.1 / Darwin 24.3.0 arm64 kernel
+- CPU: Apple M2 (8) @ 3.50 GHz
+- Machine: MacBook Air (M2, 2022)
 
 ## JSON parsing
 
@@ -72,7 +75,7 @@ milliparsec, on average, is ~30-40% faster.
 ### Benchmark command:
 
 ```sh
-autocannon -m POST --form '{ "file": {  "type": "file", "path": "./file.txt"  } }' localhost:3004 
+autocannon -m POST --form '{ "file": {  "type": "file", "path": "./file.txt"  } }' localhost:3004
 ```
 
 ### Results

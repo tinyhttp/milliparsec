@@ -14,10 +14,10 @@
   "devDependencies": {
     "@types/body-parser": "^1.19.5",
     "@types/formidable": "^3.4.5",
-    "autocannon": "^7.15.0",
-    "body-parser": "^1.20.2"
+    "autocannon": "^8.0.0",
+    "body-parser": "^1.20.3"
   },
   "dependencies": {
-    "formidable": "^3.5.1"
+    "formidable": "^3.5.2"
   }
 }
