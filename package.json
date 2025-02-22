@@ -1,6 +1,6 @@
 {
   "name": "milliparsec",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "tiniest body parser in the universe",
   "repository": {
     "type": "git",
