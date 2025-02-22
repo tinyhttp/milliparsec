@@ -3,7 +3,9 @@
 <img src="logo.png" width="400px" />
 <br /><br />
 
-[![Version][v-badge-url]][npm-url] [![Coverage][cov-img]][cov-url] [![Github actions][gh-actions-img]][github-actions] [![Downloads][dl-badge-url]][npm-url]
+[![Version][v-badge-url]][npm-url] [![Coverage][cov-img]][cov-url]
+[![Github actions][gh-actions-img]][github-actions]
+[![Downloads][dl-badge-url]][npm-url]
 
 </div>
 <br />
@@ -18,7 +20,7 @@ Check out [deno-libs/parsec](https://github.com/deno-libs/parsec) for Deno port.
 - 📦 tiny package size (8KB dist size)
 - 🔥 no dependencies
 - ✨ [tinyhttp](https://github.com/tinyhttp/tinyhttp) and Express support
-- ⚡ 30% faster than body-parser
+- ⚡ 40% faster than body-parser and 20x faster than formidable
 
 ## Install
 
@@ -51,7 +53,8 @@ const server = createServer(async (req: ReqWithBody, res) => {
 
 ### What is "parsec"?
 
-The parsec is a unit of length used to measure large distances to astronomical objects outside the Solar System.
+The parsec is a unit of length used to measure large distances to astronomical
+objects outside the Solar System.
 
 [v-badge-url]: https://img.shields.io/npm/v/milliparsec.svg?style=for-the-badge&color=25608B&logo=npm&label=
 [npm-url]: https://www.npmjs.com/package/milliparsec
