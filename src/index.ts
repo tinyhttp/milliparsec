@@ -1,4 +1,4 @@
-import { Buffer } from 'node:buffer'
+import { Buffer, File } from 'node:buffer'
 import type { IncomingMessage, ServerResponse as Response } from 'node:http'
 
 type NextFunction = (err?: any) => void

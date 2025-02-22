@@ -10,14 +10,12 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - name: Enable corepack
-        run: corepack enable pnpm
-
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          cache: 'pnpm'
+          cache: "pnpm"
           node-version: 20
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
       - run: pnpm install
       - run: pnpm build
       - name: Setup Biome

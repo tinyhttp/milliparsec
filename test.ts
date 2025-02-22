@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { Buffer } from 'node:buffer'
+import { File } from 'node:buffer'
 import { createServer } from 'node:http'
 import { describe, it } from 'node:test'
 import { App } from '@tinyhttp/app'
@@ -353,7 +354,7 @@ describe('Multipart', () => {
   it('should parse multipart with files', async () => {
     const fd = new FormData()
     const file = new File(['hello world'], 'hello.txt', { type: 'text/plain' })
-    fd.set('file', file)
+    fd.set('file', file as Blob)
     const server = createServer(async (req: ReqWithBody<{ file: [File] }>, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
 
@@ -380,8 +381,8 @@ describe('Multipart', () => {
       new File(['bye world'], 'bye.txt', { type: 'text/plain' })
     ]
 
-    fd.set('file1', files[0])
-    fd.set('file2', files[1])
+    fd.set('file1', files[0] as Blob)
+    fd.set('file2', files[1] as Blob)
 
     const server = createServer(async (req: ReqWithBody<{ file1: [File]; file2: [File] }>, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
@@ -405,7 +406,7 @@ describe('Multipart', () => {
   it('should support binary files', async () => {
     const fd = new FormData()
     const file = new File([new Uint8Array([1, 2, 3])], 'blob.bin', { type: 'application/octet-stream' })
-    fd.set('file', file)
+    fd.set('file', file as Blob)
 
     const server = createServer(async (req: ReqWithBody<{ file: [File] }>, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
@@ -495,8 +496,8 @@ describe('Limits', () => {
 
     const fd = new FormData()
 
-    fd.set('file1', new File(['hello world'], 'hello.txt', { type: 'text/plain' }))
-    fd.set('file2', new File(['bye world'], 'bye.txt', { type: 'text/plain' }))
+    fd.set('file1', new File(['hello world'], 'hello.txt', { type: 'text/plain' }) as Blob)
+    fd.set('file2', new File(['bye world'], 'bye.txt', { type: 'text/plain' }) as Blob)
 
     await makeFetch(server)('/', {
       body: fd,
@@ -514,7 +515,7 @@ describe('Limits', () => {
 
     const fd = new FormData()
 
-    fd.set('file', new File(['hello world'], 'hello.txt', { type: 'text/plain' }))
+    fd.set('file', new File(['hello world'], 'hello.txt', { type: 'text/plain' }) as Blob)
 
     await makeFetch(server)('/', {
       body: fd,
@@ -534,7 +535,7 @@ describe('Limits', () => {
 
     const fd = new FormData()
 
-    fd.set('file', new File(['hello world to everyone'], 'hello.txt', { type: 'text/plain' }))
+    fd.set('file', new File(['hello world to everyone'], 'hello.txt', { type: 'text/plain' }) as Blob)
 
     await makeFetch(server)('/', {
       body: fd,
