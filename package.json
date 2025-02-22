@@ -23,7 +23,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.3",
     "@tinyhttp/app": "^2.4.0",
-    "@types/node": "^22.7.4",
+    "@types/node": "^18.19.76",
     "c8": "10.1.2",
     "supertest-fetch": "^2.0.0",
     "tsx": "^4.19.1",
