@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "bench": "autocannon -b '{\"a\":1}' -H \"Content-Type=application/json\"",
+    "bench": "autocannon -m POST -b '{\"a\":1}' -H \"Content-Type=application/json\"",
     "bench:multipart": "autocannon -m POST --form '{ \"file\": { \"type\": \"file\", \"path\": \"./file.txt\" } }'"
   },
   "keywords": [],

@@ -17,7 +17,7 @@ conditions.
 ### Benchmark command:
 
 ```sh
-autocannon -b '{"a":1}' -H "Content-Type=application/json" localhost:3002 # or 3003
+autocannon -m POST -b '{"a":1}' -H "Content-Type=application/json" localhost:3002 # or 3003
 ```
 
 ### Results
