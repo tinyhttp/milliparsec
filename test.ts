@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict'
 import { Buffer } from 'node:buffer'
-import { File } from 'node:buffer'
 import { createServer } from 'node:http'
 import { describe, it } from 'node:test'
 import { App } from '@tinyhttp/app'
+import express from 'express'
 import { makeFetch } from 'supertest-fetch'
-import { type ReqWithBody, custom, json, multipart, raw, text, urlencoded } from './src/index.js'
+import { custom, json, multipart, type ReqWithBody, raw, text, urlencoded } from './src/index.js'
 
 const td = new TextDecoder()
 
@@ -354,7 +354,7 @@ describe('Multipart', () => {
   it('should parse multipart with files', async () => {
     const fd = new FormData()
     const file = new File(['hello world'], 'hello.txt', { type: 'text/plain' })
-    fd.set('file', file as Blob)
+    fd.set('file', file)
     const server = createServer(async (req: ReqWithBody<{ file: [File] }>, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
 
@@ -552,6 +552,32 @@ describe('Framework integration', { timeout: 500 }, () => {
       .use('/json', json())
       .use('/url', urlencoded())
       .post((req, res) => {
+        res.json(req.body)
+      })
+
+    const server = app.listen()
+
+    const fetch = makeFetch(server)
+
+    await fetch('/json', {
+      body: JSON.stringify({ hello: 'world' }),
+      method: 'POST'
+    }).expect(200, { hello: 'world' })
+
+    await fetch('/url', {
+      body: 'hello=world',
+      method: 'POST'
+    })
+      .expect(200, { hello: 'world' })
+      .then(() => server.close())
+  })
+  it('works with express', async () => {
+    const app = express()
+
+    app
+      .use('/json', json())
+      .use('/url', urlencoded())
+      .use((req, res) => {
         res.json(req.body)
       })
 

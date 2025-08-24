@@ -152,7 +152,6 @@ const parseMultipart = (
 
   if (fileCountLimit && parts.length > fileCountLimit) throw new Error(`Too many files. Limit: ${fileCountLimit}`)
 
-  // biome-ignore lint/complexity/noForEach: for...of fails
   parts.forEach((part) => {
     const [headers, ...lines] = part.split('\r\n').filter((part) => !!part)
     const data = lines.join('\r\n').trim()
