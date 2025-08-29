@@ -1,32 +1,11 @@
-import { Buffer, File } from 'node:buffer'
-import type { IncomingMessage, ServerResponse as Response } from 'node:http'
+import { Buffer } from 'node:buffer'
+import type { ServerResponse as Response } from 'node:http'
+import type { LimitErrorFn, NextFunction, ParserOptions, ReqWithBody } from './types.js'
+import { checkType, hasBody } from './utils.js'
 
-type NextFunction = (err?: any) => void
+export * from './types.js'
 
-/**
- * Request extension with a body
- */
-export type ReqWithBody<T = any> = IncomingMessage & {
-  body?: T
-}
-
-export const hasBody = (method: string) => ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
-
-const defaultPayloadLimit = 102400 // 100KB
-
-export type LimitErrorFn = (limit: number) => Error
-
-export type ParserOptions = Partial<{
-  /**
-   * Limit payload size (in bytes)
-   * @default '100KB'
-   */
-  payloadLimit: number
-  /**
-   * Custom error function for payload limit
-   */
-  payloadLimitErrorFn: LimitErrorFn
-}>
+const defaultPayloadLimit = 102400 // 100KiB
 
 const defaultErrorFn: LimitErrorFn = (payloadLimit) => new Error(`Payload too large. Limit: ${payloadLimit} bytes`)
 
@@ -58,9 +37,9 @@ export const p =
  * @param fn
  */
 const custom =
-  <T = any>(fn: (body: Buffer) => any) =>
+  <T = any>(fn: (body: Buffer) => any, type?: ParserOptions['type']) =>
   async (req: ReqWithBody, _res: Response, next?: NextFunction) => {
-    if (hasBody(req.method!)) req.body = await p<T>(fn)(req, _res, next)
+    if (hasBody(req.method!) && checkType(req, type)) req.body = await p<T>(fn)(req, _res, next)
     next?.()
   }
 
@@ -69,13 +48,20 @@ const custom =
  * @param options
  */
 const json =
-  ({ payloadLimit, payloadLimitErrorFn }: ParserOptions = {}) =>
+  ({
+    payloadLimit,
+    payloadLimitErrorFn,
+    type,
+    reviver
+  }: ParserOptions<{
+    reviver?: (this: any, key: string, value: any) => any
+  }> = {}) =>
   async (req: ReqWithBody, res: Response, next?: NextFunction) => {
-    if (hasBody(req.method!)) {
+    if (hasBody(req.method!) && checkType(req, type)) {
       req.body = await p(
         (x) => {
           const str = td.decode(x)
-          return str ? JSON.parse(str) : {}
+          return str ? JSON.parse(str, reviver) : {}
         },
         payloadLimit,
         payloadLimitErrorFn
@@ -89,9 +75,9 @@ const json =
  * @param options
  */
 const raw =
-  ({ payloadLimit, payloadLimitErrorFn }: ParserOptions = {}) =>
+  ({ payloadLimit, payloadLimitErrorFn, type }: ParserOptions = {}) =>
   async (req: ReqWithBody, _res: Response, next?: NextFunction) => {
-    if (hasBody(req.method!)) {
+    if (hasBody(req.method!) && checkType(req, type)) {
       req.body = await p((x) => x, payloadLimit, payloadLimitErrorFn)(req, _res, next)
     }
     next?.()
@@ -104,9 +90,9 @@ const td = new TextDecoder()
  * @returns
  */
 const text =
-  ({ payloadLimit, payloadLimitErrorFn }: ParserOptions = {}) =>
+  ({ payloadLimit, payloadLimitErrorFn, type }: ParserOptions = {}) =>
   async (req: ReqWithBody, _res: Response, next?: NextFunction) => {
-    if (hasBody(req.method!)) {
+    if (hasBody(req.method!) && checkType(req, type)) {
       req.body = await p((x) => td.decode(x), payloadLimit, payloadLimitErrorFn)(req, _res, next)
     }
     next?.()
@@ -117,9 +103,9 @@ const text =
  * @param options
  */
 const urlencoded =
-  ({ payloadLimit, payloadLimitErrorFn }: ParserOptions = {}) =>
+  ({ payloadLimit, payloadLimitErrorFn, type }: ParserOptions = {}) =>
   async (req: ReqWithBody, _res: Response, next?: NextFunction) => {
-    if (hasBody(req.method!)) {
+    if (hasBody(req.method!) && checkType(req, type)) {
       req.body = await p(
         (x) => Object.fromEntries(new URLSearchParams(x.toString()).entries()),
         payloadLimit,
@@ -136,7 +122,7 @@ const getBoundary = (contentType: string) => {
 
 const defaultFileSizeLimitErrorFn: LimitErrorFn = (limit) => new Error(`File too large. Limit: ${limit} bytes`)
 
-const defaultFileSizeLimit = 200 * 1024 * 1024
+const defaultFileSizeLimit = 200 * 1024 * 1024 // 200MiB
 
 const parseMultipart = (
   body: string,
@@ -197,9 +183,14 @@ type MultipartOptions = Partial<{
  * @param options
  */
 const multipart =
-  ({ payloadLimit = Number.POSITIVE_INFINITY, payloadLimitErrorFn, ...opts }: MultipartOptions & ParserOptions = {}) =>
+  ({
+    payloadLimit = Number.POSITIVE_INFINITY,
+    payloadLimitErrorFn,
+    type,
+    ...opts
+  }: MultipartOptions & ParserOptions = {}) =>
   async (req: ReqWithBody, res: Response, next?: NextFunction) => {
-    if (hasBody(req.method!)) {
+    if (hasBody(req.method!) && checkType(req, type)) {
       req.body = await p(
         (x) => {
           const boundary = getBoundary(req.headers['content-type']!)

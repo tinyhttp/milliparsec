@@ -5,7 +5,8 @@ import { describe, it } from 'node:test'
 import { App } from '@tinyhttp/app'
 import express from 'express'
 import { makeFetch } from 'supertest-fetch'
-import { custom, json, multipart, type ReqWithBody, raw, text, urlencoded } from './src/index.js'
+import { custom, json, multipart, raw, text, urlencoded } from './src/index.js'
+import type { ReqWithBody } from './src/types.js'
 
 const td = new TextDecoder()
 
@@ -541,6 +542,88 @@ describe('Limits', () => {
       body: fd,
       method: 'POST'
     }).expect(413, 'File too large. Limit: 0.01953125KB')
+  })
+})
+
+describe('Content-Type filtering', () => {
+  it('does not filter if type is not specified', async () => {
+    const server = createServer(async (req: ReqWithBody, res) => {
+      await json()(req, res, (err) => err && console.log(err))
+
+      res.setHeader('Content-Type', 'application/json')
+
+      res.end(JSON.stringify(req.body))
+    })
+
+    await makeFetch(server)('/', {
+      body: JSON.stringify({ hello: 'world' }),
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).expect(200, { hello: 'world' })
+  })
+
+  it('matches with a specified MIME type', async () => {
+    const server = createServer(async (req: ReqWithBody, res) => {
+      await json({ type: 'application/json' })(req, res, (err) => err && console.log(err))
+
+      res.setHeader('Content-Type', 'application/json')
+
+      res.end(JSON.stringify(req.body))
+    })
+
+    await makeFetch(server)('/', {
+      body: JSON.stringify({ hello: 'world' }),
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).expect(200, { hello: 'world' })
+  })
+
+  it('matches with a MIME + encoding type', async () => {
+    const server = createServer(async (req: ReqWithBody, res) => {
+      await json({ type: 'application/json' })(req, res, (err) => err && console.log(err))
+
+      res.setHeader('Content-Type', 'application/json; charset=utf-8')
+
+      res.end(JSON.stringify(req.body))
+    })
+
+    await makeFetch(server)('/', {
+      body: JSON.stringify({ hello: 'world' }),
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    }).expect(200, { hello: 'world' })
+  })
+
+  it('executes the type(req) fn if type is a function', async () => {
+    const server = createServer(async (req: ReqWithBody, res) => {
+      await json({ type: (req) => req.headers['content-type'] === 'application/json' })(
+        req,
+        res,
+        (err) => err && console.log(err)
+      )
+
+      res.setHeader('Content-Type', 'application/json')
+
+      res.end(JSON.stringify(req.body))
+    })
+
+    await makeFetch(server)('/', {
+      body: JSON.stringify({ hello: 'world' }),
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).expect(200, { hello: 'world' })
   })
 })
 
