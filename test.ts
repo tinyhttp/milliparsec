@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict'
-import { Buffer } from 'node:buffer'
-import { File } from 'node:buffer'
+import { Buffer, File } from 'node:buffer'
 import { createServer } from 'node:http'
 import { describe, it } from 'node:test'
 import { App } from '@tinyhttp/app'
+import express from 'express'
 import { makeFetch } from 'supertest-fetch'
-import { type ReqWithBody, custom, json, multipart, raw, text, urlencoded } from './src/index.js'
+import { custom, json, multipart, raw, text, urlencoded } from './src/index.js'
+import type { ReqWithBody } from './src/types.js'
 
 const td = new TextDecoder()
 
@@ -354,7 +355,7 @@ describe('Multipart', () => {
   it('should parse multipart with files', async () => {
     const fd = new FormData()
     const file = new File(['hello world'], 'hello.txt', { type: 'text/plain' })
-    fd.set('file', file as Blob)
+    fd.set('file', file as globalThis.File)
     const server = createServer(async (req: ReqWithBody<{ file: [File] }>, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
 
@@ -381,8 +382,8 @@ describe('Multipart', () => {
       new File(['bye world'], 'bye.txt', { type: 'text/plain' })
     ]
 
-    fd.set('file1', files[0] as Blob)
-    fd.set('file2', files[1] as Blob)
+    fd.set('file1', files[0] as globalThis.File)
+    fd.set('file2', files[1] as globalThis.File)
 
     const server = createServer(async (req: ReqWithBody<{ file1: [File]; file2: [File] }>, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
@@ -406,7 +407,7 @@ describe('Multipart', () => {
   it('should support binary files', async () => {
     const fd = new FormData()
     const file = new File([new Uint8Array([1, 2, 3])], 'blob.bin', { type: 'application/octet-stream' })
-    fd.set('file', file as Blob)
+    fd.set('file', file as globalThis.File)
 
     const server = createServer(async (req: ReqWithBody<{ file: [File] }>, res) => {
       await multipart()(req, res, (err) => err && console.log(err))
@@ -496,8 +497,8 @@ describe('Limits', () => {
 
     const fd = new FormData()
 
-    fd.set('file1', new File(['hello world'], 'hello.txt', { type: 'text/plain' }) as Blob)
-    fd.set('file2', new File(['bye world'], 'bye.txt', { type: 'text/plain' }) as Blob)
+    fd.set('file1', new File(['hello world'], 'hello.txt', { type: 'text/plain' }) as globalThis.File)
+    fd.set('file2', new File(['bye world'], 'bye.txt', { type: 'text/plain' }) as globalThis.File)
 
     await makeFetch(server)('/', {
       body: fd,
@@ -515,7 +516,7 @@ describe('Limits', () => {
 
     const fd = new FormData()
 
-    fd.set('file', new File(['hello world'], 'hello.txt', { type: 'text/plain' }) as Blob)
+    fd.set('file', new File(['hello world'], 'hello.txt', { type: 'text/plain' }) as globalThis.File)
 
     await makeFetch(server)('/', {
       body: fd,
@@ -535,12 +536,56 @@ describe('Limits', () => {
 
     const fd = new FormData()
 
-    fd.set('file', new File(['hello world to everyone'], 'hello.txt', { type: 'text/plain' }) as Blob)
+    fd.set('file', new File(['hello world to everyone'], 'hello.txt', { type: 'text/plain' }) as globalThis.File)
 
     await makeFetch(server)('/', {
       body: fd,
       method: 'POST'
     }).expect(413, 'File too large. Limit: 0.01953125KB')
+  })
+})
+
+describe('Content-Type filtering', () => {
+  it('does not filter if type is not specified', async () => {
+    const server = createServer(async (req: ReqWithBody, res) => {
+      await json()(req, res, (err) => err && console.log(err))
+
+      res.setHeader('Content-Type', 'application/json')
+
+      res.end(JSON.stringify(req.body))
+    })
+
+    await makeFetch(server)('/', {
+      body: JSON.stringify({ hello: 'world' }),
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).expect(200, { hello: 'world' })
+  })
+
+  it('executes the type(req) fn if type is a function', async () => {
+    const server = createServer(async (req: ReqWithBody, res) => {
+      await json({ type: (req) => req.headers['content-type'] === 'application/json' })(
+        req,
+        res,
+        (err) => err && console.log(err)
+      )
+
+      res.setHeader('Content-Type', 'application/json')
+
+      res.end(JSON.stringify(req.body))
+    })
+
+    await makeFetch(server)('/', {
+      body: JSON.stringify({ hello: 'world' }),
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).expect(200, { hello: 'world' })
   })
 })
 
@@ -552,6 +597,32 @@ describe('Framework integration', { timeout: 500 }, () => {
       .use('/json', json())
       .use('/url', urlencoded())
       .post((req, res) => {
+        res.json(req.body)
+      })
+
+    const server = app.listen()
+
+    const fetch = makeFetch(server)
+
+    await fetch('/json', {
+      body: JSON.stringify({ hello: 'world' }),
+      method: 'POST'
+    }).expect(200, { hello: 'world' })
+
+    await fetch('/url', {
+      body: 'hello=world',
+      method: 'POST'
+    })
+      .expect(200, { hello: 'world' })
+      .then(() => server.close())
+  })
+  it('works with express', async () => {
+    const app = express()
+
+    app
+      .use('/json', json())
+      .use('/url', urlencoded())
+      .use((req, res) => {
         res.json(req.body)
       })
 

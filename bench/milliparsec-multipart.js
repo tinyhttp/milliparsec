@@ -2,6 +2,7 @@
 
 import { createServer } from 'node:http'
 import * as bodyParser from '../dist/index.js'
+
 const mw = bodyParser.multipart()
 
 const server = createServer((req, res) => {
@@ -9,7 +10,7 @@ const server = createServer((req, res) => {
     /**
      * @type {File}
      */
-    // @ts-ignore
+    // @ts-expect-error
     const file = req.body.file[0]
     const stream = file.stream()
 

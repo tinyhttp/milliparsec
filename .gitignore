@@ -44,3 +44,4 @@ typings/
 dist
 coverage
 coverage.lcov
+.DS_Store

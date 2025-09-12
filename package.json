@@ -21,10 +21,12 @@
   },
   "exports": "./dist/index.js",
   "devDependencies": {
-    "@biomejs/biome": "1.9.3",
+    "@biomejs/biome": "2.2.2",
     "@tinyhttp/app": "^2.4.0",
-    "@types/node": "^18.19.76",
+    "@types/express": "^5.0.3",
+    "@types/node": "^18",
     "c8": "10.1.2",
+    "express": "^5.1.0",
     "supertest-fetch": "^2.0.0",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"
@@ -40,8 +42,5 @@
     "prepublishOnly": "pnpm build && pnpm test",
     "check": "biome check --write"
   },
-  "packageManager": "pnpm@9.4.0",
-  "publishConfig": {
-    "provenance": true
-  }
+  "packageManager": "pnpm@10.11.0"
 }
