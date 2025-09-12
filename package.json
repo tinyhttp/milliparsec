@@ -24,7 +24,7 @@
     "@biomejs/biome": "2.2.2",
     "@tinyhttp/app": "^2.4.0",
     "@types/express": "^5.0.3",
-    "@types/node": "^18.19.76",
+    "@types/node": "^18",
     "c8": "10.1.2",
     "express": "^5.1.0",
     "supertest-fetch": "^2.0.0",

@@ -18,7 +18,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3
       '@types/node':
-        specifier: ^18.19.76
+        specifier: ^18
         version: 18.19.76
       c8:
         specifier: 10.1.2

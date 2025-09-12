@@ -1,4 +1,4 @@
-import { Buffer } from 'node:buffer'
+import { Buffer, File } from 'node:buffer'
 import type { ServerResponse as Response } from 'node:http'
 import type { LimitErrorFn, NextFunction, ParserOptions, ReqWithBody } from './types.js'
 import { checkType, hasBody } from './utils.js'
