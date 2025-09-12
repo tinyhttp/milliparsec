@@ -28,4 +28,4 @@ jobs:
       - name: Update npm
         run: npm install -g npm@latest
       - name: Publish
-      - run: npm publish
+        run: npm publish
