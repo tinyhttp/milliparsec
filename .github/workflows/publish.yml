@@ -25,4 +25,7 @@ jobs:
 
       - name: Run Biome
         run: biome ci .
-      - run: pnpm publish --no-git-checks
+      - name: Update npm
+        run: npm install -g npm@latest
+      - name: Publish
+      - run: npm publish
