@@ -22,7 +22,7 @@ export type ParserOptions<T extends Record<string, any> = Record<string, any>> =
   /**
    * Middleware content type
    */
-  type: string | ((req: IncomingMessage) => boolean)
+  type: (req: IncomingMessage) => boolean
 }> &
   T
 

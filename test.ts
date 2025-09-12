@@ -565,44 +565,6 @@ describe('Content-Type filtering', () => {
     }).expect(200, { hello: 'world' })
   })
 
-  it('matches with a specified MIME type', async () => {
-    const server = createServer(async (req: ReqWithBody, res) => {
-      await json({ type: 'application/json' })(req, res, (err) => err && console.log(err))
-
-      res.setHeader('Content-Type', 'application/json')
-
-      res.end(JSON.stringify(req.body))
-    })
-
-    await makeFetch(server)('/', {
-      body: JSON.stringify({ hello: 'world' }),
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }).expect(200, { hello: 'world' })
-  })
-
-  it('matches with a MIME + encoding type', async () => {
-    const server = createServer(async (req: ReqWithBody, res) => {
-      await json({ type: 'application/json' })(req, res, (err) => err && console.log(err))
-
-      res.setHeader('Content-Type', 'application/json; charset=utf-8')
-
-      res.end(JSON.stringify(req.body))
-    })
-
-    await makeFetch(server)('/', {
-      body: JSON.stringify({ hello: 'world' }),
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8'
-      }
-    }).expect(200, { hello: 'world' })
-  })
-
   it('executes the type(req) fn if type is a function', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
       await json({ type: (req) => req.headers['content-type'] === 'application/json' })(

@@ -17,8 +17,7 @@
 | `urlencoded()` `interpretNumericEntities` option | ✅          | ❌                                 |
 | `urlencoded()` `depth` option                    | ✅          | ❌                                 |
 
-\* The `type` option can be a string or a function. `milliparsec` does not
-depend on the `type-is` package and does not support wildcard MIME strings (for
-example `*/json`). It only does a simple string comparisong of the first part of
-the `Content-Type` header. Unlike body-parser, milliparsec does not set default
-`type` on parsers.
+\* The `type` option can only be a function. `milliparsec` does not depend on
+the `type-is` package and does not support wildcard MIME strings (for example
+`*/json`). Unlike body-parser, milliparsec does not set default `type` on
+parsers.
