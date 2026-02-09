@@ -71,11 +71,7 @@ const json = ({
 }: ParserOptions<{
   reviver?: (this: any, key: string, value: any) => any
 }> = {}) => {
-  const parse = p(
-    (x) => (x.length === 0 ? {} : JSON.parse(x.toString(), reviver)),
-    payloadLimit,
-    payloadLimitErrorFn
-  )
+  const parse = p((x) => (x.length === 0 ? {} : JSON.parse(x.toString(), reviver)), payloadLimit, payloadLimitErrorFn)
   return async (req: ReqWithBody, res: Response, next?: NextFunction) => {
     if (hasBody(req.method!) && checkType(req, type)) {
       req.body = await parse(req, res, next)
