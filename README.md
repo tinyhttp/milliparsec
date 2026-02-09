@@ -20,7 +20,7 @@ Check out [deno-libs/parsec](https://github.com/deno-libs/parsec) for Deno port.
 - 📦 tiny package size (8KB dist size)
 - 🔥 no dependencies
 - ✨ [tinyhttp](https://github.com/tinyhttp/tinyhttp) and Express support
-- ⚡ ~10% faster than body-parser, ~36% faster than formidable
+- ⚡ ~15% faster than body-parser, ~4x faster than formidable
 
 ## Install
 

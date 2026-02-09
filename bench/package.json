@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "bench": "oha -m POST -d '{\"a\":1}' -H \"Content-Type: application/json\"",
+    "bench": "oha -m POST -d '{\"users\":[{\"id\":1,\"name\":\"John Doe\",\"email\":\"john@example.com\",\"age\":30},{\"id\":2,\"name\":\"Jane Smith\",\"email\":\"jane@example.com\",\"age\":25},{\"id\":3,\"name\":\"Bob Wilson\",\"email\":\"bob@example.com\",\"age\":35}],\"metadata\":{\"total\":3,\"page\":1,\"limit\":10}}' -H \"Content-Type: application/json\"",
     "bench:multipart": "oha -m POST -D ./file.txt -H \"Content-Type: multipart/form-data\""
   },
   "keywords": [],
