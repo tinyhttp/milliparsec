@@ -1,0 +1,6 @@
+--boundary
+Content-Disposition: form-data; name="file"; filename="file.txt"
+Content-Type: text/plain
+
+this is a file that is being sent in a multipart request
+--boundary--

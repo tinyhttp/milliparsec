@@ -5,8 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "bench": "autocannon -m POST -b '{\"a\":1}' -H \"Content-Type=application/json\"",
-    "bench:multipart": "autocannon -m POST --form '{ \"file\": { \"type\": \"file\", \"path\": \"./file.txt\" } }'"
+    "bench": "oha -m POST -d '{\"a\":1}' -H \"Content-Type: application/json\"",
+    "bench:multipart": "oha -m POST -D ./file.txt -H \"Content-Type: multipart/form-data\""
   },
   "keywords": [],
   "author": "",
@@ -14,7 +14,6 @@
   "devDependencies": {
     "@types/body-parser": "^1.19.6",
     "@types/formidable": "^3.4.5",
-    "autocannon": "^8.0.0",
     "body-parser": "^2.2.0"
   },
   "dependencies": {

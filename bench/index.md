@@ -7,17 +7,16 @@ conditions.
 
 ## Environment
 
-- Node.js 22.3.1
-- System: macOS Sequoia 15.3.1 / Darwin 24.3.0 arm64 kernel
-- CPU: Apple M2 (8) @ 3.50 GHz
-- Machine: MacBook Air (M2, 2022)
+- Node.js v24.4.0
+- System: Linux 6.18.5-arch1-1 x86_64
+- CPU: 13th Gen Intel Core i9-13900H
 
 ## JSON parsing
 
 ### Benchmark command:
 
 ```sh
-autocannon -m POST -b '{"a":1}' -H "Content-Type=application/json" localhost:3002 # or 3003
+oha -m POST -d '{"a":1}' -H "Content-Type: application/json" http://localhost:3002 # or 3003
 ```
 
 ### Results
@@ -25,62 +24,51 @@ autocannon -m POST -b '{"a":1}' -H "Content-Type=application/json" localhost:300
 body-parser result:
 
 ```
-┌─────────┬──────┬──────┬───────┬──────┬─────────┬─────────┬───────┐
-│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%  │ Avg     │ Stdev   │ Max   │
-├─────────┼──────┼──────┼───────┼──────┼─────────┼─────────┼───────┤
-│ Latency │ 0 ms │ 0 ms │ 0 ms  │ 0 ms │ 0.01 ms │ 0.12 ms │ 22 ms │
-└─────────┴──────┴──────┴───────┴──────┴─────────┴─────────┴───────┘
-┌───────────┬─────────┬─────────┬─────────┬─────────┬──────────┬──────────┬─────────┐
-│ Stat      │ 1%      │ 2.5%    │ 50%     │ 97.5%   │ Avg      │ Stdev    │ Min     │
-├───────────┼─────────┼─────────┼─────────┼─────────┼──────────┼──────────┼─────────┤
-│ Req/Sec   │ 54,591  │ 54,591  │ 61,759  │ 63,871  │ 61,436.8 │ 2,478.39 │ 54,589  │
-├───────────┼─────────┼─────────┼─────────┼─────────┼──────────┼──────────┼─────────┤
-│ Bytes/Sec │ 7.05 MB │ 7.05 MB │ 7.97 MB │ 8.24 MB │ 7.93 MB  │ 319 kB   │ 7.04 MB │
-└───────────┴─────────┴─────────┴─────────┴─────────┴──────────┴──────────┴─────────┘
+Summary:
+  Success rate: 100.00%
+  Total:        60.2458 ms
+  Slowest:      55.2801 ms
+  Fastest:      0.5548 ms
+  Average:      12.0064 ms
+  Requests/sec: 3319.7335
 
-Req/Bytes counts sampled once per second.
-# of samples: 10
-
-614k requests in 10.01s, 79.3 MB read
+Response time distribution:
+  50.00% in 1.3036 ms
+  75.00% in 31.2024 ms
+  90.00% in 46.0986 ms
+  95.00% in 47.2233 ms
+  99.00% in 52.1532 ms
 ```
 
 milliparsec result:
 
 ```
-┌─────────┬──────┬──────┬───────┬──────┬─────────┬─────────┬───────┐
-│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%  │ Avg     │ Stdev   │ Max   │
-├─────────┼──────┼──────┼───────┼──────┼─────────┼─────────┼───────┤
-│ Latency │ 0 ms │ 0 ms │ 0 ms  │ 0 ms │ 0.01 ms │ 0.04 ms │ 11 ms │
-└─────────┴──────┴──────┴───────┴──────┴─────────┴─────────┴───────┘
-┌───────────┬─────────┬─────────┬─────────┬─────────┬───────────┬──────────┬─────────┐
-│ Stat      │ 1%      │ 2.5%    │ 50%     │ 97.5%   │ Avg       │ Stdev    │ Min     │
-├───────────┼─────────┼─────────┼─────────┼─────────┼───────────┼──────────┼─────────┤
-│ Req/Sec   │ 79,999  │ 79,999  │ 88,127  │ 88,767  │ 87,095.28 │ 2,370.01 │ 79,966  │
-├───────────┼─────────┼─────────┼─────────┼─────────┼───────────┼──────────┼─────────┤
-│ Bytes/Sec │ 9.76 MB │ 9.76 MB │ 10.7 MB │ 10.8 MB │ 10.6 MB   │ 289 kB   │ 9.76 MB │
-└───────────┴─────────┴─────────┴─────────┴─────────┴───────────┴──────────┴─────────┘
+Summary:
+  Success rate: 100.00%
+  Total:        54.7949 ms
+  Slowest:      44.1667 ms
+  Fastest:      0.6135 ms
+  Average:      9.5273 ms
+  Requests/sec: 3649.9779
 
-Req/Bytes counts sampled once per second.
-# of samples: 11
-
-958k requests in 11.01s, 117 MB read
-
-Req/Bytes counts sampled once per second.
-# of samples: 11
-
-641k requests in 11.02s, 78.2 MB read
+Response time distribution:
+  50.00% in 1.1726 ms
+  75.00% in 17.3265 ms
+  90.00% in 36.4140 ms
+  95.00% in 37.4827 ms
+  99.00% in 43.6290 ms
 ```
 
 ### Verdict
 
-milliparsec, on average, is ~40% faster.
+milliparsec, on average, is ~10% faster.
 
 ## Multipart with files
 
 ### Benchmark command:
 
 ```sh
-autocannon -m POST --form '{ "file": {  "type": "file", "path": "./file.txt"  } }' localhost:3004
+oha -m POST -D multipart-body.txt -H "Content-Type: multipart/form-data; boundary=boundary" http://localhost:3004 # or 3005
 ```
 
 ### Results
@@ -88,47 +76,41 @@ autocannon -m POST --form '{ "file": {  "type": "file", "path": "./file.txt"  } 
 formidable result:
 
 ```
-┌─────────┬──────┬──────┬───────┬───────┬─────────┬─────────┬───────┐
-│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%   │ Avg     │ Stdev   │ Max   │
-├─────────┼──────┼──────┼───────┼───────┼─────────┼─────────┼───────┤
-│ Latency │ 1 ms │ 5 ms │ 19 ms │ 26 ms │ 6.63 ms │ 5.86 ms │ 54 ms │
-└─────────┴──────┴──────┴───────┴───────┴─────────┴─────────┴───────┘
-┌───────────┬────────┬────────┬────────┬────────┬────────┬──────────┬────────┐
-│ Stat      │ 1%     │ 2.5%   │ 50%    │ 97.5%  │ Avg    │ Stdev    │ Min    │
-├───────────┼────────┼────────┼────────┼────────┼────────┼──────────┼────────┤
-│ Req/Sec   │ 530    │ 530    │ 775    │ 4,595  │ 1,404  │ 1,179.32 │ 530    │
-├───────────┼────────┼────────┼────────┼────────┼────────┼──────────┼────────┤
-│ Bytes/Sec │ 105 kB │ 105 kB │ 153 kB │ 910 kB │ 278 kB │ 233 kB   │ 105 kB │
-└───────────┴────────┴────────┴────────┴────────┴────────┴──────────┴────────┘
+Summary:
+  Success rate: 100.00%
+  Total:        108.3334 ms
+  Slowest:      71.1838 ms
+  Fastest:      8.5817 ms
+  Average:      23.8519 ms
+  Requests/sec: 1846.1530
 
-Req/Bytes counts sampled once per second.
-# of samples: 10
-
-14k requests in 10.02s, 2.78 MB read
+Response time distribution:
+  50.00% in 16.0338 ms
+  75.00% in 56.2787 ms
+  90.00% in 56.8965 ms
+  95.00% in 69.7132 ms
+  99.00% in 71.0121 ms
 ```
 
 milliparsec result:
 
 ```
-┌─────────┬──────┬──────┬───────┬──────┬─────────┬─────────┬───────┐
-│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%  │ Avg     │ Stdev   │ Max   │
-├─────────┼──────┼──────┼───────┼──────┼─────────┼─────────┼───────┤
-│ Latency │ 0 ms │ 0 ms │ 0 ms  │ 0 ms │ 0.02 ms │ 0.19 ms │ 20 ms │
-└─────────┴──────┴──────┴───────┴──────┴─────────┴─────────┴───────┘
-┌───────────┬─────────┬─────────┬─────────┬─────────┬───────────┬──────────┬─────────┐
-│ Stat      │ 1%      │ 2.5%    │ 50%     │ 97.5%   │ Avg       │ Stdev    │ Min     │
-├───────────┼─────────┼─────────┼─────────┼─────────┼───────────┼──────────┼─────────┤
-│ Req/Sec   │ 24,063  │ 24,063  │ 29,727  │ 30,863  │ 29,263.28 │ 1,758.94 │ 24,051  │
-├───────────┼─────────┼─────────┼─────────┼─────────┼───────────┼──────────┼─────────┤
-│ Bytes/Sec │ 4.76 MB │ 4.76 MB │ 5.89 MB │ 6.11 MB │ 5.79 MB   │ 348 kB   │ 4.76 MB │
-└───────────┴─────────┴─────────┴─────────┴─────────┴───────────┴──────────┴─────────┘
+Summary:
+  Success rate: 100.00%
+  Total:        79.4623 ms
+  Slowest:      67.6478 ms
+  Fastest:      1.6161 ms
+  Average:      15.9568 ms
+  Requests/sec: 2516.9155
 
-Req/Bytes counts sampled once per second.
-# of samples: 11
-
-322k requests in 11.01s, 63.7 MB read
+Response time distribution:
+  50.00% in 2.9719 ms
+  75.00% in 24.1332 ms
+  90.00% in 62.7090 ms
+  95.00% in 65.4033 ms
+  99.00% in 67.3112 ms
 ```
 
 ### Verdict
 
-milliparsec, on average, is ~20x faster.
+milliparsec, on average, is ~36% faster.

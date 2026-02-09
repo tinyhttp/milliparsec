@@ -1,5 +1,5 @@
 import type { IncomingMessage } from 'node:http'
-import type { ParserOptions } from './types.js'
+import type { ParserOptions } from './types.ts'
 
 export const hasBody = (method: string): boolean => ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
 

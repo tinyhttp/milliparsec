@@ -1,9 +1,9 @@
 import { Buffer, File } from 'node:buffer'
 import type { ServerResponse as Response } from 'node:http'
-import type { LimitErrorFn, NextFunction, ParserOptions, ReqWithBody } from './types.js'
-import { checkType, hasBody } from './utils.js'
+import type { LimitErrorFn, NextFunction, ParserOptions, ReqWithBody } from './types.ts'
+import { checkType, hasBody } from './utils.ts'
 
-export * from './types.js'
+export * from './types.ts'
 
 const defaultPayloadLimit = 102400 // 100KiB
 

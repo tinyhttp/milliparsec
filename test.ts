@@ -5,8 +5,8 @@ import { describe, it } from 'node:test'
 import { App } from '@tinyhttp/app'
 import express from 'express'
 import { makeFetch } from 'supertest-fetch'
-import { custom, json, multipart, raw, text, urlencoded } from './src/index.js'
-import type { ReqWithBody } from './src/types.js'
+import { custom, json, multipart, raw, text, urlencoded } from './src/index.ts'
+import type { ReqWithBody } from './src/types.ts'
 
 const td = new TextDecoder()
 
