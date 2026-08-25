@@ -131,7 +131,7 @@ const urlencoded = ({ payloadLimit, payloadLimitErrorFn, type }: ParserOptions =
 
 const getBoundary = (contentType: string) => {
   const match = /boundary=(.+);?/.exec(contentType)
-  return match ? `--${match[1]}` : null
+  return match ? `--${match[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}` : null
 }
 
 const defaultFileSizeLimitErrorFn: LimitErrorFn = (limit) => new Error(`File too large. Limit: ${limit} bytes`)
