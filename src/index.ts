@@ -10,22 +10,32 @@ const defaultPayloadLimit = 102400 // 100KiB
 const defaultErrorFn: LimitErrorFn = (payloadLimit) => new Error(`Payload too large. Limit: ${payloadLimit} bytes`)
 
 // Main function
-export const p =
-  <T = any>(
-    fn: (body: Buffer, req: ReqWithBody<T>) => void,
-    payloadLimit = defaultPayloadLimit,
-    payloadLimitErrorFn: LimitErrorFn = defaultErrorFn
-  ) =>
-  (req: ReqWithBody<T>, _res: Response, next?: (err?: any) => void): Promise<T | undefined> =>
+export const p = <T = any>(
+  fn: (body: Buffer, req: ReqWithBody<T>) => void,
+  payloadLimit = defaultPayloadLimit,
+  payloadLimitErrorFn: LimitErrorFn = defaultErrorFn
+) => {
+  // A limit that cannot enforce anything makes every `totalSize > limit` check
+  // false, silently accepting arbitrarily large payloads, so reject it when the
+  // parser is created. `!(x >= 0)` covers NaN as well as negatives. `Infinity`
+  // stays valid: it is how `multipart` opts out. A numeric string is accepted
+  // since `process.env` values are strings, and the value is validated as
+  // `unknown` because callers may be untyped.
+  const given: unknown = payloadLimit
+  const limit = typeof given === 'string' && given.trim() !== '' ? Number(given) : given
+  if (typeof limit !== 'number' || !(limit >= 0))
+    throw new TypeError(`payloadLimit must be a non-negative number, got ${String(payloadLimit)}`)
+
+  return (req: ReqWithBody<T>, _res: Response, next?: (err?: any) => void): Promise<T | undefined> =>
     new Promise((resolve) => {
       const body: Buffer[] = []
       let totalSize = 0
 
       req.on('data', (chunk: Buffer) => {
         totalSize += chunk.byteLength
-        if (totalSize > payloadLimit) {
+        if (totalSize > limit) {
           req.removeAllListeners()
-          next?.(payloadLimitErrorFn(payloadLimit))
+          next?.(payloadLimitErrorFn(limit))
           resolve(undefined)
         } else {
           body.push(chunk)
@@ -46,6 +56,7 @@ export const p =
         resolve(undefined)
       })
     })
+}
 
 /**
  * Parse payload with a custom function

@@ -430,6 +430,47 @@ describe('Multipart', () => {
 })
 
 describe('Limits', () => {
+  it('should reject an invalid payloadLimit when the parser is created', () => {
+    // An invalid limit makes every `totalSize > payloadLimit` check false,
+    // which would silently disable size enforcement.
+    // '100kb' is body-parser's format and was never supported: fail loudly
+    // rather than silently accept unlimited payloads.
+    for (const payloadLimit of [Number.NaN, 'not-a-number', '100kb', '', null, -1] as unknown as number[]) {
+      assert.throws(() => json({ payloadLimit }), TypeError)
+      assert.throws(() => text({ payloadLimit }), TypeError)
+      assert.throws(() => raw({ payloadLimit }), TypeError)
+      assert.throws(() => urlencoded({ payloadLimit }), TypeError)
+      assert.throws(() => multipart({ payloadLimit }), TypeError)
+    }
+  })
+
+  it('should accept a valid payloadLimit', () => {
+    // a numeric string is valid: process.env values are always strings
+    for (const payloadLimit of [undefined, 0, 1024, Number.POSITIVE_INFINITY, '1200000', '1200000 '] as unknown as number[]) {
+      assert.doesNotThrow(() => json({ payloadLimit }))
+    }
+    // multipart opts out of a limit with Infinity by default
+    assert.doesNotThrow(() => multipart())
+  })
+
+  it('should enforce a payloadLimit given as a numeric string', async () => {
+    const server = createServer(async (req: ReqWithBody, res) => {
+      await text({ payloadLimit: '1024' } as unknown as { payloadLimit: number })(req, res, (err) => {
+        if (err) res.writeHead(413).end(err.message)
+        else res.end(req.body)
+      })
+    })
+
+    await makeFetch(server)('/', {
+      body: new Uint8Array(Buffer.alloc(1024 ** 2, 'a').buffer),
+      method: 'POST',
+      headers: {
+        Accept: 'text/plain',
+        'Content-Type': 'text/plain'
+      }
+    }).expect(413, 'Payload too large. Limit: 1024 bytes')
+  })
+
   it('should throw on default payloadLimit', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
       await text()(req, res, (err) => {
