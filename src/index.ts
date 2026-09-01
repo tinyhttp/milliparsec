@@ -251,4 +251,4 @@ const multipart = ({
   }
 }
 
-export { custom, json, raw, text, urlencoded, multipart }
+export { custom, json, multipart, raw, text, urlencoded }
