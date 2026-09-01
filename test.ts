@@ -430,12 +430,15 @@ describe('Multipart', () => {
 })
 
 describe('Limits', () => {
+  // An invalid limit makes every `size > limit` comparison false, which would
+  // silently disable enforcement. '100kb' is body-parser's format and was never
+  // supported: fail loudly rather than silently accept unlimited input.
+  const invalidLimits = [Number.NaN, 'not-a-number', '100kb', '', null, -1] as unknown as number[]
+  // a numeric string is valid: process.env values are always strings
+  const validLimits = [undefined, 0, 1024, Number.POSITIVE_INFINITY, '1200000', '1200000 '] as unknown as number[]
+
   it('should reject an invalid payloadLimit when the parser is created', () => {
-    // An invalid limit makes every `totalSize > payloadLimit` check false,
-    // which would silently disable size enforcement.
-    // '100kb' is body-parser's format and was never supported: fail loudly
-    // rather than silently accept unlimited payloads.
-    for (const payloadLimit of [Number.NaN, 'not-a-number', '100kb', '', null, -1] as unknown as number[]) {
+    for (const payloadLimit of invalidLimits) {
       assert.throws(() => json({ payloadLimit }), TypeError)
       assert.throws(() => text({ payloadLimit }), TypeError)
       assert.throws(() => raw({ payloadLimit }), TypeError)
@@ -444,12 +447,22 @@ describe('Limits', () => {
     }
   })
 
-  it('should accept a valid payloadLimit', () => {
-    // a numeric string is valid: process.env values are always strings
-    for (const payloadLimit of [undefined, 0, 1024, Number.POSITIVE_INFINITY, '1200000', '1200000 '] as unknown as number[]) {
-      assert.doesNotThrow(() => json({ payloadLimit }))
+  it('should reject invalid multipart file limits when the parser is created', () => {
+    // same failure mode as payloadLimit: `data.length > NaN` is always false,
+    // so an unvalidated file limit silently accepts every part
+    for (const limit of invalidLimits) {
+      assert.throws(() => multipart({ fileSizeLimit: limit }), TypeError)
+      assert.throws(() => multipart({ fileCountLimit: limit }), TypeError)
     }
-    // multipart opts out of a limit with Infinity by default
+  })
+
+  it('should accept a valid limit', () => {
+    for (const limit of validLimits) {
+      assert.doesNotThrow(() => json({ payloadLimit: limit }))
+      assert.doesNotThrow(() => multipart({ fileSizeLimit: limit }))
+      assert.doesNotThrow(() => multipart({ fileCountLimit: limit }))
+    }
+    // multipart opts out of a total payload limit with Infinity by default
     assert.doesNotThrow(() => multipart())
   })
 
@@ -469,6 +482,34 @@ describe('Limits', () => {
         'Content-Type': 'text/plain'
       }
     }).expect(413, 'Payload too large. Limit: 1024 bytes')
+  })
+
+  it('should enforce a fileSizeLimit given as a numeric string', async () => {
+    const server = createServer(async (req: ReqWithBody, res) => {
+      await multipart({ fileSizeLimit: '10' } as unknown as { fileSizeLimit: number })(req, res, (err) => {
+        if (err) res.writeHead(413).end(err.message)
+        else res.end('accepted')
+      })
+    })
+
+    const fd = new FormData()
+    fd.set('file', new File(['hello world'], 'hello.txt', { type: 'text/plain' }) as globalThis.File)
+
+    await makeFetch(server)('/', { body: fd, method: 'POST' }).expect(413, 'File too large. Limit: 10 bytes')
+  })
+
+  it('should reject every file when fileCountLimit is 0', async () => {
+    const server = createServer(async (req: ReqWithBody, res) => {
+      await multipart({ fileCountLimit: 0 })(req, res, (err) => {
+        if (err) res.writeHead(413).end(err.message)
+        else res.end('accepted')
+      })
+    })
+
+    const fd = new FormData()
+    fd.set('file', new File(['hello world'], 'hello.txt', { type: 'text/plain' }) as globalThis.File)
+
+    await makeFetch(server)('/', { body: fd, method: 'POST' }).expect(413, 'Too many files. Limit: 0')
   })
 
   it('should throw on default payloadLimit', async () => {
