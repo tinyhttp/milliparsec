@@ -21,7 +21,7 @@
   },
   "exports": "./dist/index.js",
   "devDependencies": {
-    "@biomejs/biome": "2.2.2",
+    "@biomejs/biome": "2.5.11",
     "@tinyhttp/app": "^2.5.2",
     "@types/express": "^5.0.6",
     "@types/node": "^18.19.130",
