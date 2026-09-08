@@ -131,7 +131,7 @@ const urlencoded = ({ payloadLimit, payloadLimitErrorFn, type }: ParserOptions =
 
 const getBoundary = (contentType: string) => {
   const match = /boundary=(.+);?/.exec(contentType)
-  return match ? `--${match[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}` : null
+  return match ? `--${match[1]}` : null
 }
 
 const defaultFileSizeLimitErrorFn: LimitErrorFn = (limit) => new Error(`File too large. Limit: ${limit} bytes`)
@@ -147,7 +147,7 @@ const parseMultipart = (
     fileSizeLimitErrorFn = defaultFileSizeLimitErrorFn
   }: MultipartOptions
 ) => {
-  const parts = body.split(new RegExp(`${boundary}(--)?`)).filter((part) => !!part && /content-disposition/i.test(part))
+  const parts = body.split(boundary).filter((part) => !!part && /content-disposition/i.test(part))
   const parsedBody: Record<string, (File | string)[]> = {}
 
   if (fileCountLimit && parts.length > fileCountLimit) throw new Error(`Too many files. Limit: ${fileCountLimit}`)

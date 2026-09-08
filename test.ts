@@ -272,7 +272,7 @@ describe('Multipart', () => {
     })
   })
 
-  it('should escape regex metacharacters in the multipart boundary', async () => {
+  it('should treat regex metacharacters in the boundary as literal', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
       await multipart()(req, res, (err) => err && res.end(err))
 
