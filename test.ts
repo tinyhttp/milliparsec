@@ -272,6 +272,23 @@ describe('Multipart', () => {
     })
   })
 
+  it('should treat regex metacharacters in the boundary as literal', async () => {
+    const server = createServer(async (req: ReqWithBody, res) => {
+      await multipart()(req, res, (err) => err && res.end(err))
+
+      res.end(JSON.stringify(req.body))
+    })
+
+    await makeFetch(server)('/', {
+      body: '--a+b\r\nContent-Disposition: form-data; name="f"\r\n\r\nVALUE\r\n--a+b--\r\n',
+      method: 'POST',
+      headers: {
+        Accept: 'multipart/form-data',
+        'Content-Type': 'multipart/form-data; boundary=a+b'
+      }
+    }).expect(200, { f: ['VALUE'] })
+  })
+
   it('should not parse if boundary is not present', async () => {
     const server = createServer(async (req: ReqWithBody, res) => {
       await multipart()(req, res, (err) => err && res.end(err))

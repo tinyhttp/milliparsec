@@ -163,7 +163,7 @@ const parseMultipart = (
   boundary: string,
   { fileCountLimit, fileSizeLimit, fileSizeLimitErrorFn }: ResolvedMultipartOptions
 ) => {
-  const parts = body.split(new RegExp(`${boundary}(--)?`)).filter((part) => !!part && /content-disposition/i.test(part))
+  const parts = body.split(boundary).filter((part) => !!part && /content-disposition/i.test(part))
   const parsedBody: Record<string, (File | string)[]> = {}
 
   if (parts.length > fileCountLimit) throw new Error(`Too many files. Limit: ${fileCountLimit}`)
